@@ -9,3 +9,8 @@
 7. Aggiorna state.json (usate, pubblicazioni con data e id), push. Notifica Robi con anteprima e battuta.
 
 Nota: con fumetto ovale usa --tx verso il lato SENZA testa (0.15-0.25 o 0.8) così la codina non tocca il viso; entrambi gli occhi devono vedersi aperti e interi.
+
+Scelta della posizione del fumetto (guarda prima la posa):
+1. Se sopra la testa di Bronco c'è spazio libero (orecchie/sfondo) -> --pos top (come i fumetti classici), --tx verso il lato senza testa.
+2. Se la testa tocca il bordo alto o gli occhi sono troppo in alto -> --pos bottom (sul petto/bancone, evitando oggetti importanti) oppure --pos left/right --y 0.1-0.5 --lines 4 (fumetto laterale verticale su sfondo libero, senza coprire mani/oggetti chiave).
+3. Controlla SEMPRE il risultato: occhi, naso, bocca liberi, testo leggibile. Altrimenti prova un'altra posizione.

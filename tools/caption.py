@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fumetto per Bronco. Uso:
-python3 tools/caption.py IN.jpg OUT.jpg "Testo battuta" --hl parola1,parola2 --pos top|bottom --shape pill|rect --color 0..4 --tx 0.5 --lines 2
+python3 tools/caption.py IN.jpg OUT.jpg "Testo battuta" --hl parola1,parola2 --pos top|bottom|left|right --shape pill|rect --color 0..4 --tx 0.5 --lines 2
 shape: oval (default, fumetto ovale) | pill | rect. pos: top (default) o bottom. tx = posizione orizzontale della codina (0..1), puntala verso il corpo/guancia di Bronco, MAI sul muso.
 Dopo il render CONTROLLA l'immagine: muso (occhi, naso, bocca) deve restare libero. Se coperto: cambia pos/tx/lines/shape."""
 import argparse,os
@@ -19,7 +19,7 @@ def main():
     a=argparse.ArgumentParser();a.add_argument("src");a.add_argument("dst");a.add_argument("text")
     a.add_argument("--hl",default="");a.add_argument("--pos",default="top");a.add_argument("--shape",default="oval")
     a.add_argument("--color",type=int,default=0);a.add_argument("--tx",type=float,default=0.5);a.add_argument("--lines",type=int,default=2)
-    a.add_argument("--width",type=float,default=0.9,help="larghezza fumetto come frazione (0.4-0.95); stretto+lines 3-4 = fumetto verticale")
+    a.add_argument("--y",type=float,default=0.08,help="per pos left/right: altezza del fumetto (0..1)");a.add_argument("--width",type=float,default=0.9,help="larghezza fumetto come frazione (0.4-0.95); stretto+lines 3-4 = fumetto verticale")
     o=a.parse_args()
     im=Image.open(o.src).convert("RGB");W,H=im.size;d=ImageDraw.Draw(im)
     bw=int(W*o.width);x0=(W-bw)//2;x1=x0+bw
@@ -34,8 +34,17 @@ def main():
         tw=max(d.textlength(l,font=f) for l in lines)
         bw=int(min(W*0.95,tw*1.3+40));x0=(W-bw)//2;x1=x0+bw
         th=h;h=int(th*1.25)
-    y0=(4 if oval else 40) if o.pos=="top" else H-40-h-110
-    y1=y0+h;tx=int(W*o.tx);fill=COLS[o.color%5]
+    side=o.pos in("left","right")
+    if side:
+        bw=int(W*min(o.width,0.5));size=58
+        while True:
+            f=ImageFont.truetype(FONT,size);lines=wrap(d,o.text,f,int(bw*0.72))
+            if len(lines)<=max(o.lines,4):break
+            size-=3
+        lh=int(size*1.06);th=lh*len(lines);h=int(th*1.45);oval=True
+        x0=30 if o.pos=="left" else W-30-bw;x1=x0+bw
+    y0=int(H*o.y) if side else (4 if oval else 40) if o.pos=="top" else H-40-h-110
+    y1=y0+h;tx=(x0+x1)//2 if side else int(W*o.tx);fill=COLS[o.color%5]
     r=min(h//2,90) if o.shape=="pill" else 55
     hl=[k.strip().lower() for k in o.hl.split(",") if k.strip()]
     def shape(off,col):
@@ -47,7 +56,7 @@ def main():
     if not oval: d.rectangle([tx-47,y1-14,tx+57,y1-2],fill=fill)
     y=y0+28+((h-th)//2-14 if oval else 0)
     for ln in lines:
-        w=d.textlength(ln,font=f);x=(W-w)/2
+        w=d.textlength(ln,font=f);x=(x0+x1-w)/2
         for wd in ln.split(" "):
             c=RED if any(k in wd.lower() for k in hl) else K
             d.text((x,y),wd,font=f,fill=c);x+=d.textlength(wd+" ",font=f)
