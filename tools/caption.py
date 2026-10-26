@@ -23,7 +23,7 @@ def main():
     o=a.parse_args()
     im=Image.open(o.src).convert("RGB");W,H=im.size;d=ImageDraw.Draw(im)
     bw=int(W*o.width);x0=(W-bw)//2;x1=x0+bw
-    size=100 if o.shape!='oval' else 64
+    size=100 if o.shape!='oval' else 58
     while True:
         f=ImageFont.truetype(FONT,size);lines=wrap(d,o.text,f,bw-110)
         if len(lines)<=o.lines:break
@@ -33,15 +33,15 @@ def main():
     if oval:
         tw=max(d.textlength(l,font=f) for l in lines)
         bw=int(min(W*0.95,tw*1.3+40));x0=(W-bw)//2;x1=x0+bw
-        th=h;h=int(th*1.3)
-    y0=(12 if oval else 40) if o.pos=="top" else H-40-h-110
+        th=h;h=int(th*1.25)
+    y0=(4 if oval else 40) if o.pos=="top" else H-40-h-110
     y1=y0+h;tx=int(W*o.tx);fill=COLS[o.color%5]
     r=min(h//2,90) if o.shape=="pill" else 55
     hl=[k.strip().lower() for k in o.hl.split(",") if k.strip()]
     def shape(off,col):
         if oval: d.ellipse([x0+off,y0+off,x1+off,y1+off],fill=col,outline=K,width=10)
         else: d.rounded_rectangle([x0+off,y0+off,x1+off,y1+off],radius=r,fill=col,outline=K,width=10)
-        pts=[(tx-55+off,y1-8+off),(tx+65+off,y1-8+off),(tx+5+off,y1+(90 if o.pos=="top" else 110)+off)]
+        pts=[(tx-55+off,y1-8+off),(tx+65+off,y1-8+off),(tx+5+off,y1+((55 if oval else 90) if o.pos=="top" else 110)+off)]
         d.polygon(pts,fill=col,outline=K)
     shape(12,K);shape(0,fill)
     if not oval: d.rectangle([tx-47,y1-14,tx+57,y1-2],fill=fill)

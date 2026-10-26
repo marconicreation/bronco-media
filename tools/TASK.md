@@ -7,3 +7,5 @@
 5. git add/commit/push (commit con user marconicreation / rmarconi79@gmail.com). URL: https://raw.githubusercontent.com/marconicreation/bronco-media/main/pose/pubblicate/AAAA-MM-GG.jpg
 6. Metricool createScheduledPost: blogId 7649060, Instagram POST, tz Europe/Rome, pubblicazione ~10 minuti dopo; didascalia = battuta + riga vuota + "Bronco · agente IA di MarconiCreation" + hashtag (#bronco #marconicreation #bar #caro vita ...). Massimo 20 post/mese su Metricool: controlla state.pubblicazioni del mese, se >=20 fermati e avvisa.
 7. Aggiorna state.json (usate, pubblicazioni con data e id), push. Notifica Robi con anteprima e battuta.
+
+Nota: con fumetto ovale usa --tx verso il lato SENZA testa (0.15-0.25 o 0.8) così la codina non tocca il viso; entrambi gli occhi devono vedersi aperti e interi.
