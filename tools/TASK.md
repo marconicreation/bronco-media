@@ -17,3 +17,5 @@ Scelta della posizione del fumetto (guarda prima la posa):
 
 Direzione del fumetto: la codina deve SEMPRE indicare Bronco: usa --to X,Y (frazioni) puntando al bordo della testa/guancia/mento vicino alla bocca, senza toccare il muso. Fumetto in basso -> codina verso l'alto; laterale -> verso Bronco; in alto -> verso il basso.
 Ogni tanto (circa 1 post su 4, o quando la battuta è una riflessione) usa --thought: fumetto pensiero con pallini che salgono verso la testa di Bronco.
+
+AGGIORNAMENTO: ogni post con immagine va pubblicato anche su Facebook. Nella createScheduledPost usa providers [{"network":"instagram"},{"network":"facebook"}] con instagramData {"type":"POST"} e facebookData {"type":"POST"} (pagina marconicreation / MarconiCreation Portovenere, id 691340067386511). Se Metricool rifiuta facebookData, crea un secondo post solo Facebook.
