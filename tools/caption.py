@@ -17,7 +17,7 @@ def wrap(d,t,f,w):
     out.append(cur);return out
 def main():
     a=argparse.ArgumentParser();a.add_argument("src");a.add_argument("dst");a.add_argument("text")
-    a.add_argument("--hl",default="");a.add_argument("--pos",default="top");a.add_argument("--shape",default="oval")
+    a.add_argument("--to",default="",help="punto indicato dalla codina, es 0.45,0.30 (frazioni di larghezza,altezza): ORECCHIO/guancia/bordo della testa di Bronco, vicino alla bocca ma MAI sul muso");a.add_argument("--thought",action="store_true",help="fumetto pensiero con pallini invece della codina");a.add_argument("--hl",default="");a.add_argument("--pos",default="top");a.add_argument("--shape",default="oval")
     a.add_argument("--color",type=int,default=0);a.add_argument("--tx",type=float,default=0.5);a.add_argument("--lines",type=int,default=2)
     a.add_argument("--y",type=float,default=0.08,help="per pos left/right: altezza del fumetto (0..1)");a.add_argument("--width",type=float,default=0.9,help="larghezza fumetto come frazione (0.4-0.95); stretto+lines 3-4 = fumetto verticale")
     o=a.parse_args()
@@ -47,13 +47,34 @@ def main():
     y1=y0+h;tx=(x0+x1)//2 if side else int(W*o.tx);fill=COLS[o.color%5]
     r=min(h//2,90) if o.shape=="pill" else 55
     hl=[k.strip().lower() for k in o.hl.split(",") if k.strip()]
-    def shape(off,col):
+    cx,cy=(x0+x1)/2,(y0+y1)/2;ax,by_=(x1-x0)/2,(y1-y0)/2
+    if o.to:
+        px,py=[float(v) for v in o.to.split(",")];px*=W;py*=H
+    else:
+        px,py=(tx,y1+55) if o.pos=="top" else (tx,y0-110) if o.pos=="bottom" else (W/2,cy+120)
+    import math
+    dx,dy=px-cx,py-cy;L=math.hypot(dx,dy) or 1;ux,uy=dx/L,dy/L
+    if oval: t=1/math.sqrt((dx/ax)**2+(dy/by_)**2)
+    else: t=min(ax/abs(dx) if dx else 1e9,by_/abs(dy) if dy else 1e9)
+    ex,ey=cx+dx*t,cy+dy*t   # punto sul bordo
+    nx,ny=-uy,ux
+    def box(off,col):
         if oval: d.ellipse([x0+off,y0+off,x1+off,y1+off],fill=col,outline=K,width=10)
         else: d.rounded_rectangle([x0+off,y0+off,x1+off,y1+off],radius=r,fill=col,outline=K,width=10)
-        pts=[(tx-55+off,y1-8+off),(tx+65+off,y1-8+off),(tx+5+off,y1+((55 if oval else 90) if o.pos=="top" else 110)+off)]
-        d.polygon(pts,fill=col,outline=K)
-    shape(12,K);shape(0,fill)
-    if not oval: d.rectangle([tx-47,y1-14,tx+57,y1-2],fill=fill)
+    def tail(off,col,out=True):
+        w=58
+        b1=(ex-ux*20+nx*w+off,ey-uy*20+ny*w+off);b2=(ex-ux*20-nx*w+off,ey-uy*20-ny*w+off);tip=(px+off,py+off)
+        d.polygon([b1,b2,tip],fill=col,outline=K if out else None)
+    def thought(off,col):
+        for f_,rad in ((0.22,30),(0.55,21),(0.85,13)):
+            qx=ex+(px-ex)*f_+off;qy=ey+(py-ey)*f_+off
+            d.ellipse([qx-rad,qy-rad,qx+rad,qy+rad],fill=col,outline=K,width=7)
+    for off,col in ((12,K),(0,fill)):
+        if o.thought: thought(off,col);box(off,col)
+        else: tail(off,col);box(off,col)
+    if not o.thought:
+        w=44;b1=(ex-ux*26+nx*w,ey-uy*26+ny*w);b2=(ex-ux*26-nx*w,ey-uy*26-ny*w)
+        d.polygon([b1,b2,(ex+ux*18-nx*w*0.5,ey+uy*18-ny*w*0.5),(ex+ux*18+nx*w*0.5,ey+uy*18+ny*w*0.5)],fill=fill)
     y=y0+28+((h-th)//2-14 if oval else 0)
     for ln in lines:
         w=d.textlength(ln,font=f);x=(x0+x1-w)/2
