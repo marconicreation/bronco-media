@@ -2,5 +2,12 @@
  "usate": [
   "conto.jpg"
  ],
- "pubblicazioni": []
+ "pubblicazioni": [
+  {
+   "data": "2026-10-27",
+   "id": 407508941,
+   "immagine": "conto.jpg",
+   "battuta": "Bolletta: più righe di un romanzo, finale sempre uguale"
+  }
+ ]
 }
