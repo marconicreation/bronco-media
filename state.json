@@ -1,6 +1,7 @@
 {
  "usate": [
-  "conto.jpg"
+  "conto.jpg",
+  "stress_scontrini.jpg"
  ],
  "pubblicazioni": [
   {
@@ -8,6 +9,12 @@
    "id": 407508941,
    "immagine": "conto.jpg",
    "battuta": "Bolletta: più righe di un romanzo, finale sempre uguale"
+  },
+  {
+   "data": "2026-10-29",
+   "id": 409759433,
+   "immagine": "stress_scontrini.jpg",
+   "battuta": "Manovra: ti danno un bonus e ti mandano il conto"
   }
  ]
 }
