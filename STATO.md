@@ -27,6 +27,6 @@ tools/caption.py (bolle comic), tools/quote.py (card citazioni), pose/nuove (pos
 
 ## Aperto
 - Nessun incasso né risposta reale dalle ~12 email iniziali. AXIS (Upwork, report Vietnam 50 USD) silenziosa dal 26/10.
-- Robi deve: mettere il link del calcolatore nella bio IG; cancellare bozza Metricool 405857600 e vecchio token GitHub; accesso Pinterest.
+- Link del calcolatore nella bio IG: fatto il 30/10. Robi deve: cancellare bozza Metricool 405857600 e vecchio token GitHub; accesso Pinterest.
 - Rinnovare autorizzazione Facebook di Make prima del 25/12/2026. Canva Pro scade il 7/11.
 - Venerdì sera: riepilogo con 3 numeri (email, risposte vere, vendite).
