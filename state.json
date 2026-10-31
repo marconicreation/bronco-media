@@ -1,7 +1,8 @@
 {
  "usate": [
   "conto.jpg",
-  "stress_scontrini.jpg"
+  "stress_scontrini.jpg",
+  "lente.jpg"
  ],
  "pubblicazioni": [
   {
@@ -15,6 +16,12 @@
    "id": 409759433,
    "immagine": "stress_scontrini.jpg",
    "battuta": "Manovra: ti danno un bonus e ti mandano il conto"
+  },
+  {
+   "data": "2026-10-31",
+   "id": null,
+   "immagine": "lente.jpg",
+   "battuta": "Clausole scritte piccole, rincari scritti in grande"
   }
  ]
 }
