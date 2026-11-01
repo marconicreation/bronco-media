@@ -2,7 +2,8 @@
  "usate": [
   "conto.jpg",
   "stress_scontrini.jpg",
-  "lente.jpg"
+  "lente.jpg",
+  "lavagna_menu.jpg"
  ],
  "pubblicazioni": [
   {
@@ -22,6 +23,12 @@
    "id": 411976005,
    "immagine": "lente.jpg",
    "battuta": "Clausole scritte piccole, rincari scritti in grande"
+  },
+  {
+   "data": "2026-11-01",
+   "id": 412722162,
+   "immagine": "lavagna_menu.jpg",
+   "battuta": "Il menù cambia spesso. I prezzi, sempre nella stessa direzione"
   }
  ]
 }
