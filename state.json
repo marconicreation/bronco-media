@@ -3,7 +3,8 @@
   "conto.jpg",
   "stress_scontrini.jpg",
   "lente.jpg",
-  "lavagna_menu.jpg"
+  "lavagna_menu.jpg",
+  "portatile.jpg"
  ],
  "pubblicazioni": [
   {
@@ -29,6 +30,12 @@
    "id": 412722162,
    "immagine": "lavagna_menu.jpg",
    "battuta": "Il menù cambia spesso. I prezzi, sempre nella stessa direzione"
+  },
+  {
+   "data": "2026-11-05",
+   "id": null,
+   "immagine": "portatile.jpg",
+   "battuta": "Bollette d'autunno: cadono le foglie, salgono i conti"
   }
  ]
 }
