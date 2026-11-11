@@ -4,7 +4,8 @@
   "stress_scontrini.jpg",
   "lente.jpg",
   "lavagna_menu.jpg",
-  "portatile.jpg"
+  "portatile.jpg",
+  "pioggia_sciarpa.jpg"
  ],
  "pubblicazioni": [
   {
@@ -36,6 +37,12 @@
    "id": 417411894,
    "immagine": "portatile.jpg",
    "battuta": "Bollette d'autunno: cadono le foglie, salgono i conti"
+  },
+  {
+   "data": "2026-11-11",
+   "id": 424094717,
+   "immagine": "pioggia_sciarpa.jpg",
+   "battuta": "Decreto bollette in arrivo. La bolletta, già arrivata"
   }
  ]
 }
