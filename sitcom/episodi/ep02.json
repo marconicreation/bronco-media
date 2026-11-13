@@ -1,0 +1,147 @@
+{
+ "numero": 2,
+ "titolo": "Il salvadanaio intelligiente",
+ "data": "2026-11-14",
+ "scene": [
+  {
+   "img": "pose/trio_bancone.jpg",
+   "chi": "",
+   "testo": "",
+   "durata": 1.8
+  },
+  {
+   "img": "pose/bartolomeo_annuncia.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "Bronco, ho inventato il salvadanaio intelli... intelligiente!",
+   "durata": 4.6,
+   "inq": [
+    {},
+    {
+     "box": [
+      0.0,
+      0.1,
+      0.45,
+      0.55
+     ]
+    },
+    {
+     "img": "pose/bartolomeo_invenzione.jpg"
+    },
+    {
+     "box": [
+      0.3,
+      0.0,
+      0.95,
+      0.65
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/geremia_braccia.jpg",
+   "chi": "",
+   "testo": "",
+   "durata": 1.0,
+   "inq": [
+    {
+     "box": [
+      0.2,
+      0.1,
+      0.8,
+      0.7
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/geremia_strilla.jpg",
+   "chi": "GEREMIA",
+   "testo": "INTELLIGENTE, testa di fieno! Dammelo subito: lì ci metto il mio ORO!",
+   "durata": 4.4,
+   "inq": [
+    {
+     "box": [
+      0.2,
+      0.05,
+      0.85,
+      0.7
+     ]
+    },
+    {},
+    {
+     "img": "pose/geremia_dito.jpg",
+     "box": [
+      0.15,
+      0.05,
+      0.8,
+      0.7
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/bartolomeo_invenzione.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "È così intelligente che quando vede le tasse si chiude da solo.",
+   "durata": 4.0,
+   "inq": [
+    {
+     "box": [
+      0.35,
+      0.05,
+      0.9,
+      0.6
+     ]
+    },
+    {
+     "img": "pose/bartolomeo_annuncia.jpg"
+    }
+   ]
+  },
+  {
+   "img": "pose/bartolomeo_sciabadu.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "Sciabadù!",
+   "durata": 2.0
+  },
+  {
+   "img": "pose/geremia_bocca_aperta.jpg",
+   "chi": "",
+   "testo": "...",
+   "durata": 1.8,
+   "inq": [
+    {
+     "box": [
+      0.18,
+      0.03,
+      0.82,
+      0.67
+     ]
+    },
+    {
+     "img": "pose/geremia_braccia.jpg"
+    }
+   ]
+  },
+  {
+   "img": "pose/bronco_shaker.jpg",
+   "chi": "BRONCO",
+   "testo": "Ne prendo due. Uno solo per la bolletta.",
+   "durata": 3.8,
+   "inq": [
+    {},
+    {
+     "img": "pose/bronco_papillon.jpg",
+     "box": [
+      0.12,
+      0.03,
+      0.82,
+      0.73
+     ]
+    }
+   ]
+  }
+ ],
+ "voci": false,
+ "didascalia": "AL BANCONE DI BRONCO 🍸 Episodio 2: Il salvadanaio intelligiente\n\nBartolomeo ha inventato il salvadanaio che si difende dalle tasse. Geremia vuole metterci dentro tutto il suo oro.\n\nUna nuova puntata ogni giorno all'ora di pranzo: seguici per non perderti la prossima!\n\n🎁 Il cocktail col tuo nome: regalo di Natale a 5 €, link in bio.\n\n#sitcom #cartoon #bar #barista #cocktail #umorismo #fumetti #reelsitalia #bronco #marconicreation"
+}

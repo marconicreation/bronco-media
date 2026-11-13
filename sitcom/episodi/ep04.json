@@ -1,0 +1,147 @@
+{
+ "numero": 4,
+ "titolo": "Il modulo per i moduli",
+ "data": "2026-11-16",
+ "scene": [
+  {
+   "img": "pose/trio_bancone.jpg",
+   "chi": "",
+   "testo": "",
+   "durata": 1.8
+  },
+  {
+   "img": "pose/bartolomeo_annuncia.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "Ho inventato il modulo per chiedere il modulo! Lo comprilo io!",
+   "durata": 4.6,
+   "inq": [
+    {},
+    {
+     "box": [
+      0.0,
+      0.1,
+      0.45,
+      0.55
+     ]
+    },
+    {
+     "img": "pose/bartolomeo_invenzione.jpg"
+    },
+    {
+     "box": [
+      0.3,
+      0.0,
+      0.95,
+      0.65
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/geremia_braccia.jpg",
+   "chi": "",
+   "testo": "",
+   "durata": 1.0,
+   "inq": [
+    {
+     "box": [
+      0.2,
+      0.1,
+      0.8,
+      0.7
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/geremia_strilla.jpg",
+   "chi": "GEREMIA",
+   "testo": "COMPILO, ronzino! E quanto costa? Io non pago neanche il caffè!",
+   "durata": 4.4,
+   "inq": [
+    {
+     "box": [
+      0.2,
+      0.05,
+      0.85,
+      0.7
+     ]
+    },
+    {},
+    {
+     "img": "pose/geremia_dito.jpg",
+     "box": [
+      0.15,
+      0.05,
+      0.8,
+      0.7
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/bartolomeo_invenzione.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "È gratis! Serve solo una marca da bollo, una firma e tre code.",
+   "durata": 4.0,
+   "inq": [
+    {
+     "box": [
+      0.35,
+      0.05,
+      0.9,
+      0.6
+     ]
+    },
+    {
+     "img": "pose/bartolomeo_annuncia.jpg"
+    }
+   ]
+  },
+  {
+   "img": "pose/bartolomeo_sciabadu.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "Sciabadù!",
+   "durata": 2.0
+  },
+  {
+   "img": "pose/geremia_bocca_aperta.jpg",
+   "chi": "",
+   "testo": "...",
+   "durata": 1.8,
+   "inq": [
+    {
+     "box": [
+      0.18,
+      0.03,
+      0.82,
+      0.67
+     ]
+    },
+    {
+     "img": "pose/geremia_braccia.jpg"
+    }
+   ]
+  },
+  {
+   "img": "pose/bronco_shaker.jpg",
+   "chi": "BRONCO",
+   "testo": "Da me la fila si fa solo per il caffè.",
+   "durata": 3.8,
+   "inq": [
+    {},
+    {
+     "img": "pose/bronco_papillon.jpg",
+     "box": [
+      0.12,
+      0.03,
+      0.82,
+      0.73
+     ]
+    }
+   ]
+  }
+ ],
+ "voci": false,
+ "didascalia": "AL BANCONE DI BRONCO 🍸 Episodio 4: Il modulo per i moduli\n\nIl modulo per chiedere il modulo. Bartolomeo ha battuto la burocrazia... quasi.\n\nUna nuova puntata ogni giorno all'ora di pranzo: seguici per non perderti la prossima!\n\n🎁 Il cocktail col tuo nome: regalo di Natale a 5 €, link in bio.\n\n#sitcom #cartoon #bar #barista #cocktail #umorismo #fumetti #reelsitalia #bronco #marconicreation"
+}
