@@ -18,6 +18,7 @@ POSE = '/mnt/project-files/sitcom/ep01/pose'
 FONT = '/home/user/bronco-media/Bangers-Regular.ttf'
 CLIP = os.path.join(HERE, 'clip_trio.mp4')
 OUT = os.path.join(HERE, 'sigla.mp4')
+MUSICA = None  # python3 sigla.py --musica FILE.wav|mp3 usa una base esterna invece di quella sintetizzata
 W, H, FPS = 1080, 1920, 30
 BPM = 132; BEAT = 60 / BPM; BAR = 4 * BEAT
 INK = (20, 12, 8); GOLD = (255, 214, 90); CREAM = (255, 246, 228)
@@ -185,7 +186,10 @@ def build(out=OUT):
         for f in intro(*args): p.stdin.write(f.tobytes()); n += 1
     for f in clip_frames(min(3 * BAR, 5.0)): p.stdin.write(f.tobytes()); n += 1
     p.stdin.close(); p.wait()
-    music(n / FPS, os.path.join(tmp, 'm.wav'))
+    if MUSICA:  # base approvata da Robi (es. /mnt/project-files/sitcom/musica/...): presa dall'inizio, sfumata in coda
+        d = n / FPS; subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', MUSICA, '-t', str(d), '-af', f'afade=t=out:st={d - 0.4}:d=0.4',
+                                     '-ar', '44100', '-ac', '1', os.path.join(tmp, 'm.wav')], check=True)
+    else: music(n / FPS, os.path.join(tmp, 'm.wav'))
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', vid, '-i', os.path.join(tmp, 'm.wav'), '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k',
                     '-ar', '44100', '-ac', '1', '-shortest', '-movflags', '+faststart', out], check=True)
     print(out, round(n / FPS, 2), 's')
@@ -200,5 +204,6 @@ def anteponi(ep, out):
     print(out)
 
 if __name__ == '__main__':
-    if len(sys.argv) == 4 and sys.argv[1] == '--anteponi': anteponi(sys.argv[2], sys.argv[3])
+    if len(sys.argv) == 3 and sys.argv[1] == '--musica': MUSICA = sys.argv[2]; build()
+    elif len(sys.argv) == 4 and sys.argv[1] == '--anteponi': anteponi(sys.argv[2], sys.argv[3])
     else: build()
