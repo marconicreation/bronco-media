@@ -4,10 +4,10 @@ Uso:
   python3 sigla.py                         -> crea sigla.mp4 in questa cartella
   python3 sigla.py --anteponi EP.mp4 OUT.mp4  -> mette la sigla davanti a un episodio gia' montato
 
-Struttura (a tempo di musica, 144 bpm, 1 battuta = 1,667 s):
+Struttura (a tempo di musica, 132 bpm, 1 battuta = 1,82 s):
   battuta 1: Bronco "il barista"   | 2: Bartolomeo "l'inventore" | 3: Geremia "il brontolone"
   battute 4-6: clip animata dei tre al bancone (Higgsfield, clip_trio.mp4) + titolo
-Musica: funk originale sintetizzata qui (batteria, giro di basso, fiati), nessun diritto.
+Musica: funk stile sigle TV anni '70, originale e sintetizzata qui (basso in primo piano, clavinet, archi, fiati), nessun diritto.
 """
 import sys, os, subprocess, tempfile, wave
 import numpy as np
@@ -19,7 +19,7 @@ FONT = '/home/user/bronco-media/Bangers-Regular.ttf'
 CLIP = os.path.join(HERE, 'clip_trio.mp4')
 OUT = os.path.join(HERE, 'sigla.mp4')
 W, H, FPS = 1080, 1920, 30
-BPM = 144; BEAT = 60 / BPM; BAR = 4 * BEAT
+BPM = 132; BEAT = 60 / BPM; BAR = 4 * BEAT
 INK = (20, 12, 8); GOLD = (255, 214, 90); CREAM = (255, 246, 228)
 
 PERSONAGGI = [  # (posa, nome, ruolo, colore sfondo, entra da)
@@ -86,66 +86,93 @@ def clip_frames(dur):
         d.text((W // 2, 1840), '@marconicreation', font=f_tag, fill=CREAM, anchor='mm', stroke_width=3, stroke_fill=INK)
         yield c
 
-# ---------------- musica: funk originale ----------------
+# ---------------- musica: funk anni '70 originale, basso in primo piano ----------------
 SR = 44100
-def env(n, a, d):
-    t = np.arange(n) / SR; return np.minimum(1, t / max(a, 1e-4)) * np.exp(-t / d)
+def lp(x, fc, q=2.0):
+    """Passa-basso morbido via FFT (rolloff tipo filtro analogico)."""
+    X = np.fft.rfft(x); f = np.fft.rfftfreq(len(x), 1 / SR)
+    return np.fft.irfft(X / np.sqrt(1 + (f / fc) ** (2 * q)), len(x))
+def hp(x, fc):
+    X = np.fft.rfft(x); f = np.fft.rfftfreq(len(x), 1 / SR)
+    return np.fft.irfft(X * (1 - 1 / np.sqrt(1 + (f / fc) ** 4)), len(x))
 
 def music(sec, path):
-    N = int(sec * SR); y = np.zeros(N + SR); s16 = BEAT / 4
-    def add(sig, at):
-        i = int(at * SR); y[i:i + len(sig)] += sig[:len(y) - i]
+    N = int(sec * SR); y = np.zeros(N + 2 * SR); s16 = BEAT / 4
+    bus = {k: np.zeros_like(y) for k in ('dr', 'bass', 'clav', 'str', 'br')}
+    def add(k, sig, at):
+        i = int(at * SR)
+        if i < len(y): bus[k][i:i + len(sig)] += sig[:len(y) - i]
     rng = np.random.RandomState(7)
-    def kick():
-        n = int(0.25 * SR); t = np.arange(n) / SR; f = 50 + 90 * np.exp(-t * 30)
-        return 0.9 * np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 9)
-    def snare():
-        n = int(0.2 * SR); t = np.arange(n) / SR
-        return (0.45 * rng.randn(n) * np.exp(-t * 22) + 0.3 * np.sin(2 * np.pi * 190 * t) * np.exp(-t * 25))
-    def hat(open_=False):
-        n = int((0.12 if open_ else 0.04) * SR); x = rng.randn(n); x = np.diff(np.concatenate([[0], x]))
-        return 0.12 * x * np.exp(-np.arange(n) / SR * (18 if open_ else 80))
-    def bass(freq, dur):
-        n = int(dur * SR); t = np.arange(n) / SR
-        saw = 2 * ((freq * t) % 1) - 1; sq = np.sign(np.sin(2 * np.pi * freq * t))
-        x = 0.6 * np.sin(2 * np.pi * freq * t) + 0.25 * saw + 0.15 * sq
-        k = int(SR / (freq * 6)) or 1; x = np.convolve(x, np.ones(k) / k, 'same')  # filtro morbido
-        e = env(n, 0.004, 0.22); e[-200:] *= np.linspace(1, 0, 200)
-        return 0.55 * x * e
-    def brass(freqs, dur):
-        n = int(dur * SR); t = np.arange(n) / SR; x = np.zeros(n)
-        for f in freqs:
-            vib = 1 + 0.004 * np.sin(2 * np.pi * 5.5 * t)
-            ph = np.cumsum(f * vib) / SR
-            for h in range(1, 7): x += np.sin(2 * np.pi * h * ph) / h ** 1.2
-        e = np.minimum(1, t / 0.02) * np.exp(-t * 2.5); e[-300:] *= np.linspace(1, 0, 300)
-        return 0.07 * x * e
     note = lambda m: 440 * 2 ** ((m - 69) / 12)
-    E1 = 28 + 12  # Mi basso (E2)
-    # giro di basso funk in Mi (16 sedicesimi per battuta): (sedicesimo, semitoni sopra Mi, durata in sedicesimi)
-    riff_a = [(0, 0, 2), (3, 0, 1), (4, 12, 1), (6, 10, 1), (7, 0, 2), (10, 3, 1), (11, 5, 1), (12, 7, 2), (14, 10, 1), (15, 12, 1)]
-    riff_b = [(0, 5, 2), (3, 5, 1), (4, 17, 1), (6, 15, 1), (7, 5, 2), (10, 7, 1), (11, 8, 1), (12, 10, 1), (13, 11, 1), (14, 12, 2)]
+    def kick():
+        n = int(0.3 * SR); t = np.arange(n) / SR; f = 45 + 70 * np.exp(-t * 25)
+        return 0.8 * np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 8)
+    def snare():  # rullante secco anni '70, poco riverbero
+        n = int(0.18 * SR); t = np.arange(n) / SR
+        return lp(0.4 * rng.randn(n) * np.exp(-t * 28), 6000) + 0.25 * np.sin(2 * np.pi * 180 * t) * np.exp(-t * 30)
+    def hat(o=False):
+        n = int((0.15 if o else 0.035) * SR); x = hp(rng.randn(n), 7000)
+        return 0.18 * x * np.exp(-np.arange(n) / SR * (14 if o else 90))
+    def tamb():
+        n = int(0.12 * SR); x = hp(rng.randn(n), 5000); t = np.arange(n) / SR
+        return 0.13 * x * (np.exp(-t * 30) + 0.5 * np.exp(-((t - 0.03) ** 2) / 1e-4))
+    def bass(m, dur, acc=1.0):
+        """Basso elettrico suonato con le dita: attacco 'thump', corpo caldo, un filo di saturazione."""
+        n = int(dur * SR); t = np.arange(n) / SR; f = note(m)
+        x = np.sin(2 * np.pi * f * t) + 0.5 * np.sin(4 * np.pi * f * t) + 0.25 * (2 * ((f * t) % 1) - 1)
+        x = lp(x, 350 + 1400 * acc, 1.5) + lp(x * np.exp(-t * 60), 2500) * 0.6  # filtro che si chiude + click
+        x = np.tanh(2.2 * x) * np.minimum(1, t / 0.003) * (0.55 + 0.45 * np.exp(-t * 5))
+        x[-int(0.008 * SR):] *= np.linspace(1, 0, int(0.008 * SR))
+        return 0.5 * acc * x
+    def clav(ms, dur):  # clavinet con wah
+        n = int(dur * SR); t = np.arange(n) / SR; x = np.zeros(n)
+        for m in ms:
+            f = note(m); x += np.sign(np.sin(2 * np.pi * f * t)) * 0.5 + (2 * ((f * t) % 1) - 1) * 0.5
+        x = hp(x, 500); x = lp(x, 1800, 3) * np.exp(-t * 18)
+        return 0.05 * x
+    def strings(ms, dur):
+        n = int(dur * SR); t = np.arange(n) / SR; x = np.zeros(n)
+        for m in ms:
+            for dt in (-0.12, 0, 0.13):
+                f = note(m) * 2 ** (dt / 12); x += 2 * ((f * t + rng.rand()) % 1) - 1
+        x = lp(x, 3000) * np.minimum(1, t / 0.25); x[-int(0.2 * SR):] *= np.linspace(1, 0, int(0.2 * SR))
+        return 0.012 * x
+    def brass(ms, dur, lvl=1.0):
+        n = int(dur * SR); t = np.arange(n) / SR; x = np.zeros(n)
+        for m in ms:
+            ph = np.cumsum(note(m) * (1 + 0.004 * np.sin(2 * np.pi * 5.5 * t))) / SR
+            for h in range(1, 8): x += np.sin(2 * np.pi * h * ph) / h ** 1.1
+        e = np.minimum(1, t / 0.015) * np.exp(-t * 2.2); e[-300:] *= np.linspace(1, 0, 300)
+        return 0.05 * lvl * x * e
+    E = 40  # Mi basso
+    # giro di basso anni '70 (sedicesimo, semitoni su Mi, durata in sedicesimi, accento): ottave, ghost note e salita cromatica
+    riffA = [(0, 0, 3, 1), (3, 0, .8, .5), (4, 12, 1, .9), (5, 0, .8, .5), (6, 10, 1, .8), (7, 12, 1, .9), (8, 0, 2, 1), (10, 7, 1, .8), (11, 0, .8, .5), (12, 3, 1, .9), (13, 4, 1, .9), (14, 5, 1, .9), (15, 6, 1, .9)]
+    riffB = [(0, 5, 3, 1), (3, 5, .8, .5), (4, 17, 1, .9), (5, 5, .8, .5), (6, 15, 1, .8), (7, 17, 1, .9), (8, 7, 2, 1), (10, 14, 1, .8), (11, 7, .8, .5), (12, 10, 1, .9), (13, 9, 1, .9), (14, 8, 1, .9), (15, -1, 1, .9)]
+    Em9 = [64, 67, 71, 74, 78]; A13 = [61, 66, 69, 67, 71]
     bars = int(np.ceil(sec / BAR))
     for b in range(bars):
         t0 = b * BAR; last = b == bars - 1
-        riff = riff_b if b % 4 == 2 else riff_a
-        for s in range(16):
-            if s in (0, 7, 10) or (s == 14 and b % 2): add(kick(), t0 + s * s16)
-            if s in (4, 12): add(snare(), t0 + s * s16)
-            if s in (15,) and b % 2: add(0.5 * snare(), t0 + s * s16)
-            add(hat(open_=(s % 4 == 2)), t0 + s * s16 + (0.012 if s % 2 else 0))
         if not last:
-            for s, semi, ln in riff: add(bass(note(E1 + semi), ln * s16 * 0.95), t0 + s * s16)
-            # stacchetti di fiati sul levare, a ogni presentazione
-            ch = [note(64), note(67), note(71), note(74)] if b % 2 == 0 else [note(62), note(66), note(69), note(72)]
-            add(brass(ch, 1.5 * s16), t0 + 6 * s16); add(brass(ch, 3 * s16), t0 + 14 * s16)
-        else:  # finale: "ta-daaa" sul titolo
-            add(bass(note(E1), 3 * s16), t0); add(bass(note(E1), 1.5 * BAR), t0 + 3 * s16 * 1.0 + 0.0)
-            add(brass([note(64), note(68), note(71), note(76)], 1.5 * s16), t0)
-            add(1.4 * brass([note(64), note(68), note(71), note(74), note(76)], BAR * 0.95), t0 + 2 * s16)
-            add(kick(), t0); add(snare(), t0); add(kick(), t0 + 2 * s16); add(snare(), t0 + 2 * s16)
-    y = y[:N]; y = np.tanh(1.4 * y) / np.tanh(1.4)  # un po' di calore
-    y *= np.clip((sec - np.arange(N) / SR) / 0.3, 0, 1); y *= 0.85 / max(1e-6, np.abs(y).max())
+            for s in range(16):
+                if s in (0, 8) or (s == 10 and b % 2) or s == 14: add('dr', kick(), t0 + s * s16)
+                if s in (4, 12): add('dr', snare(), t0 + s * s16)
+                if s in (7, 15): add('dr', 0.3 * snare(), t0 + s * s16)  # ghost
+                add('dr', hat(o=(s % 4 == 2)), t0 + s * s16 + (0.01 if s % 2 else 0))
+                if s in (4, 12): add('dr', tamb(), t0 + s * s16)
+            riff = riffB if b % 2 else riffA
+            for s, semi, ln, acc in riff: add('bass', bass(E + semi, ln * s16 * 0.92, acc), t0 + s * s16)
+            ch = A13 if b % 2 else Em9
+            for s in (2, 3, 6, 10, 11, 14): add('clav', clav(ch[:3], s16 * 0.6), t0 + s * s16)
+            add('str', strings(ch, BAR), t0)
+            add('br', brass([c + 0 for c in ch[:4]], 1.5 * s16), t0 + 6 * s16)
+            add('br', brass([c + 0 for c in ch[:4]], 2.5 * s16), t0 + 14 * s16)
+        else:  # finale "ta-daaa" col basso che scende e poi tiene
+            add('bass', bass(E, BAR * 0.95, 1), t0); add('dr', kick(), t0); add('dr', snare(), t0); add('dr', hat(True), t0)
+            add('br', brass([64, 68, 71, 74, 76], BAR * 0.9, 1.6), t0)
+            add('str', strings([64, 68, 71, 76, 80], BAR * 0.9), t0)
+    mix = 0.75 * bus['dr'] + 1.35 * bus['bass'] + 2.2 * bus['clav'] + 1.3 * bus['str'] + 1.7 * bus['br']
+    y = mix[:N]; y = np.tanh(1.3 * y) / np.tanh(1.3)
+    y *= np.clip((sec - np.arange(N) / SR) / 0.3, 0, 1); y *= 0.9 / max(1e-6, np.abs(y).max())
     with wave.open(path, 'w') as w:
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes((y * 32767).astype(np.int16).tobytes())
 
@@ -156,7 +183,7 @@ def build(out=OUT):
     n = 0
     for args in PERSONAGGI:
         for f in intro(*args): p.stdin.write(f.tobytes()); n += 1
-    for f in clip_frames(3 * BAR): p.stdin.write(f.tobytes()); n += 1
+    for f in clip_frames(min(3 * BAR, 5.0)): p.stdin.write(f.tobytes()); n += 1
     p.stdin.close(); p.wait()
     music(n / FPS, os.path.join(tmp, 'm.wav'))
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', vid, '-i', os.path.join(tmp, 'm.wav'), '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k',
