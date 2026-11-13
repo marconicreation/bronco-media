@@ -5,7 +5,8 @@
   "lente.jpg",
   "lavagna_menu.jpg",
   "portatile.jpg",
-  "pioggia_sciarpa.jpg"
+  "pioggia_sciarpa.jpg",
+  "cappuccini.jpg"
  ],
  "pubblicazioni": [
   {
@@ -43,6 +44,12 @@
    "id": 424094717,
    "immagine": "pioggia_sciarpa.jpg",
    "battuta": "Decreto bollette in arrivo. La bolletta, già arrivata"
+  },
+  {
+   "data": "2026-11-13",
+   "id": 426628817,
+   "immagine": "cappuccini.jpg",
+   "battuta": "Lo sconto in bolletta? Leggero come la schiuma"
   }
  ]
 }
