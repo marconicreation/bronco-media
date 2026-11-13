@@ -1,0 +1,164 @@
+{
+ "numero": 9,
+ "titolo": "La calcolatrice ottimista",
+ "data": "2026-11-21",
+ "scene": [
+  {
+   "img": "pose/trio_bancone.jpg",
+   "chi": "",
+   "testo": "",
+   "durata": 1.8
+  },
+  {
+   "img": "pose/bartolomeo_quaderno.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "Bronco! Ho inventato la calcolatrice ottimista: arrotonda sempre per difetto!",
+   "durata": 4.6,
+   "inq": [
+    {},
+    {
+     "box": [
+      0.05,
+      0.5,
+      0.55,
+      1.0
+     ]
+    },
+    {
+     "img": "pose/bartolomeo_invenzione.jpg"
+    },
+    {
+     "box": [
+      0.25,
+      0.03,
+      0.85,
+      0.63
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/geremia_braccia.jpg",
+   "chi": "",
+   "testo": "",
+   "durata": 1.0,
+   "inq": [
+    {
+     "box": [
+      0.2,
+      0.1,
+      0.8,
+      0.7
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/geremia_dito.jpg",
+   "chi": "GEREMIA",
+   "testo": "Dammela! La uso per pagare il conto qui al bar, ah ah!",
+   "durata": 4.4,
+   "inq": [
+    {
+     "box": [
+      0.15,
+      0.05,
+      0.8,
+      0.7
+     ]
+    },
+    {},
+    {
+     "img": "pose/geremia_strilla.jpg",
+     "box": [
+      0.2,
+      0.05,
+      0.85,
+      0.7
+     ]
+    }
+   ]
+  },
+  {
+   "img": "pose/bartolomeo_invenzione.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "Purtroppo il fisco ha quella pessimista.",
+   "durata": 4.0,
+   "inq": [
+    {
+     "box": [
+      0.35,
+      0.05,
+      0.9,
+      0.6
+     ]
+    },
+    {
+     "img": "pose/bartolomeo_quaderno.jpg"
+    }
+   ]
+  },
+  {
+   "img": "pose/bartolomeo_sciabadu.jpg",
+   "chi": "BARTOLOMEO",
+   "testo": "Sciabadù!",
+   "durata": 2.0
+  },
+  {
+   "img": "pose/geremia_bocca_aperta.jpg",
+   "chi": "",
+   "testo": "...",
+   "durata": 1.8,
+   "inq": [
+    {
+     "box": [
+      0.18,
+      0.03,
+      0.82,
+      0.67
+     ]
+    },
+    {
+     "img": "pose/geremia_braccia.jpg"
+    }
+   ]
+  },
+  {
+   "img": "pose/bartolomeo_birra.jpg",
+   "chi": "",
+   "testo": "",
+   "durata": 1.8,
+   "inq": [
+    {
+     "box": [
+      0.0,
+      0.4,
+      0.55,
+      0.95
+     ]
+    },
+    {}
+   ]
+  },
+  {
+   "img": "pose/bronco_shaker.jpg",
+   "chi": "BRONCO",
+   "testo": "Il conto lo faccio io. Con la calcolatrice normale.",
+   "durata": 3.8,
+   "inq": [
+    {},
+    {
+     "img": "pose/bronco_papillon.jpg",
+     "box": [
+      0.12,
+      0.03,
+      0.82,
+      0.73
+     ]
+    }
+   ]
+  }
+ ],
+ "voci": false,
+ "didascalia": "AL BANCONE DI BRONCO 🍸 Episodio 9: La calcolatrice ottimista\n\nLa calcolatrice ottimista arrotonda sempre per difetto. Peccato che il fisco abbia quella pessimista.\n\nUna nuova puntata ogni giorno all'ora di pranzo: seguici per non perderti la prossima!\n\n🎁 Il cocktail col tuo nome: regalo di Natale a 5 €, link in bio.\n\n#sitcom #cartoon #bar #barista #cocktail #umorismo #fumetti #reelsitalia #bronco #marconicreation"
+}
