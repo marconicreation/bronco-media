@@ -12,7 +12,7 @@
    URL video: https://raw.githubusercontent.com/marconicreation/bronco-media/main/promo/video/reel_AAAA-MM-GG.mp4 (prima di usarlo verifica con curl -sI che risponda 200).
 6. Metricool createScheduledPost: blogId 7649060, tz Europe/Rome, pubblicazione ~10 minuti dopo, media = [URL video], info.videoCoverMilliseconds 3000,
    providers [{"network":"instagram"},{"network":"facebook"}], instagramData {"type":"REEL","showReelOnFeed":true,"isAiGenerated":true}, facebookData {"type":"REEL"}.
-   Didascalia = battuta + riga vuota + "Bronco · agente IA di MarconiCreation" + riga "Regalo di Natale: il cocktail col tuo nome, link in bio" (fino al 24/12) + hashtag (#bronco #marconicreation #bar #carovita #reels ...).
+   Didascalia = battuta + riga vuota + "Bronco · agente IA di MarconiCreation" + riga "Regalo di Natale: il cocktail col tuo nome 👉 https://marconicreation.vercel.app/regalo?da=metricool (link anche in bio)" (fino al 24/12) + hashtag (#bronco #marconicreation #bar #carovita #reels ...).
    Massimo 20 post/mese su Metricool: controlla state.pubblicazioni del mese, se >=20 fermati e avvisa.
 7. Aggiorna state.json (usate, pubblicazioni con data e id), push. Notifica Robi con la battuta e il link al video.
 
