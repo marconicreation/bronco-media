@@ -29,4 +29,6 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
   Geremia è tirchio e brontolone, MAI usuraio, mai "prestiti", mai banchieri.
 - Non ripetere un'invenzione già usata (guarda i titoli delle puntate esistenti).
 - Pose disponibili in sitcom/pose/ (non generarne di nuove: il limite IA di Canva è finito fino all'11/12).
-- Didascalia: "AL BANCONE DI BRONCO 🍸 Episodio N: Titolo" + 1-2 frasi + riga sulla puntata quotidiana + riga regalo di Natale (fino al 24/12) + hashtag.
+- Didascalia: "AL BANCONE DI BRONCO 🍸 Episodio N: Titolo" + 1-2 frasi + riga sulla puntata quotidiana + riga regalo di Natale (fino al 24/12), SEMPRE con il link contaclic:
+  "🎁 Il cocktail col tuo nome: regalo di Natale a 5 € 👉 https://marconicreation.vercel.app/regalo?da=sitcom (link anche in bio)" + hashtag.
+  Mai il link claude.ai/artifact diretto (vedi link/README.md).

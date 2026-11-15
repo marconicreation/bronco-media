@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/regalo", "destination": "/api/vai?d=regalo" },
+    { "source": "/etsy", "destination": "/api/vai?d=etsy" },
+    { "source": "/numeri", "destination": "/api/numeri" }
+  ]
+}
