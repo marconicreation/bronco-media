@@ -96,6 +96,11 @@ def base(img, t, dur):
     c = Image.new('RGB', (W, H), BG); c.paste(big.crop((o, o, o + IMG_S, o + IMG_S)), (0, IMG_Y))
     d = ImageDraw.Draw(c)
     if testata(): d.text((W // 2, 62), testata(), font=f_tag, fill=GOLD, anchor='mm', stroke_width=3, stroke_fill='black')
+    if ep.get('avvento'):  # calendario dell'Avvento (Robi 18/11): bollino rosso "-K A NATALE" sull'angolo dell'immagine
+        k = 25 - int(ep['avvento']); txt = 'VIGILIA!' if k == 1 else f'-{k} A NATALE'
+        tw = d.textlength(txt, font=f_tag) + 50
+        d.rounded_rectangle((W - 24 - tw, IMG_Y + 20, W - 24, IMG_Y + 96), 38, fill=(194, 30, 36), outline=CREAM, width=5)
+        d.text((W - 24 - tw / 2, IMG_Y + 58), txt, font=f_tag, fill='white', anchor='mm')
     d.text((W // 2, 1790), '@marconicreation', font=f_tag, fill=(230, 200, 160), anchor='mm')
     return c, d
 
