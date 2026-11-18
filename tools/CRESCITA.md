@@ -57,5 +57,5 @@ niente La Spezia e provincia, niente concorsi con premi (in Italia servono autor
    - Lo prepara la routine dei Reel FB il SABATO sera (tools/TASK_FB.md): bash tools/meglio.sh promo/fb/D_2.mp4 promo/fb/<ultimo>_2.mp4 EP EP EP
      con le 3 puntate della settimana con più view (Metricool; se non ci sono dati, le ultime 3). Didascalia: "Il meglio della settimana al bancone 🍸
      Quale battuta vince? 1, 2 o 3? 👇" + riga regalo + hashtag.
-6. NATALE (da approvare con Robi): "Il calendario dell'Avvento di Bronco" dal 1/12 al 24/12, ogni puntata è una casella ("🎄 -N a Natale")
+6. NATALE (Robi sì 18/11, dettagli in sitcom/TASK_SITCOM.md): "Il calendario dell'Avvento di Bronco" dal 1/12 al 24/12, ogni puntata è una casella ("🎄 -N a Natale")
    e la saga di Natale porta al regalo "Il cocktail col tuo nome".
