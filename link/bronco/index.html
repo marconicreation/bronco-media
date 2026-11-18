@@ -212,7 +212,7 @@ var D = [
   {k:["acqua"],n:"acqua",c:"acqua"}
 ];
 
-function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ,;\n+&-]/g," "); }
+function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ,;\n+&-]/g," "); }
 function trova(testo){
   var t = " " + norm(testo).replace(/[,;\n+&]/g," , ").replace(/\s+/g," ") + " ";
   var presi = [], usati = {};
