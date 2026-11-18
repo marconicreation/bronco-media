@@ -37,6 +37,16 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   5) Il verdetto: vince... il Broncospasmo di Bronco, che non era nemmeno in gara. Il premio va diviso fra tutti al bancone. Sciabadù.
   Poi SAGA 2: proponila tu a Robi nel messaggio serale dell'ultima parte (2 idee, lui sceglie).
 
+## CALENDARIO DELL'AVVENTO DI BRONCO (Robi sì 18/11): dal 1/12 al 24/12
+- Ogni puntata di dicembre è una casella: nel json "avvento": N (N = giorno di dicembre) e il titolo comincia con "🎄 -K a Natale" (K = 25 - N).
+  Didascalia, prima riga: "🎄 Casella N del calendario dell'Avvento di Bronco: -K a Natale!" poi la battuta.
+  Invito a tornare in ogni puntata: "Domani alle 13 si apre la casella N+1".
+- Saghe di dicembre (5 parti ciascuna): 2-6/12, 7-11/12, 12-16/12, 17-21/12; poi 22-24/12 il FINALE DI NATALE in 3 parti
+  ("Il Natale al bancone"): tutti al bancone, Geremia non vuole fare regali, Bronco gli inventa "il cocktail col suo nome" e Geremia si commuove
+  (una sola volta, poi torna brontolone). Il 24/12 la puntata chiude: "Hai ancora tempo: il cocktail col tuo nome arriva per email in poche ore".
+- Una saga a dicembre è sui regali sbagliati (Bartolomeo inventa il regalo perfetto per chi ha tutto), una sul cenone (prezzi, parenti, avanzi).
+- Le saghe di dicembre le proponi a Robi 2 alla volta nel messaggio serale dell'ultima parte, come per la saga 2.
+
 ## REGOLE (scelte di Robi, da rispettare sempre)
 - Personaggi: BARTOLOMEO (vecchio cavallo inventore sognatore, fan di Bronco, storpia le parole), GEREMIA (vecchio scimpanzé arrabbiato e tirchio,
   occhialini tondi, urla "ORO!"), BRONCO (bulldog barista, chiude con calma e ironia). Paese inventato: Kavod.
