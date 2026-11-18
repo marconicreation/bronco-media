@@ -7,7 +7,7 @@
    "img": "pose/trio_bancone.jpg",
    "chi": "",
    "testo": "",
-   "durata": 1.8
+   "durata": 1.0
   },
   {
    "img": "pose/bartolomeo_quaderno.jpg",
@@ -143,5 +143,21 @@
   }
  ],
  "voci": false,
- "didascalia": "AL BANCONE DI BRONCO 🍸 Episodio 7: Il navigatore della burocrazia\n\nUn navigatore per trovare lo sportello giusto. Geremia è convinto che non esista.\n\nUna nuova puntata ogni giorno all'ora di pranzo: seguici per non perderti la prossima!\n\n🎁 Il cocktail col tuo nome: regalo di Natale a 5 € 👉 https://marconicreation.vercel.app/regalo?da=sitcom (link anche in bio)\n\n#sitcom #cartoon #bar #barista #cocktail #umorismo #fumetti #reelsitalia #bronco #marconicreation"
+ "didascalia": "AL BANCONE DI BRONCO 🍸 Episodio 7: Il navigatore della burocrazia\n\nUn navigatore per trovare lo sportello giusto. Geremia è convinto che non esista.\n\nUna nuova puntata ogni giorno all'ora di pranzo: seguici per non perderti la prossima!\n\n🎁 Il cocktail col tuo nome: regalo di Natale a 5 € 👉 https://marconicreation.vercel.app/regalo?da=sitcom (link anche in bio)\n\n#sitcom #cartoon #bar #barista #cocktail #umorismo #fumetti #reelsitalia #bronco #marconicreation",
+ "aggancio": {
+  "img": "pose/geremia_bocca_aperta.jpg",
+  "chi": "GEREMIA",
+  "testo": "Lo sportello giusto? È una LEGGENDA!",
+  "durata": 2.5,
+  "inq": [
+   {
+    "box": [
+     0.18,
+     0.03,
+     0.82,
+     0.67
+    ]
+   }
+  ]
+ }
 }

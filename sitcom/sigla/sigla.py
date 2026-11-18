@@ -3,6 +3,7 @@
 Uso:
   python3 sigla.py                         -> crea sigla.mp4 in questa cartella
   python3 sigla.py --anteponi EP.mp4 OUT.mp4  -> mette la sigla davanti a un episodio gia' montato
+  python3 sigla.py --accoda EP.mp4 OUT.mp4    -> mette la sigla DOPO l'episodio (formato "battuta subito")
 
 Struttura (a tempo di musica, 132 bpm, 1 battuta = 1,82 s):
   battuta 1: Bronco "il barista"   | 2: Bartolomeo "l'inventore" | 3: Geremia "il brontolone"
@@ -194,9 +195,11 @@ def build(out=OUT):
                     '-ar', '44100', '-ac', '1', '-shortest', '-movflags', '+faststart', out], check=True)
     print(out, round(n / FPS, 2), 's')
 
-def anteponi(ep, out):
+def anteponi(ep, out, coda=False):
+    """coda=True: la sigla va DOPO la puntata (formato "battuta subito", Robi 18/11)."""
     if not os.path.exists(OUT): build()
-    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', OUT, '-i', ep, '-filter_complex',
+    a, b = (ep, OUT) if coda else (OUT, ep)
+    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', a, '-i', b, '-filter_complex',
                     f'[0:v]fps={FPS},scale={W}:{H},setsar=1[a];[1:v]fps={FPS},scale={W}:{H},setsar=1[b];'
                     '[0:a]aresample=44100,aformat=channel_layouts=mono[x];[1:a]aresample=44100,aformat=channel_layouts=mono[y];'
                     '[a][x][b][y]concat=n=2:v=1:a=1[v][au]', '-map', '[v]', '-map', '[au]',
@@ -206,4 +209,5 @@ def anteponi(ep, out):
 if __name__ == '__main__':
     if len(sys.argv) == 3 and sys.argv[1] == '--musica': MUSICA = sys.argv[2]; build()
     elif len(sys.argv) == 4 and sys.argv[1] == '--anteponi': anteponi(sys.argv[2], sys.argv[3])
+    elif len(sys.argv) == 4 and sys.argv[1] == '--accoda': anteponi(sys.argv[2], sys.argv[3], coda=True)
     else: build()

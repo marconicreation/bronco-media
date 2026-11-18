@@ -7,7 +7,7 @@
    "img": "pose/trio_bancone.jpg",
    "chi": "",
    "testo": "",
-   "durata": 1.8
+   "durata": 1.0
   },
   {
    "img": "pose/bartolomeo_annuncia.jpg",
@@ -143,5 +143,21 @@
   }
  ],
  "voci": false,
- "didascalia": "AL BANCONE DI BRONCO 🍸 Episodio 8: Il termosifone a pedali\n\nIl termosifone a pedali: il riscaldamento te lo fai da solo. Geremia lo vuole gratis.\n\nUna nuova puntata ogni giorno all'ora di pranzo: seguici per non perderti la prossima!\n\n🎁 Il cocktail col tuo nome: regalo di Natale a 5 € 👉 https://marconicreation.vercel.app/regalo?da=sitcom (link anche in bio)\n\n#sitcom #cartoon #bar #barista #cocktail #umorismo #fumetti #reelsitalia #bronco #marconicreation"
+ "didascalia": "AL BANCONE DI BRONCO 🍸 Episodio 8: Il termosifone a pedali\n\nIl termosifone a pedali: il riscaldamento te lo fai da solo. Geremia lo vuole gratis.\n\nUna nuova puntata ogni giorno all'ora di pranzo: seguici per non perderti la prossima!\n\n🎁 Il cocktail col tuo nome: regalo di Natale a 5 € 👉 https://marconicreation.vercel.app/regalo?da=sitcom (link anche in bio)\n\n#sitcom #cartoon #bar #barista #cocktail #umorismo #fumetti #reelsitalia #bronco #marconicreation",
+ "aggancio": {
+  "img": "pose/geremia_strilla.jpg",
+  "chi": "GEREMIA",
+  "testo": "Pedalare? Io il caldo lo voglio GRATIS!",
+  "durata": 2.5,
+  "inq": [
+   {
+    "box": [
+     0.15,
+     0.0,
+     0.9,
+     0.75
+    ]
+   }
+  ]
+ }
 }
