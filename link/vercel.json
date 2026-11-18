@@ -2,6 +2,8 @@
   "rewrites": [
     { "source": "/regalo", "destination": "/api/vai?d=regalo" },
     { "source": "/etsy", "destination": "/api/vai?d=etsy" },
-    { "source": "/numeri", "destination": "/api/numeri" }
+    { "source": "/numeri", "destination": "/api/numeri" },
+    { "source": "/bronco", "destination": "/bronco/index.html" },
+    { "source": "/chiedi", "destination": "/bronco/index.html" }
   ]
 }

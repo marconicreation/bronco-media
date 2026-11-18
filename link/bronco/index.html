@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chiedi a Bronco</title>
+<meta name="description" content="Scrivi cosa hai in frigo: Bronco, il barista più simpatico del web, ti inventa un cocktail.">
+<meta property="og:title" content="Chiedi a Bronco 🍸">
+<meta property="og:description" content="Scrivi cosa hai in frigo e Bronco ti inventa un cocktail. Gratis.">
+<meta property="og:image" content="https://marconicreation.vercel.app/bronco/bronco.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="/bronco/bronco_p.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1c120c; --legno:#3a2416; --carta:#fff7e8; --ink:#2a1a10; --oro:#f2b33d;
+  --rosso:#d8402f; --verde:#3c8d4f; --tenue:#c9b49a; --card:#2a1b12;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:radial-gradient(ellipse at 50% -10%,#5a3820 0%,var(--bg) 60%) fixed,var(--bg);
+  color:var(--carta); font-family:Nunito,system-ui,sans-serif; line-height:1.45;
+  min-height:100vh;
+}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px 40px}
+header{text-align:center;padding-top:8px}
+.ritratto{width:150px;height:150px;border-radius:50%;object-fit:cover;border:5px solid var(--oro);box-shadow:0 8px 30px rgba(0,0,0,.5)}
+h1{font-family:Bangers,Impact,sans-serif;font-weight:400;letter-spacing:1.5px;font-size:52px;line-height:1;margin:10px 0 4px;color:var(--oro);text-shadow:3px 3px 0 #000}
+.sotto{color:var(--tenue);margin:0 0 18px;font-size:17px}
+.fumetto{position:relative;background:var(--carta);color:var(--ink);border-radius:18px;padding:14px 16px;font-weight:700;margin:0 0 16px}
+.fumetto:after{content:"";position:absolute;top:-12px;left:50%;margin-left:-12px;border:12px solid transparent;border-top:0;border-bottom-color:var(--carta)}
+label{display:block;font-weight:800;margin:0 0 6px}
+textarea{width:100%;min-height:96px;border-radius:14px;border:3px solid var(--oro);background:#fffdf7;color:var(--ink);font:inherit;font-size:18px;padding:12px;resize:vertical}
+textarea:focus{outline:3px solid #fff3;outline-offset:2px}
+.esempi{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.esempi button{background:transparent;border:1.5px solid var(--tenue);color:var(--tenue);border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.riga{display:flex;align-items:center;gap:10px;margin:12px 0 14px;color:var(--tenue)}
+.riga input{width:22px;height:22px;accent-color:var(--oro)}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:16px;font-family:Bangers,Impact,sans-serif;font-size:30px;letter-spacing:1.5px;cursor:pointer;background:var(--rosso);color:#fff;box-shadow:0 5px 0 #7d1f14}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #7d1f14}
+.btn.sec{background:var(--oro);color:var(--ink);box-shadow:0 5px 0 #8a6012;font-size:24px}
+#risultato{margin-top:24px}
+.ricetta{background:var(--carta);color:var(--ink);border-radius:20px;padding:20px 18px;box-shadow:0 10px 40px rgba(0,0,0,.45);animation:entra .45s ease-out}
+@keyframes entra{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.nome{font-family:Bangers,Impact,sans-serif;font-weight:400;font-size:40px;line-height:1.05;letter-spacing:1px;margin:0 0 6px;color:var(--rosso)}
+.trovati{font-size:14px;color:#7a5f44;margin:0 0 12px}
+.ricetta h3{font-size:15px;text-transform:uppercase;letter-spacing:1.5px;margin:16px 0 6px;color:#7a5f44}
+.ricetta ul,.ricetta ol{margin:0;padding-left:22px}
+.ricetta li{margin:3px 0}
+.bronco-dice{display:flex;gap:12px;align-items:flex-start;margin-top:16px;background:#f3e6cf;border-radius:14px;padding:12px}
+.bronco-dice img{width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none;border:3px solid var(--oro)}
+.bronco-dice b{display:block;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#7a5f44}
+.azioni{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.azioni .btn{font-size:21px;padding:13px}
+.tazza{margin-top:22px;background:var(--card);border:2px solid #4a3020;border-radius:20px;overflow:hidden}
+.tazza img{display:block;width:100%;height:auto}
+.tazza .dentro{padding:14px 16px 18px}
+.tazza h4{font-family:Bangers,Impact,sans-serif;font-weight:400;font-size:28px;letter-spacing:1px;margin:0;color:var(--oro)}
+.tazza p{margin:4px 0 12px;color:var(--tenue)}
+a.btn{text-align:center;text-decoration:none}
+.regalo{margin-top:14px;text-align:center;color:var(--tenue)}
+.regalo a{color:var(--oro);font-weight:800}
+footer{margin-top:28px;text-align:center;font-size:13px;color:#9a8670}
+footer a{color:#c9b49a}
+.nascosto{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img class="ritratto" src="/bronco/bronco.jpg" alt="Bronco, il bulldog barista, che agita lo shaker" width="150" height="150">
+    <h1>Chiedi a Bronco</h1>
+    <p class="sotto">Dimmi cosa hai in frigo. Il cocktail lo invento io.</p>
+  </header>
+
+  <div class="fumetto" id="saluto">Ciao! Sono Bronco. Scrivimi cosa trovi in casa, anche roba strana: io ci faccio un cocktail. Vai col tango!</div>
+
+  <form id="form" autocomplete="off">
+    <label for="frigo">Cosa hai in frigo (o in dispensa)?</label>
+    <textarea id="frigo" placeholder="Es. gin, limone, miele, rosmarino" maxlength="300"></textarea>
+    <div class="esempi" aria-label="Esempi">
+      <button type="button" data-e="prosecco, pesca, menta">prosecco, pesca, menta</button>
+      <button type="button" data-e="rum, latte, caffè, cannella">rum, latte, caffè, cannella</button>
+      <button type="button" data-e="aranciata, limone, zenzero">aranciata, limone, zenzero</button>
+      <button type="button" data-e="vodka, pomodoro, peperoncino, sottaceti">vodka, pomodoro, sottaceti</button>
+    </div>
+    <div class="riga"><input type="checkbox" id="zero"><label for="zero" style="margin:0;font-weight:400">Solo analcolico</label></div>
+    <button class="btn" type="submit">Bronco, inventa!</button>
+  </form>
+
+  <section id="risultato" aria-live="polite"></section>
+
+  <footer>
+    <p>Bevi responsabilmente. Le ricette con alcol sono per maggiorenni.</p>
+    <p>Bronco, Bartolomeo e Geremia vivono nella sitcom <b>Al bancone di Bronco</b>, ogni giorno su Instagram e Facebook.</p>
+    <p>© MarconiCreation</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var DA = (new URLSearchParams(location.search).get("da") || "diretto").replace(/[^a-z0-9_-]/gi,"").slice(0,20) || "diretto";
+function conta(e){ try{ fetch("/api/conta?e="+e+"&da="+encodeURIComponent(DA),{keepalive:true}); }catch(_){} }
+conta("apri");
+
+// ---------- dizionario ----------
+// c: categoria. a: alcolico. g: colore per il nome. n: come lo chiama Bronco.
+var D = [
+  // basi alcoliche
+  {k:["gin"],n:"gin",c:"base",a:1},
+  {k:["vodka"],n:"vodka",c:"base",a:1},
+  {k:["rum"],n:"rum",c:"base",a:1,g:"Dorato"},
+  {k:["tequila","mezcal"],n:"tequila",c:"base",a:1},
+  {k:["whisky","whiskey","bourbon","scotch"],n:"whisky",c:"base",a:1,g:"Ambrato"},
+  {k:["brandy","cognac","vecchia romagna","stravecchio"],n:"brandy",c:"base",a:1,g:"Ambrato"},
+  {k:["grappa"],n:"grappa",c:"base",a:1},
+  // liquori
+  {k:["vermouth","martini rosso","martini bianco"],n:"vermouth",c:"liq",a:1},
+  {k:["campari","bitter"],n:"bitter",c:"liq",a:1,g:"Rosso"},
+  {k:["aperol"],n:"Aperol",c:"liq",a:1,g:"Arancio"},
+  {k:["amaro","montenegro","averna","jagermeister","jager","fernet"],n:"amaro",c:"liq",a:1,g:"Nero"},
+  {k:["limoncello"],n:"limoncello",c:"liq",a:1,g:"Giallo"},
+  {k:["amaretto","disaronno"],n:"amaretto",c:"liq",a:1,g:"Ambrato"},
+  {k:["baileys","crema di whisky"],n:"crema di whisky",c:"liq",a:1},
+  {k:["triple sec","cointreau","grand marnier"],n:"triple sec",c:"liq",a:1},
+  {k:["sambuca"],n:"sambuca",c:"liq",a:1},
+  {k:["nocino","mirto","liquore"],n:"liquore di casa",c:"liq",a:1},
+  // bollicine
+  {k:["prosecco","spumante","champagne","franciacorta"],n:"prosecco",c:"bolle",a:1,g:"Dorato"},
+  {k:["birra"],n:"birra",c:"bolle",a:1,g:"Dorato"},
+  {k:["vino bianco"],n:"vino bianco",c:"vino",a:1},
+  {k:["vino rosso","vino"],n:"vino rosso",c:"vino",a:1,g:"Rosso"},
+  {k:["acqua frizzante","acqua gassata","soda","seltz","acqua tonica","tonica","schweppes"],n:"acqua tonica o frizzante",c:"bolle"},
+  {k:["ginger beer","ginger ale"],n:"ginger beer",c:"bolle"},
+  {k:["coca cola","coca-cola","cola","pepsi"],n:"cola",c:"bolle",g:"Nero"},
+  {k:["aranciata","fanta"],n:"aranciata",c:"bolle",g:"Arancio"},
+  {k:["gassosa","sprite","limonata","lemonsoda","lemon soda","7up"],n:"gassosa",c:"bolle"},
+  {k:["chinotto"],n:"chinotto",c:"bolle",g:"Nero"},
+  // agrumi
+  {k:["limone","limoni"],n:"limone",c:"agrume",g:"Giallo"},
+  {k:["lime"],n:"lime",c:"agrume",g:"Verde"},
+  {k:["arancia","arance","arancio"],n:"arancia",c:"agrume",g:"Arancio"},
+  {k:["pompelmo"],n:"pompelmo",c:"agrume",g:"Rosa"},
+  {k:["mandarino","mandarini","clementine","clementina"],n:"mandarino",c:"agrume",g:"Arancio"},
+  // frutta e succhi
+  {k:["pesca","pesche"],n:"pesca",c:"frutta",g:"Rosa"},
+  {k:["fragola","fragole"],n:"fragole",c:"frutta",g:"Rosso"},
+  {k:["lampone","lamponi"],n:"lamponi",c:"frutta",g:"Rosso"},
+  {k:["mirtillo","mirtilli"],n:"mirtilli",c:"frutta",g:"Viola"},
+  {k:["frutti di bosco","more"],n:"frutti di bosco",c:"frutta",g:"Viola"},
+  {k:["ananas"],n:"ananas",c:"frutta",g:"Tropicale"},
+  {k:["mango"],n:"mango",c:"frutta",g:"Tropicale"},
+  {k:["banana","banane"],n:"banana",c:"frutta",g:"Giallo"},
+  {k:["mela","mele"],n:"mela",c:"frutta",g:"Verde"},
+  {k:["pera","pere"],n:"pera",c:"frutta"},
+  {k:["melograno"],n:"melograno",c:"frutta",g:"Rubino"},
+  {k:["anguria","cocomero"],n:"anguria",c:"frutta",g:"Rosso"},
+  {k:["melone"],n:"melone",c:"frutta",g:"Arancio"},
+  {k:["kiwi"],n:"kiwi",c:"frutta",g:"Verde"},
+  {k:["albicocca","albicocche"],n:"albicocca",c:"frutta",g:"Arancio"},
+  {k:["ciliegia","ciliegie","amarena","amarene"],n:"ciliegie",c:"frutta",g:"Rubino"},
+  {k:["uva"],n:"uva",c:"frutta"},
+  {k:["cocco"],n:"cocco",c:"frutta",g:"Tropicale"},
+  {k:["passion fruit","maracuja","frutto della passione"],n:"frutto della passione",c:"frutta",g:"Tropicale"},
+  {k:["succo","spremuta","ace","estathe","the freddo","te freddo"],n:"succo di frutta",c:"frutta"},
+  {k:["pomodoro","pomodori","passata"],n:"pomodoro",c:"pomodoro",g:"Rosso"},
+  {k:["cetriolo","cetrioli"],n:"cetriolo",c:"frutta",g:"Verde"},
+  // dolci
+  {k:["zucchero","zucchero di canna"],n:"zucchero",c:"dolce"},
+  {k:["miele"],n:"miele",c:"dolce",g:"Dorato"},
+  {k:["sciroppo","granatina","orzata"],n:"sciroppo",c:"dolce"},
+  {k:["marmellata","confettura"],n:"marmellata",c:"dolce"},
+  {k:["nutella","crema spalmabile"],n:"Nutella",c:"dolce",g:"Nero"},
+  {k:["cioccolato","cacao"],n:"cioccolato",c:"caffe",g:"Nero"},
+  {k:["gelato"],n:"gelato",c:"latte"},
+  // erbe e spezie
+  {k:["menta"],n:"menta",c:"erba",g:"Verde"},
+  {k:["basilico"],n:"basilico",c:"erba",g:"Verde"},
+  {k:["rosmarino"],n:"rosmarino",c:"erba"},
+  {k:["salvia"],n:"salvia",c:"erba"},
+  {k:["timo"],n:"timo",c:"erba"},
+  {k:["cannella"],n:"cannella",c:"spezia"},
+  {k:["zenzero"],n:"zenzero",c:"spezia"},
+  {k:["peperoncino","tabasco"],n:"peperoncino",c:"spezia",g:"Infuocato"},
+  {k:["pepe"],n:"pepe",c:"spezia"},
+  {k:["vaniglia","vanillina"],n:"vaniglia",c:"spezia"},
+  {k:["chiodi di garofano","noce moscata","anice"],n:"spezie",c:"spezia"},
+  // latte e caffè
+  {k:["latte"],n:"latte",c:"latte",g:"Bianco"},
+  {k:["panna"],n:"panna",c:"latte",g:"Bianco"},
+  {k:["yogurt"],n:"yogurt",c:"latte",g:"Bianco"},
+  {k:["caffe","espresso","moka"],n:"caffè",c:"caffe",g:"Nero"},
+  {k:["te","the","tisana","camomilla"],n:"tè",c:"te"},
+  {k:["ghiaccio"],n:"ghiaccio",c:"ghiaccio"},
+  {k:["olive","oliva"],n:"olive",c:"guarn"},
+  {k:["sale"],n:"sale",c:"guarn"},
+  {k:["uovo","uova","albume"],n:"albume",c:"uovo"},
+  // roba strana
+  {k:["maionese","ketchup","senape"],n:"salse",c:"strano"},
+  {k:["tonno","sardine","acciughe","alici"],n:"pesce in scatola",c:"strano"},
+  {k:["formaggio","parmigiano","mozzarella","gorgonzola","stracchino","sottilette"],n:"formaggio",c:"strano"},
+  {k:["salame","prosciutto","mortadella","wurstel","pancetta","speck"],n:"salumi",c:"strano"},
+  {k:["sottaceti","sottaceto","giardiniera","capperi","cetriolini"],n:"sottaceti",c:"strano"},
+  {k:["cipolla","aglio"],n:"cipolla",c:"strano"},
+  {k:["pizza","pasta","riso","pane","avanzi","lasagna","minestrone"],n:"avanzi",c:"strano"},
+  {k:["burro","margarina"],n:"burro",c:"strano"},
+  {k:["broccoli","spinaci","zucchine","melanzane","carote","insalata","verdura","peperoni"],n:"verdure",c:"strano"},
+  {k:["acqua"],n:"acqua",c:"acqua"}
+];
+
+function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ,;\n+&-]/g," "); }
+function trova(testo){
+  var t = " " + norm(testo).replace(/[,;\n+&]/g," , ").replace(/\s+/g," ") + " ";
+  var presi = [], usati = {};
+  D.forEach(function(d){
+    for (var i=0;i<d.k.length;i++){
+      var kk = " " + d.k[i] + " ";
+      if (t.indexOf(kk) >= 0){
+        if (!usati[d.n]) { presi.push(d); usati[d.n]=1; }
+        t = t.split(kk).join(" , ");
+        break;
+      }
+    }
+  });
+  var stop = /^(e|ed|un|una|uno|il|lo|la|le|gli|i|di|del|della|dei|delle|con|po|poco|mezzo|mezza|qualche|bottiglia|lattina|vasetto|barattolo|frigo|ho|c|e'|anche|solo|niente|cosa|in|da|al|alla|nel|nella|vecchio|vecchia|avanzato|avanzata|fresco|fresca|freddo|fredda)$/;
+  var ignoti = [];
+  t.split(",").forEach(function(pz){
+    var w = pz.trim().split(" ").filter(function(x){ return x.length>2 && !stop.test(x); }).join(" ");
+    if (w && w.length>2 && ignoti.indexOf(w)<0 && ignoti.length<3) ignoti.push(w);
+  });
+  return {presi:presi, ignoti:ignoti};
+}
+
+// ---------- casualità ripetibile ----------
+function hash(s){ var h=2166136261; for (var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+function rng(seed){ var a=seed||1; var f=function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; f(); f(); f(); return f; }
+function pick(r,arr){ return arr[Math.floor(r()*arr.length)]; }
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+function art(n){ var m={miele:"il miele",zucchero:"lo zucchero",sciroppo:"lo sciroppo",marmellata:"la marmellata",Nutella:"la Nutella"}; return m[n]||n; }
+function di(n){ return /^[aeiou]/i.test(n) ? "d'"+n : "di "+n; }
+
+// ---------- personaggi ----------
+var PERS = {
+  BRONCO:{nome:"Bronco",img:"/bronco/bronco_p.jpg",tazza:"tazza_bronco",foto:"/bronco/tazza_bronco_tango.jpg",frase:"Vai col tango!"},
+  BARTOLOMEO:{nome:"Bartolomeo",img:"/bronco/bartolomeo.jpg",tazza:"tazza_bartolomeo",foto:"/bronco/tazza_bartolomeo_sciabadu.jpg",frase:"Sciabadù!"},
+  GEREMIA:{nome:"Geremia",img:"/bronco/geremia.jpg",tazza:"tazza_geremia",foto:"/bronco/tazza_geremia_caffe.jpg",frase:"Non parlarmi prima del caffè!"}
+};
+
+function inventa(testo, zero, giro){
+  var f = trova(testo);
+  var r = rng(hash(norm(testo)+"|"+(zero?1:0)+"|"+giro));
+  var cat = {}; f.presi.forEach(function(d){ (cat[d.c]=cat[d.c]||[]).push(d); });
+  function ha(c){ return cat[c] && cat[c].length; }
+  var avvisi = [];
+  if (zero) {
+    var tolti = f.presi.filter(function(d){ return d.a; });
+    if (tolti.length) avvisi.push("Hai chiesto analcolico, quindi "+tolti.map(function(d){return d.n;}).join(", ")+" li lascio sullo scaffale.");
+    ["base","liq","vino"].forEach(function(c){ delete cat[c]; });
+    if (cat.bolle) cat.bolle = cat.bolle.filter(function(d){ return !d.a; });
+  }
+  var ing = [], passi = [], guarn = [];
+  var base = ha("base") ? cat.base.slice(0,2) : [];
+  var liq = ha("liq") ? cat.liq.slice(0,1) : [];
+  var vino = ha("vino") ? cat.vino[0] : null;
+  var bolle = ha("bolle") ? cat.bolle[0] : null;
+  var agr = ha("agrume") ? cat.agrume.slice(0,2) : [];
+  var frutta = ha("frutta") ? cat.frutta.slice(0,2) : [];
+  var pom = ha("pomodoro");
+  var dolce = ha("dolce") ? cat.dolce[0] : null;
+  var erba = ha("erba") ? cat.erba[0] : null;
+  var spezia = ha("spezia") ? cat.spezia.slice(0,2) : [];
+  var latte = ha("latte") ? cat.latte[0] : null;
+  var caffe = ha("caffe") ? cat.caffe[0] : null;
+  var te = ha("te") ? cat.te[0] : null;
+  var uovo = ha("uovo");
+  var strani = cat.strano || [];
+  var alcol = base.length || liq.length || vino || (bolle && bolle.a);
+
+  var utili = base.length+liq.length+(vino?1:0)+(bolle?1:0)+agr.length+frutta.length+(pom?1:0)+(dolce?1:0)+(erba?1:0)+spezia.length+(latte?1:0)+(caffe?1:0)+(te?1:0);
+  var vuoto = utili === 0;
+  if (vuoto) {
+    // la limonata del bancone
+    agr = [{n:"limone",g:"Giallo"}]; bolle = {n:"acqua frizzante"}; dolce = {n:"zucchero"}; erba = {n:"menta",g:"Verde"};
+    avvisi.push("Con quello che mi hai scritto non ci tiro fuori un cocktail, ma un limone e un po' di acqua frizzante li hanno tutti. Ecco la limonata del bancone.");
+  }
+
+  // dosi
+  if (base.length===1) ing.push((liq.length?"45":"50")+" ml di "+base[0].n);
+  if (base.length===2) { ing.push("30 ml di "+base[0].n); ing.push("20 ml di "+base[1].n); }
+  if (liq.length) ing.push((base.length?"20":"40")+" ml di "+liq[0].n);
+  if (vino) ing.push((base.length||liq.length?"60":"100")+" ml di "+vino.n);
+  if (pom) ing.push("100 ml di succo di pomodoro");
+  if (caffe) ing.push(caffe.n==="cioccolato" ? "1 cucchiaino di cacao (o 2 quadratini di cioccolato sciolti)" : "1 caffè espresso o di moka, freddo");
+  if (te) ing.push("100 ml di "+te.n+" freddo");
+  if (latte) ing.push(latte.n==="gelato" ? "1 pallina di gelato" : (latte.n==="yogurt" ? "2 cucchiai di yogurt" : (latte.n==="panna" ? "30 ml di panna" : "60 ml di latte freddo")));
+  frutta.forEach(function(d,i){
+    var Q = {"succo di frutta":"80 ml di succo di frutta","cetriolo":"3 fettine di cetriolo","banana":"mezza banana a rondelle","pesca":"mezza pesca a pezzetti (o 60 ml di succo)","mela":"mezza mela a pezzetti (o 60 ml di succo)","pera":"mezza pera a pezzetti","ananas":"2 fette di ananas (o 60 ml di succo)","mango":"qualche cubetto di mango","kiwi":"un kiwi a pezzetti","melone":"qualche cubetto di melone","anguria":"qualche cubetto di anguria","albicocca":"2 albicocche a pezzetti","cocco":"2 cucchiai di latte di cocco o cocco grattugiato","melograno":"2 cucchiai di chicchi di melograno","frutto della passione":"la polpa di un frutto della passione","uva":"qualche acino d'uva"};
+    var q = Q[d.n] ? (i===0 ? Q[d.n] : "un po' di "+d.n) : (i===0 ? "una manciata di "+d.n+" (o 60 ml di succo)" : "qualche pezzetto di "+d.n);
+    ing.push(q);
+  });
+  agr.forEach(function(d,i){ ing.push((i===0?"20 ml di succo di ":"una spruzzata di ")+d.n); });
+  if (dolce) ing.push(dolce.n==="Nutella" ? "1 cucchiaino di Nutella" : (dolce.n==="marmellata" ? "1 cucchiaino di marmellata" : "1 cucchiaino di "+dolce.n));
+  if (erba) ing.push("4 o 5 foglie di "+erba.n);
+  spezia.forEach(function(d){ ing.push(d.n==="zenzero" ? "una fettina di zenzero" : (d.n==="peperoncino" ? "una punta di peperoncino (poco, fidati)" : "un pizzico di "+d.n)); });
+  if (uovo) ing.push("mezzo albume, per la schiuma");
+  if (bolle && bolle.n==="birra") ing.push("una birra ben fredda");
+  else if (bolle) ing.push((bolle.a && !base.length && !liq.length && !vino ? "120 ml di " : "colmare con ")+bolle.n);
+  var birra = bolle && bolle.n==="birra";
+  if (birra && utili===1) { ing.push("una fettina di limone, se ce l'hai"); agr = [{n:"limone"}]; }
+  if (!birra) ing.push("ghiaccio");
+
+  // metodo
+  var shaker = !bolle && (agr.length || latte || caffe || uovo || frutta.length || dolce);
+  if (erba) passi.push("Nel fondo del bicchiere (o dello shaker) pesta piano le foglie di "+erba.n+(dolce?" con "+art(dolce.n):"")+": devono profumare, non diventare insalata.");
+  if (frutta.length && frutta[0].n!=="succo di frutta") passi.push("Schiaccia la frutta con un cucchiaio, così rilascia il succo.");
+  if (shaker) {
+    passi.push("Metti tutto nello shaker con tanto ghiaccio. Niente shaker? Va benissimo un barattolo col coperchio.");
+    passi.push(uovo ? "Shakera prima senza ghiaccio per 10 secondi, poi con il ghiaccio per altri 15." : "Shakera forte per 15 secondi, finché il barattolo è gelato.");
+    passi.push("Filtra nel bicchiere"+(latte||caffe?" basso":"")+" con ghiaccio nuovo.");
+  } else {
+    passi.push(birra ? "Prendi un bicchiere alto messo 10 minuti in freezer. Niente ghiaccio con la birra, per carità." : "Riempi di ghiaccio un bicchiere alto.");
+    if (ing.length>2) passi.push(bolle ? "Versa gli altri ingredienti e mescola con un cucchiaio lungo." : "Versa tutto e mescola con un cucchiaio lungo.");
+    if (bolle && bolle.n==="birra") passi.push("Versa la birra tenendo il bicchiere inclinato"+(ing.length>2?" sopra gli altri ingredienti":"")+", poi raddrizzalo alla fine per fare due dita di schiuma.");
+    else if (bolle) passi.push("Colma con "+bolle.n+" e mescola una volta sola, piano, sennò scappano le bollicine.");
+  }
+  // guarnizione
+  if (agr.length) guarn.push("una scorza di "+agr[0].n);
+  if (erba) guarn.push("un rametto di "+erba.n);
+  if (ha("guarn")) guarn.push(cat.guarn.map(function(d){return d.n;}).join(" e ")+(pom?"":" sul bordo"));
+  if (spezia.some(function(d){return d.n==="cannella";})) guarn.push("una spolverata di cannella");
+  if (caffe && !guarn.length) guarn.push("tre chicchi di caffè");
+  if (!guarn.length) guarn.push(pick(r,["una fettina di frutta sul bordo","una cannuccia e tanta dignità","un ombrellino, se ce l'hai"]));
+
+  // personaggio ospite
+  var ospite = "BRONCO";
+  if (caffe || strani.length || (spezia.some(function(d){return d.n==="peperoncino";}))) ospite = "GEREMIA";
+  else if (f.presi.length>=5 || f.ignoti.length || latte && bolle) ospite = "BARTOLOMEO";
+  if (r()<0.25) ospite = pick(r,["BRONCO","BARTOLOMEO","GEREMIA"]);
+
+  // nome
+  var colori = f.presi.map(function(d){return d.g;}).filter(Boolean);
+  if (vuoto) colori = ["Giallo"];
+  var colore = colori.length ? pick(r,colori) : pick(r,["Dorato","Ambrato"]);
+  var star = (base[0]||liq[0]||bolle||frutta[0]||agr[0]||latte||caffe||te||{n:"bancone"}).n;
+  var nomi = vuoto ? ["La Limonata del Bancone"] : [
+    "Vai col Tango "+colore,
+    "Il Papillon "+colore,
+    "Sciabadù "+di(cap(star)),
+    "Il Brontolone "+colore,
+    "Bancone "+colore,
+    "Il Tango "+di(cap(star)),
+    "La Furia di Geremia",
+    "L'Invenzione di Bartolomeo",
+    "Il Segreto di Bronco",
+    "Ultimo Giro "+colore,
+    "La Sciabadù Special",
+    "Il Colpo di Coda "+colore
+  ];
+  if (!alcol && !vuoto) nomi = nomi.map(function(x){ return x; }).concat(["Il Sobrio "+colore,"Analcolico da Campione"]);
+  var nome = pick(r,nomi);
+  if (/Geremia/.test(nome)) ospite = "GEREMIA";
+  if (/Bartolomeo|Sciabad/.test(nome)) ospite = "BARTOLOMEO";
+
+  // battute
+  var intro = pick(r,[
+    "Ah, roba seria. Lasciami lavorare.",
+    "Con questi ingredienti? Ci vado a nozze.",
+    "Lascia fare a me, ci penso io.",
+    "Mi hai dato un bel materiale. Vediamo che esce.",
+    "Ogni frigo ha un cocktail nascosto. Il tuo è questo."
+  ]);
+  if (vuoto) intro = "Mmh. Fammi guardare meglio in quel frigo...";
+  if (strani.length) { var sn = cap(strani[0].n); avvisi.push(pick(r,[
+    sn+" nel cocktail? No. Ho una reputazione da difendere. Lo lascio fuori.",
+    sn+" nel cocktail? Neanche Bartolomeo ci aveva pensato. E c'è un motivo. Lo lascio fuori.",
+    sn+"? Stasera fa da spuntino, non da ingrediente. Te lo servo a parte."
+  ])); }
+  if (f.ignoti.length && !vuoto) avvisi.push("\""+f.ignoti[0]+"\"? Questo non lo conosco, ma se vuoi mettilo come guarnizione. A tuo rischio.");
+  if (base.length>2 || (cat.base && cat.base.length>2)) avvisi.push("Tutti quei superalcolici insieme? Ne ho usati due. Domani mi ringrazierai.");
+
+  var battute = {
+    BRONCO:[
+      "Assaggialo e dimmi se non è da applauso. Io intanto mi sistemo il papillon.",
+      "Questo lo servo solo agli amici. E tu ormai sei dei nostri.",
+      "Semplice, onesto, fatto bene. Come piace a me. Vai col tango!"
+    ],
+    BARTOLOMEO:[
+      "Io ci avrei messo anche un'elica, ma Bronco dice di no. Sciabadù!",
+      "Ho preso appunti sul quadernino: questa ricetta la brevetto. Sciabadù!",
+      "Geniale. Quasi geniale come la mia macchina per sbucciare le olive. Sciabadù!"
+    ],
+    GEREMIA:[
+      "Bah. Ai miei tempi si beveva acqua del pozzo e si stava zitti. Comunque dammene due.",
+      "Non è male. Ma non dirlo a Bronco, che poi si monta la testa.",
+      "Io lo bevo solo per protesta. Contro cosa? Non lo so ancora."
+    ]
+  };
+  if (!alcol) battute.GEREMIA.push("Analcolico? Finalmente qualcuno con la testa sulle spalle.");
+
+  return {
+    nome:nome, intro:intro, avvisi:avvisi, ing:ing, passi:passi, guarn:guarn,
+    trovati:f.presi.map(function(d){return d.n;}),
+    ospite:ospite, battuta:pick(r,battute[ospite]), alcol:!!alcol
+  };
+}
+
+// ---------- interfaccia ----------
+var form = document.getElementById("form");
+var ta = document.getElementById("frigo");
+var zero = document.getElementById("zero");
+var out = document.getElementById("risultato");
+var giro = 0, ultimo = "";
+
+document.querySelectorAll(".esempi button").forEach(function(b){
+  b.addEventListener("click", function(){ ta.value = b.getAttribute("data-e"); ta.focus(); });
+});
+
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];}); }
+
+function mostra(){
+  var testo = ta.value.trim();
+  if (!testo) { ta.focus(); ta.placeholder = "Dai, scrivimi almeno una cosa! Es. limone, zucchero"; return; }
+  if (testo !== ultimo) { giro = 0; ultimo = testo; }
+  var c = inventa(testo, zero.checked, giro);
+  var p = PERS[c.ospite];
+  var html = '<article class="ricetta">'
+    + '<h2 class="nome">'+esc(c.nome)+'</h2>'
+    + (c.trovati.length ? '<p class="trovati">Ho trovato: '+esc(c.trovati.join(", "))+'</p>' : '')
+    + '<p><b>Bronco:</b> '+esc(c.intro)+'</p>'
+    + c.avvisi.map(function(a){ return '<p><b>Bronco:</b> '+esc(a)+'</p>'; }).join("")
+    + '<h3>Ti serve</h3><ul>'+c.ing.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'
+    + '<h3>Come si fa</h3><ol>'+c.passi.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol>'
+    + '<h3>Guarnizione</h3><p style="margin:0">'+esc(cap(c.guarn.join(", ")))+'.</p>'
+    + '<div class="bronco-dice"><img src="'+p.img+'" alt="'+p.nome+'"><div><b>'+p.nome+' dice</b>'+esc(c.battuta)+'</div></div>'
+    + '<div class="azioni"><button class="btn sec" type="button" id="altro">Un altro!</button><button class="btn" type="button" id="condividi">Condividi</button></div>'
+    + '</article>'
+    + '<div class="tazza"><img src="'+p.foto+'" alt="La tazza di '+p.nome+'" loading="lazy" width="700" height="700">'
+    + '<div class="dentro"><h4>Ti sta simpatico '+p.nome+'?</h4><p>La sua tazza "'+esc(p.frase)+'" è su Etsy: 19,90 € con spedizione gratis. Ordina entro il 6 dicembre per averla a Natale.</p>'
+    + '<a class="btn sec" href="/api/vai?d='+p.tazza+'&da=app" target="_blank" rel="noopener">Vedi la tazza</a></div></div>'
+    + '<p class="regalo">Cerchi un regalo da 5 €? Bronco inventa <a href="/api/vai?d=regalo&da=app" target="_blank" rel="noopener">un cocktail col nome di chi vuoi tu</a>.</p>';
+  out.innerHTML = html;
+  conta("cocktail");
+  document.getElementById("altro").addEventListener("click", function(){ giro++; mostra(); });
+  document.getElementById("condividi").addEventListener("click", function(){ condividi(c.nome); });
+  out.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function condividi(nome){
+  conta("condividi");
+  var url = "https://marconicreation.vercel.app/bronco?da=condivisione";
+  var txt = "Bronco mi ha inventato un cocktail con quello che avevo in frigo: «"+nome+"» 🍸 Prova anche tu:";
+  if (navigator.share) { navigator.share({title:"Chiedi a Bronco", text:txt, url:url}).catch(function(){}); }
+  else { window.open("https://wa.me/?text="+encodeURIComponent(txt+" "+url), "_blank", "noopener"); }
+}
+
+form.addEventListener("submit", function(e){ e.preventDefault(); mostra(); });
+ta.addEventListener("keydown", function(e){ if (e.key==="Enter" && !e.shiftKey) { e.preventDefault(); mostra(); } });
+})();
+</script>
+</body>
+</html>
