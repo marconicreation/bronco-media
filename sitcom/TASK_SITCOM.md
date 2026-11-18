@@ -24,7 +24,10 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   Esempio: {"img": "pose/geremia_strilla.jpg", "chi": "GEREMIA", "testo": "ZERO GUSTO! Come la mia pensione!", "durata": 2.5, "inq": [{"box": [0.15,0.0,0.9,0.75]}]}
   Con "aggancio": niente cartello iniziale, titolo piccolo in alto su ogni scena, la SIGLA VA IN CODA (monta.sh lo fa da solo).
   La prima scena (trio_bancone) dura 1,0 s.
-- Fino al 24/12 la puntata chiude sul regalo (card vera + link in bio + indirizzo): lo fa sitcom.py da solo.
+- Fino al 24/12 la puntata chiude sul regalo nei giorni PARI (card vera + link in bio + indirizzo): lo fa sitcom.py da solo.
+- TAZZE (Robi sì 18/11): nei giorni DISPARI dal 19/11 al 23/12 la chiusura è la tazza del protagonista su Etsy (19,90 €, spedizione gratis):
+  sitcom.py lo fa da solo (protagonista = "chi" dell'aggancio, o "tazza": "BARTOLOMEO"/"GEREMIA"/"BRONCO" nel json).
+  Nei giorni dispari la riga regalo della didascalia diventa: "☕ La tazza di NOME è su Etsy: 19,90 € con spedizione gratis 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)".
 - MINI-SAGA: dal 22/11 le puntate sono storie di 5 parti. Nel json: "saga": {"titolo": "...", "parte": N, "di": 5}.
   sitcom.py mette "PARTE N/5" in alto e il cartello "CONTINUA... domani alle 13" (o "FINE" all'ultima parte).
   Ogni parte deve finire con una domanda aperta (cosa succederà?), e avere comunque una battuta che fa ridere da sola.
