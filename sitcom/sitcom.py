@@ -83,11 +83,19 @@ def bubble(c, d, chi, text, shown, pop):
         d.rounded_rectangle((x0 + 30, y0 - 34, x0 + 30 + tw, y0 + 30), 16, fill=(194, 50, 31), outline=INK, width=5)
         d.text((x0 + 30 + tw / 2, y0 - 2), chi, font=f_tag, fill='white', anchor='mm')
 
+def testata():
+    # formato "battuta subito" (Robi 18/11): niente cartello iniziale, il titolo resta piccolo in alto su ogni scena
+    if not ep.get('aggancio'): return None
+    t = f"AL BANCONE DI BRONCO · EP. {ep['numero']}"
+    if ep.get('saga'): t += f" · PARTE {ep['saga']['parte']}/{ep['saga']['di']}"
+    return t
+
 def base(img, t, dur):
     z = 1.0 + 0.06 * ease(min(1, t / dur)); s = int(IMG_S * z)
     big = img.resize((s, s), Image.LANCZOS); o = (s - IMG_S) // 2
     c = Image.new('RGB', (W, H), BG); c.paste(big.crop((o, o, o + IMG_S, o + IMG_S)), (0, IMG_Y))
     d = ImageDraw.Draw(c)
+    if testata(): d.text((W // 2, 62), testata(), font=f_tag, fill=GOLD, anchor='mm', stroke_width=3, stroke_fill='black')
     d.text((W // 2, 1790), '@marconicreation', font=f_tag, fill=(230, 200, 160), anchor='mm')
     return c, d
 
@@ -124,13 +132,40 @@ def scene(s):
         yield c
 
 def all_frames():
-    yield from card(['AL BANCONE', 'DI BRONCO'], 2.2, f"Episodio {ep['numero']}\n{ep['titolo']}")
-    t = 2.2
-    for s in ep['scene']:
+    # formato "battuta subito" (Robi 18/11): si apre sulla battuta piu' forte (2,5 s), poi la puntata; sigla in coda (monta.sh)
+    if ep.get('aggancio'):
+        scene_list = [dict({'durata': 2.5}, **ep['aggancio'])] + ep['scene']; t = 0
+    else:
+        yield from card(['AL BANCONE', 'DI BRONCO'], 2.2, f"Episodio {ep['numero']}\n{ep['titolo']}")
+        scene_list = ep['scene']; t = 2.2
+    for s in scene_list:
         if s.get('_voce'): VOCI.append((t + 0.3, s['_voce']))
         yield from scene(s); t += int(s.get('durata', 3.5) * FPS) / FPS
     # (la chiusura fissa con "Vai col tango!" di Bronco in primo piano e' aggiunta alle scene all'avvio)
-    yield from card(ep.get('cta_titolo', ['IL COCKTAIL', 'COL TUO NOME']), 3.0, ep.get('cta', 'Regalo di Natale a 5 €\nlink in bio'))
+    if ep.get('saga'):  # mini-saga (Robi 18/11): cartello "continua" con la parte successiva
+        sg = ep['saga']
+        if sg['parte'] < sg['di']:
+            yield from card(['CONTINUA...'], 2.4, f"{sg['titolo']}\nParte {sg['parte'] + 1} di {sg['di']}\ndomani alle 13")
+        else:
+            yield from card(['FINE'], 2.0, f"{sg['titolo']}\nla saga completa")
+    if ep.get('data', '') <= '2026-12-24': yield from regalo(4.0)  # Robi 18/11: fino a Natale ogni Reel chiude sul regalo
+    else: yield from card(['TI È PIACIUTA?'], 2.5, 'Segui @marconicreation\nuna puntata ogni giorno')
+
+REGALO_IMG = os.path.join(HERE, '..', 'tools', 'regalo_esempio.jpg')
+def regalo(dur):
+    """Chiusura regalo (Robi 18/11): Bronco mostra la card vera del "cocktail col tuo nome" + come ordinarlo."""
+    cardimg = Image.open(REGALO_IMG).convert('RGB').resize((800, 1000), Image.LANCZOS)
+    for k in range(int(dur * FPS)):
+        t = k / FPS; c = Image.new('RGB', (W, H), BG); d = ImageDraw.Draw(c)
+        d.text((W // 2, 120), 'REGALO DI NATALE · 5 €', font=f_big, fill=GOLD, anchor='mm', stroke_width=8, stroke_fill='black')
+        sc = 0.9 + 0.1 * ease(min(1, t / 0.35)); cw, chh = int(800 * sc), int(1000 * sc)
+        im = cardimg.resize((cw, chh)); x, y = (W - cw) // 2, 230 + (1000 - chh) // 2
+        d.rectangle((x - 8, y - 8, x + cw + 8, y + chh + 8), fill=GOLD); c.paste(im, (x, y))
+        d.text((W // 2, 1330), 'UN COCKTAIL COL NOME DI CHI VUOI TU', font=f_tag, fill=CREAM, anchor='mm')
+        if t > 0.5: d.text((W // 2, 1450), 'ORDINA DAL LINK IN BIO', font=f_mid, fill=GOLD, anchor='mm', stroke_width=5, stroke_fill='black')
+        if t > 0.9: d.text((W // 2, 1560), 'marconicreation.vercel.app/regalo', font=f_tag, fill=CREAM, anchor='mm')
+        d.text((W // 2, 1790), '@marconicreation', font=f_tag, fill=(230, 200, 160), anchor='mm')
+        yield c
 
 # --- musica: la stessa della sigla (funk anni '70, approvata da Robi il 13/11), da sigla/sigla.py ---
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sigla'))
