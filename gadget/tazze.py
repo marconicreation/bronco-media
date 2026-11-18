@@ -69,7 +69,7 @@ def anteprima(lato_img):
     return bg
 for t in TAZZE:
     l = lato(t); stampa = Image.new("RGB", (W, H), (255,255,255))
-    stampa.paste(l, (0,0), l); stampa.paste(l, (W//2,0), l)
+    stampa.paste(l, ((W - l.width)//2, 0), l)  # un solo disegno al centro: e' la vista frontale di Printify
     stampa.save(OUT + t["nome"] + "_stampa.png", dpi=(300,300))
     anteprima(l).save(OUT + t["nome"] + "_anteprima.jpg", quality=90)
     print("ok", t["nome"])
