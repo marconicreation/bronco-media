@@ -153,10 +153,36 @@ def all_frames():
             yield from card(['CONTINUA...'], 2.4, f"{sg['titolo']}\nParte {sg['parte'] + 1} di {sg['di']}\ndomani alle 13")
         else:
             yield from card(['FINE'], 2.0, f"{sg['titolo']}\nla saga completa")
-    if ep.get('data', '') <= '2026-12-24': yield from regalo(4.0)  # Robi 18/11: fino a Natale ogni Reel chiude sul regalo
+    if ep.get('data', '') <= '2026-12-24':
+        # Robi 18/11 sera: fino a Natale la chiusura si alterna. Giorni dispari = tazza del protagonista (Etsy), pari = regalo cocktail.
+        if chiusura_tazza(ep): yield from tazza(4.0, tazza_di(ep))
+        else: yield from regalo(4.0)  # Robi 18/11: chiusura sul regalo
     else: yield from card(['TI È PIACIUTA?'], 2.5, 'Segui @marconicreation\nuna puntata ogni giorno')
 
 REGALO_IMG = os.path.join(HERE, '..', 'tools', 'regalo_esempio.jpg')
+TAZZE = {'GEREMIA': 'geremia_caffe', 'BARTOLOMEO': 'bartolomeo_sciabadu', 'BRONCO': 'bronco_tango'}
+def chiusura_tazza(ep):
+    """Dal 19/11 i giorni dispari chiudono sulla tazza (le tazze sono su Etsy dal 18/11). "chiusura": "tazza"/"regalo" nel json forza la scelta."""
+    if ep.get('chiusura') in ('tazza', 'regalo'): return ep['chiusura'] == 'tazza'
+    d = ep.get('data', '')
+    return d >= '2026-11-19' and int(d[-2:]) % 2 == 1
+def tazza_di(ep):
+    """La tazza del protagonista: "tazza" nel json, altrimenti chi parla nell'aggancio, altrimenti Geremia."""
+    chi = (ep.get('tazza') or ep.get('aggancio', {}).get('chi') or 'GEREMIA').upper()
+    return chi if chi in TAZZE else 'GEREMIA'
+def tazza(dur, chi):
+    """Chiusura tazza (Robi 18/11): la tazza del personaggio + prezzo + link Etsy in bio."""
+    img = Image.open(os.path.join(HERE, '..', 'gadget', 'tazze', TAZZE[chi] + '_anteprima.jpg')).convert('RGB').resize((1000, 1000), Image.LANCZOS)
+    for k in range(int(dur * FPS)):
+        t = k / FPS; c = Image.new('RGB', (W, H), BG); d = ImageDraw.Draw(c)
+        d.text((W // 2, 130), f'LA TAZZA DI {chi}', font=f_big, fill=GOLD, anchor='mm', stroke_width=8, stroke_fill='black')
+        sc = 0.9 + 0.1 * ease(min(1, t / 0.35)); s2 = int(1000 * sc)
+        c.paste(img.resize((s2, s2)), ((W - s2) // 2, 250 + (1000 - s2) // 2))
+        d.text((W // 2, 1340), '19,90 € · SPEDIZIONE GRATIS', font=f_mid, fill=CREAM, anchor='mm', stroke_width=4, stroke_fill='black')
+        if t > 0.5: d.text((W // 2, 1460), 'SU ETSY · LINK IN BIO', font=f_mid, fill=GOLD, anchor='mm', stroke_width=5, stroke_fill='black')
+        if t > 0.9: d.text((W // 2, 1570), 'marconicreation.vercel.app/etsy', font=f_tag, fill=CREAM, anchor='mm')
+        d.text((W // 2, 1790), '@marconicreation', font=f_tag, fill=(230, 200, 160), anchor='mm')
+        yield c
 def regalo(dur):
     """Chiusura regalo (Robi 18/11): Bronco mostra la card vera del "cocktail col tuo nome" + come ordinarlo."""
     cardimg = Image.open(REGALO_IMG).convert('RGB').resize((800, 1000), Image.LANCZOS)
