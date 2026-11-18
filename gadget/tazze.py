@@ -69,7 +69,11 @@ def anteprima(lato_img):
     return bg
 for t in TAZZE:
     l = lato(t); stampa = Image.new("RGBA", (W, H), (0,0,0,0))  # trasparente: se Robi sovrappone copie in Printify non si coprono
-    stampa.paste(l, ((W - l.width)//2, 0), l)  # un solo disegno al centro: e' la vista frontale di Printify
+    # 3 copie (Robi 18/11): una al centro (vista frontale Printify) e una per lato, cosi' ogni foto e ogni mano vede il personaggio
+    bb = l.getbbox(); d0 = l.crop(bb); slot = W // 3
+    f = min(1.0, slot * 0.92 / d0.width, H * 0.94 / d0.height); d0 = d0.resize((int(d0.width * f), int(d0.height * f)), Image.LANCZOS)
+    for i in range(3):
+        stampa.alpha_composite(d0, (slot * i + (slot - d0.width) // 2, (H - d0.height) // 2))
     stampa.save(OUT + t["nome"] + "_stampa.png", dpi=(300,300))
     anteprima(l).save(OUT + t["nome"] + "_anteprima.jpg", quality=90)
     print("ok", t["nome"])
