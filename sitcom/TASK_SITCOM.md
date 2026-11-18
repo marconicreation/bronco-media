@@ -39,6 +39,7 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
 
 ## CALENDARIO DELL'AVVENTO DI BRONCO (Robi sì 18/11): dal 1/12 al 24/12
 - Ogni puntata di dicembre è una casella: nel json "avvento": N (N = giorno di dicembre) e il titolo comincia con "🎄 -K a Natale" (K = 25 - N).
+  sitcom.py disegna da solo il bollino rosso "-K A NATALE" (il 24/12 "VIGILIA!") in alto a destra sull'immagine: basta il campo "avvento".
   Didascalia, prima riga: "🎄 Casella N del calendario dell'Avvento di Bronco: -K a Natale!" poi la battuta.
   Invito a tornare in ogni puntata: "Domani alle 13 si apre la casella N+1".
 - Saghe di dicembre (5 parti ciascuna): 2-6/12, 7-11/12, 12-16/12, 17-21/12; poi 22-24/12 il FINALE DI NATALE in 3 parti
