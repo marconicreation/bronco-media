@@ -8,7 +8,7 @@ Uso:
   di tools/quote.py, o per una posa pulita con la battuta scritta solo in alto nel --hook).
 - --hook: testo in alto, va a capo da solo (max 3 righe, ~60 caratteri). Breve tema ("BOLLETTE") oppure
   la battuta intera. Mai nomi di persone o partiti.
-- --cta regalo (default fino al 24/12): chiusura 3,5 s sul regalo "Il cocktail col tuo nome", link in bio.
+- --cta regalo (default fino al 24/12): chiusura 3,5 s sul regalo "Il cocktail col tuo nome": card vera + link in bio + indirizzo.
   --cta segui: chiusura "Segui Bronco".
 - Musica: base lounge sintetizzata qui (nessun diritto d'autore) + suono pop sul fumetto.
 Dopo il render GUARDA 2-3 fotogrammi (ffmpeg -ss 2 -i OUT.mp4 -frames:v 1 f.jpg) prima di pubblicare."""
@@ -86,15 +86,18 @@ def scene_main(clean, capt, hook, dur, pop=True, tag="BRONCO DICE LA SUA"):
 def scene_end(kind, dur):
     logo = Image.open(os.path.join(R, 'tools/bronco_logo.png')).convert('RGBA').resize((360, 360))
     big, mid, sm = font(112), font(84), font(64)
+    gift = Image.open(os.path.join(R, 'tools/regalo_esempio.jpg')).convert('RGB').resize((760, 950))
     for k in range(int(dur * FPS)):
         t = k / FPS
         c = Image.new('RGB', (W, H), BG)
         c.paste(logo, ((W - 360) // 2, 330), logo)
-        if kind == 'regalo':
-            title(c, "IL COCKTAIL\nCOL TUO NOME", t, 880, big)
-            if t > 0.4: title(c, "REGALO DI NATALE · 5 €", t - 0.4, 1130, mid, 'white')
-            if t > 0.8: title(c, "BRONCO LO INVENTA PER CHI VUOI TU", t - 0.8, 1260, sm, CREAM)
-            if t > 1.2: title(c, "ORDINA DAL LINK IN BIO", t - 1.2, 1500, mid)
+        if kind == 'regalo':  # Robi 18/11: Bronco mostra la card vera del regalo + come ordinarlo
+            c = Image.new('RGB', (W, H), BG)
+            title(c, "REGALO DI NATALE · 5 €", t, 130, mid)
+            c.paste(gift, ((W - 760) // 2, 240))
+            title(c, "UN COCKTAIL COL NOME DI CHI VUOI TU", t, 1270, sm, CREAM)
+            if t > 0.5: title(c, "ORDINA DAL LINK IN BIO", t - 0.5, 1420, mid)
+            if t > 0.9: title(c, "marconicreation.vercel.app/regalo", t - 0.9, 1560, sm, 'white')
         else:
             title(c, "TI È PIACIUTA?", t, 900, big)
             if t > 0.5: title(c, "SEGUI BRONCO", t - 0.5, 1130, mid, 'white')

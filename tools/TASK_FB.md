@@ -7,7 +7,9 @@ Passi (dopo aver scritto m1, m2, m3 e la citazione come da istruzioni della rout
 1. Repo: add_repo marconicreation/bronco-media (push), git clone, cd bronco-media. D = data di DOMANI (AAAA-MM-GG).
 2. Reel 1 (mattina, battuta): scegli una posa da pose/nuove o pose/usate diversa da quelle degli ultimi giorni (guarda promo/fb/).
    b1 = la battuta del mattino in versione corta (max ~70 caratteri), MAI partiti o persone, niente cifre precise, niente fatti inventati.
-   python3 tools/reel.py pose/.../P.jpg pose/.../P.jpg promo/fb/D_1.mp4 --hook "b1" --cta segui
+   python3 tools/reel.py pose/.../P.jpg pose/.../P.jpg promo/fb/D_1.mp4 --hook "b1" --cta regalo
+   (Robi 18/11: fino al 24/12 OGNI Reel chiude sul regalo; in m1 aggiungi in fondo la riga
+   "🎁 Il cocktail col tuo nome: regalo di Natale a 5 € 👉 https://marconicreation.vercel.app/regalo?da=fb". Dal 25/12 torna --cta segui.)
    (stesso file due volte = niente fumetto: la battuta sta in alto, mai sopra il muso di Bronco.)
 3. Reel 3 (13:00, citazione): dopo tools/quote.py citazioni/D.jpg ...:
    python3 tools/reel.py citazioni/D.jpg citazioni/D.jpg promo/fb/D_3.mp4 --hook "frase corta che lega la citazione all'attualità (max ~50 caratteri)" --tag "LA FRASE DEL GIORNO" --cta segui
