@@ -203,7 +203,7 @@ def anteponi(ep, out, coda=False):
                     f'[0:v]fps={FPS},scale={W}:{H},setsar=1[a];[1:v]fps={FPS},scale={W}:{H},setsar=1[b];'
                     '[0:a]aresample=44100,aformat=channel_layouts=mono[x];[1:a]aresample=44100,aformat=channel_layouts=mono[y];'
                     '[a][x][b][y]concat=n=2:v=1:a=1[v][au]', '-map', '[v]', '-map', '[au]',
-                    '-c:v', 'libx264', '-crf', '19', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', out], check=True)
+                    '-c:v', 'libx264', '-crf', '17', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', out], check=True)
     print(out)
 
 if __name__ == '__main__':
