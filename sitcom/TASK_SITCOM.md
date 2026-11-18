@@ -63,6 +63,8 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   niente riferimenti a persone o luoghi di La Spezia e provincia. Niente tratti o cognomi che richiamino stereotipi etnici o religiosi:
   Geremia è tirchio e brontolone, MAI usuraio, mai "prestiti", mai banchieri.
 - Non ripetere un'invenzione già usata (guarda i titoli delle puntate esistenti).
+- QUALITÀ (Robi 18/11): ogni posa ha la copia 2x in sitcom/pose/hd/ (sitcom.py la usa da sola). Se aggiungi una posa nuova: python3 tools/hd.py sitcom/pose/NOME.jpg.
+  Le pose nate sfocate (MORBIDE in sitcom.py: geremia_dito, bronco_shaker, bronco_finale_tango, bartolomeo_quaderno) non vanno in primo piano stretto.
 - Pose disponibili in sitcom/pose/ (non generarne di nuove: il limite IA di Canva è finito fino all'11/12).
 - Didascalia: "AL BANCONE DI BRONCO 🍸 Episodio N: Titolo" + 1-2 frasi + riga sulla puntata quotidiana + riga regalo di Natale (fino al 24/12), SEMPRE con il link contaclic:
   "🎁 Il cocktail col tuo nome: regalo di Natale a 5 € 👉 https://marconicreation.vercel.app/regalo?da=sitcom (link anche in bio)" + hashtag.

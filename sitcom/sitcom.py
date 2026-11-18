@@ -36,11 +36,20 @@ f_bub = ImageFont.truetype(FONT, 64); f_tag = ImageFont.truetype(FONT, 50)
 
 def ease(t): return t * t * (3 - 2 * t)
 _IMC = {}
+MORBIDE = {'geremia_dito.jpg', 'bronco_shaker.jpg', 'bronco_finale_tango.jpg', 'bartolomeo_quaderno.jpg'}
 def square(path, box=None, flip=False):
     """box = [x0, y0, x1, y1] in frazioni dell'immagine (inquadratura stretta); flip = specchiata."""
     k = (path, tuple(box) if box else None, flip)
     if k in _IMC: return _IMC[k]
-    im = Image.open(os.path.join(HERE, path)).convert('RGB'); w, h = im.size
+    # qualita' (Robi 18/11: primi piani sgranati): se c'e' la versione ingrandita 2x (pose/hd/, waifu2x) si usa quella;
+    # sulle pose nate sfocate (MORBIDE) il primo piano non stringe oltre il 75% del quadro.
+    hd = os.path.join(HERE, os.path.dirname(path), 'hd', os.path.basename(path))
+    im = Image.open(hd if os.path.exists(hd) else os.path.join(HERE, path)).convert('RGB'); w, h = im.size
+    if box and os.path.basename(path) in MORBIDE:
+        bw, bh = box[2] - box[0], box[3] - box[1]
+        if max(bw, bh) < 0.75:
+            cx, cy, half = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2, 0.375
+            box = [cx - half, cy - half, cx + half, cy + half]
     if box:
         x0, y0, x1, y1 = box[0] * w, box[1] * h, box[2] * w, box[3] * h
         s = max(x1 - x0, y1 - y0); cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
@@ -205,7 +214,7 @@ def music(sec, path): _sigla.music(sec, path)
 
 tmp = tempfile.mkdtemp(); vid = os.path.join(tmp, 'v.mp4')
 p = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
-                      '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '20', vid], stdin=subprocess.PIPE)
+                      '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '16', vid], stdin=subprocess.PIPE)
 n = 0
 for f in all_frames(): p.stdin.write(f.tobytes()); n += 1
 p.stdin.close(); p.wait()
