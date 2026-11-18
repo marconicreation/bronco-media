@@ -5,6 +5,7 @@ leggendo la cassetta (data store 233472, key "next"). Se un video manca, lo scen
 
 DIDASCALIE m1/m2: segui SEMPRE tools/CRESCITA.md (prima riga forte, una domanda al pubblico, 5-7 hashtag a rotazione).
 (Nota 18/11: lo scenario delle 13:00 è spento, il Reel 3 non esce.)
+SABATO SERA (cioè D = domenica): il Reel 2 delle 18:00 è "IL MEGLIO DELLA SETTIMANA" fatto con tools/meglio.sh (vedi tools/CRESCITA.md, ATTRAZIONI punto 5) invece del Reel regalo.
 
 Passi (dopo aver scritto m1, m2, m3 e la citazione come da istruzioni della routine):
 1. Repo: add_repo marconicreation/bronco-media (push), git clone, cd bronco-media. D = data di DOMANI (AAAA-MM-GG).
