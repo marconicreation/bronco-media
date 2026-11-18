@@ -18,3 +18,8 @@ Aggiungi `?da=xxx` per sapere da dove arriva il clic:
 
 Deploy: i file in questa cartella (`api/`, `lib/`, `vercel.json`, `package.json`) caricati con lo strumento Vercel `create_deployment` (progetto `prj_gMpQ6EAtZNe5b7LkMXttfnFwU5Kp`, target production).
 Per aggiungere un link nuovo: aggiungilo in `lib/links.js` e una riga in `vercel.json`.
+
+## App "Chiedi a Bronco" (dal 18/11/2026)
+https://marconicreation.vercel.app/bronco (anche /chiedi): scrivi cosa hai in frigo, Bronco inventa un cocktail. Tutto in `bronco/index.html`, nessuna IA. Immagini servite da raw.githubusercontent (commit 96864af).
+Link diretti alle tazze: `/api/vai?d=tazza_geremia|tazza_bartolomeo|tazza_bronco&da=...`.
+Eventi in /numeri: `app_apri`, `app_cocktail`, `app_condividi` (da `/api/conta`).
