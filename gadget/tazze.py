@@ -68,7 +68,7 @@ def anteprima(lato_img):
     d.ellipse((x0+18, y0-22, x0+mw-18, y0+22), fill=(70,45,30))
     return bg
 for t in TAZZE:
-    l = lato(t); stampa = Image.new("RGB", (W, H), (255,255,255))
+    l = lato(t); stampa = Image.new("RGBA", (W, H), (0,0,0,0))  # trasparente: se Robi sovrappone copie in Printify non si coprono
     stampa.paste(l, ((W - l.width)//2, 0), l)  # un solo disegno al centro: e' la vista frontale di Printify
     stampa.save(OUT + t["nome"] + "_stampa.png", dpi=(300,300))
     anteprima(l).save(OUT + t["nome"] + "_anteprima.jpg", quality=90)
