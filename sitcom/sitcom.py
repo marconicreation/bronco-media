@@ -25,6 +25,11 @@ RITMO = ep.get('ritmo', ep.get('data', '') >= '2026-11-20')
 if RITMO:
     sys.path.insert(0, HERE); import lounge as _lounge
     BAR = _lounge.BAR
+    # canzone esterna (es. "Torso Stufo" di Robi, 110 bpm): SITCOM_MUSICA=file SITCOM_BPM=110 -> stacchi sulle sue battute
+    if os.environ.get('SITCOM_MUSICA'): BAR = 240 / float(os.environ.get('SITCOM_BPM', '110'))
+_FATTE = [0]  # battute gia' montate: i fotogrammi si contano sul tempo totale, cosi' gli stacchi non scivolano
+def fotogrammi(battute):
+    a = round(_FATTE[0] * BAR * FPS); _FATTE[0] += battute; return round(_FATTE[0] * BAR * FPS) - a
 if ep.get('finale', True):
     ep['scene'].append({'img': ep.get('finale_img', FINALE_IMG), 'chi': 'BRONCO', 'testo': 'Vai col tango!', 'durata': 2.6, 'battute': 1})
 # voci dei personaggi (Robi 13/11): una per battuta, la scena dura almeno quanto la voce
@@ -144,7 +149,7 @@ def base(img, t, dur):
 
 frames_written = 0
 def card(lines, dur, sub=None):
-    n = int(round(dur * FPS))
+    n = fotogrammi(1) if RITMO else int(round(dur * FPS))
     for k in range(n):
         t = k / FPS; c = Image.new('RGB', (W, H), BG); d = ImageDraw.Draw(c)
         dy = int((1 - ease(min(1, t / 0.4))) * -250)
@@ -162,7 +167,7 @@ def scene(s):
     tagli = []; acc = 0
     if RITMO:  # ogni inquadratura = battute intere di musica: lo stacco cade sempre sul primo tempo
         for q in inq:
-            b = int(round(q.get('battute', s.get('battute', 2)) * BAR * FPS)); tagli.append((acc, acc + b, q)); acc += b
+            b = fotogrammi(q.get('battute', s.get('battute', 2))); tagli.append((acc, acc + b, q)); acc += b
         n = acc; s['durata'] = n / FPS
     else:
       for q, pw in zip(inq, pesi):
@@ -247,7 +252,10 @@ def regalo(dur):
 # --- musica: la stessa della sigla (funk anni '70, approvata da Robi il 13/11), da sigla/sigla.py ---
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sigla'))
 import sigla as _sigla
-def music(sec, path): (_lounge.music if RITMO else _sigla.music)(sec, path)
+def music(sec, path):
+    if RITMO and os.environ.get('SITCOM_MUSICA'):
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', os.environ['SITCOM_MUSICA'], '-t', str(sec), '-ac', '1', '-ar', '44100', path], check=True)
+    else: (_lounge.music if RITMO else _sigla.music)(sec, path)
 
 tmp = tempfile.mkdtemp(); vid = os.path.join(tmp, 'v.mp4')
 p = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',

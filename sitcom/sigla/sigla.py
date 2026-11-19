@@ -23,7 +23,7 @@ MUSICA = None  # python3 sigla.py --musica FILE.wav|mp3 usa una base esterna inv
 W, H, FPS = 1080, 1920, 30
 sys.path.insert(0, os.path.join(HERE, '..')); import lounge as _lounge
 # dal 19/11 (Robi: "musica troppo ritmata") la sigla usa la musica lounge della sitcom (100 bpm); il vecchio funk resta in music_funk()
-BPM = _lounge.BPM; BEAT = 60 / BPM; BAR = 4 * BEAT
+BPM = float(os.environ.get('SITCOM_BPM', _lounge.BPM)) if os.environ.get('SITCOM_MUSICA') else _lounge.BPM; BEAT = 60 / BPM; BAR = 4 * BEAT
 INK = (20, 12, 8); GOLD = (255, 214, 90); CREAM = (255, 246, 228)
 
 PERSONAGGI = [  # (posa, nome, ruolo, colore sfondo, entra da)
