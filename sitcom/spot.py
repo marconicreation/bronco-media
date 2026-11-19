@@ -1,7 +1,7 @@
 """Spot delle tazze (Robi 19/11/2026): Reel di ~10 s, uno per tazza, separati dalle puntate.
 Uso: python3 sitcom/spot.py GEREMIA|BARTOLOMEO|BRONCO [uscita.mp4]   (senza uscita: sitcom/spot/spot_NOME.mp4)
 
-A tempo con la musica lounge (lounge.py, 100 bpm, 1 battuta = 2,4 s), stacchi sempre sul primo tempo:
+A tempo con la canzone della sitcom (musica/canzone.py, 110 bpm, 1 battuta = 2,18 s), stacchi sempre sul primo tempo:
   battuta 1    il personaggio dice la frase della sua tazza (posa intera, mai ingrandita)
   battute 2-3  la foto della tazza sul bancone + prezzo e spedizione gratis
   battuta 4    il disegno della tazza in grande + "su Etsy, link in bio"
@@ -11,12 +11,13 @@ import sys, os, subprocess, tempfile
 from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.join(HERE, '..')
 sys.path.insert(0, HERE); import lounge
+sys.path.insert(0, os.path.join(HERE, 'musica')); import canzone  # dal 20/11 la canzone di Robi "Torso Stufo"
 
 W, H, FPS = 1080, 1920, 30
 BG = (38, 22, 14); CREAM = (255, 246, 228); INK = (20, 12, 8); GOLD = (255, 214, 90)
 FONT = os.path.join(ROOT, 'Bangers-Regular.ttf')
 f_big = ImageFont.truetype(FONT, 118); f_mid = ImageFont.truetype(FONT, 76); f_bub = ImageFont.truetype(FONT, 78); f_tag = ImageFont.truetype(FONT, 50)
-BAR = lounge.BAR; NB = int(round(BAR * FPS))
+BAR = 240 / canzone.BPM if canzone.ATTIVA else lounge.BAR; NB = int(round(BAR * FPS))
 
 TAZZE = {
     'GEREMIA':    dict(file='geremia_caffe', posa='geremia_strilla.jpg', frase='Non parlarmi prima del caffè!'),
@@ -86,7 +87,10 @@ def build(chi, out):
     n = 0
     for f in frames(chi): p.stdin.write(f.tobytes()); n += 1
     p.stdin.close(); p.wait()
-    lounge.music(n / FPS, wav)
+    sec = n / FPS
+    if canzone.ATTIVA: subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(canzone.INIZIO), '-i', canzone.FILE, '-t', str(sec),
+                                       '-af', f'afade=t=out:st={sec - 1}:d=1', '-ac', '2', '-ar', '44100', wav], check=True)
+    else: lounge.music(sec, wav)
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', vid, '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k',
                     '-shortest', '-movflags', '+faststart', out], check=True)

@@ -23,7 +23,8 @@ MUSICA = None  # python3 sigla.py --musica FILE.wav|mp3 usa una base esterna inv
 W, H, FPS = 1080, 1920, 30
 sys.path.insert(0, os.path.join(HERE, '..')); import lounge as _lounge
 # dal 19/11 (Robi: "musica troppo ritmata") la sigla usa la musica lounge della sitcom (100 bpm); il vecchio funk resta in music_funk()
-BPM = float(os.environ.get('SITCOM_BPM', _lounge.BPM)) if os.environ.get('SITCOM_MUSICA') else _lounge.BPM; BEAT = 60 / BPM; BAR = 4 * BEAT
+sys.path.insert(0, os.path.join(HERE, '..', 'musica')); import canzone as _canzone  # dal 20/11 la canzone di Robi
+BPM = _canzone.BPM if _canzone.ATTIVA else _lounge.BPM; BEAT = 60 / BPM; BAR = 4 * BEAT
 INK = (20, 12, 8); GOLD = (255, 214, 90); CREAM = (255, 246, 228)
 
 PERSONAGGI = [  # (posa, nome, ruolo, colore sfondo, entra da)
@@ -100,7 +101,9 @@ def hp(x, fc):
     X = np.fft.rfft(x); f = np.fft.rfftfreq(len(x), 1 / SR)
     return np.fft.irfft(X * (1 - 1 / np.sqrt(1 + (f / fc) ** 4)), len(x))
 
-def music(sec, path): _lounge.music(sec, path)
+def music(sec, path):
+    if _canzone.ATTIVA: subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(_canzone.INIZIO), '-i', _canzone.FILE, '-t', str(sec), '-af', f'afade=t=out:st={sec - 1}:d=1', '-ac', '1', '-ar', '44100', path], check=True)
+    else: _lounge.music(sec, path)
 
 def music_funk(sec, path):
     N = int(sec * SR); y = np.zeros(N + 2 * SR); s16 = BEAT / 4

@@ -39,10 +39,12 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   Poi SAGA 2: proponila tu a Robi nel messaggio serale dell'ultima parte (2 idee, lui sceglie).
 
 ## RITMO E MUSICA dal 20/11 (Robi 19/11: "a tempo con la musica, ogni due battute per fotogramma", niente sgranature, musica meno ritmata)
-- Musica: sitcom/lounge.py (funk anni '70 morbido, lounge da bar, 100 bpm, 1 battuta = 2,4 s). Anche la sigla (sigla.mp4) è stata rifatta con questa musica.
+- Musica (Robi 19/11 sera): "Torso Stufo", la canzone di Robi (sitcom/musica/torso_stufo.m4a, sua, niente diritti), 110 bpm, 1 battuta = 2,18 s,
+  presa dalla battuta 14 (30,55 s) dove è già piena. Suona continua sotto puntata + sigla (monta.sh lo fa da solo). Parametri in sitcom/musica/canzone.py.
+  La base sintetica sitcom/lounge.py resta solo di riserva (SITCOM_MUSICA=lounge).
 - Ogni epNN.json ha "ritmo": true (automatico dalla data 2026-11-20). Le durate NON si scrivono in secondi ma in battute:
-  "battute": 2 (4,8 s) per ogni inquadratura con una battuta di dialogo; "battute": 1 (2,4 s) solo per trio_bancone, "Sciabadù!" e la reazione muta "...".
-  Una battuta di dialogo = UNA inquadratura (niente liste "inq" con 3-4 tagli). Aggancio = 2 battute. Totale puntata ~36 s + sigla 12 s.
+  "battute": 2 (4,4 s) per ogni inquadratura con una battuta di dialogo; "battute": 1 (2,2 s) solo per trio_bancone, "Sciabadù!" e la reazione muta "...".
+  Una battuta di dialogo = UNA inquadratura (niente liste "inq" con 3-4 tagli). Aggancio = 2 battute. Totale puntata ~33 s + sigla 11 s (la canzone dura 74 s dal punto di partenza: la puntata intera deve restare sotto i 70 s).
 - Niente zoom: sitcom.py ritaglia la posa originale senza mai ingrandirla (lato minimo 1080 px veri su 1264): un "box" stretto viene allargato da solo.
   Meglio usare le pose intere. Le pose MORBIDE (geremia_dito, bronco_shaker, bartolomeo_quaderno) evitale proprio finché non sono rifatte con Canva (dall'11/12).
 - Niente tazza né regalo in fondo al video: la puntata chiude con "Vai col tango!", poi "CONTINUA..." (saga) o "DOMANI ALLE 13", poi la sigla.
@@ -71,7 +73,7 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   battuta finale di Bartolomeo (senza "Sciabadù") -> scena SEPARATA con solo "Sciabadù!" su bartolomeo_sciabadu.jpg, inquadratura unica fissa ->
   reazione muta di Geremia ("...") -> battuta di Bronco. "Vai col tango!" lo aggiunge da solo sitcom.py nella scena finale: MAI scriverlo nelle battute.
 - Dal 20/11 una inquadratura per battuta di dialogo, lunga 2 battute di musica (vedi RITMO). Varia le pose da una battuta all'altra.
-- Fumetti: niente nomi dei personaggi, testo breve (max ~90 caratteri), statici. Niente voci. Musica = lounge.py (automatica).
+- Fumetti: niente nomi dei personaggi, testo breve (max ~90 caratteri), statici. Niente voci. Musica = Torso Stufo (automatica).
 - Satira sottile su tasse, bollette, prezzi, burocrazia, caro vita: MAI nomi di persone o partiti, niente cifre precise, niente fatti inventati,
   niente riferimenti a persone o luoghi di La Spezia e provincia. Niente tratti o cognomi che richiamino stereotipi etnici o religiosi:
   Geremia è tirchio e brontolone, MAI usuraio, mai "prestiti", mai banchieri.

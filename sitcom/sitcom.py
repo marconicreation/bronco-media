@@ -26,7 +26,8 @@ if RITMO:
     sys.path.insert(0, HERE); import lounge as _lounge
     BAR = _lounge.BAR
     # canzone esterna (es. "Torso Stufo" di Robi, 110 bpm): SITCOM_MUSICA=file SITCOM_BPM=110 -> stacchi sulle sue battute
-    if os.environ.get('SITCOM_MUSICA'): BAR = 240 / float(os.environ.get('SITCOM_BPM', '110'))
+    sys.path.insert(0, os.path.join(HERE, 'musica')); import canzone as _canzone
+    if _canzone.ATTIVA: BAR = 240 / _canzone.BPM
 _FATTE = [0]  # battute gia' montate: i fotogrammi si contano sul tempo totale, cosi' gli stacchi non scivolano
 def fotogrammi(battute):
     a = round(_FATTE[0] * BAR * FPS); _FATTE[0] += battute; return round(_FATTE[0] * BAR * FPS) - a
@@ -253,8 +254,8 @@ def regalo(dur):
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sigla'))
 import sigla as _sigla
 def music(sec, path):
-    if RITMO and os.environ.get('SITCOM_MUSICA'):
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', os.environ['SITCOM_MUSICA'], '-t', str(sec), '-ac', '1', '-ar', '44100', path], check=True)
+    if RITMO and _canzone.ATTIVA:  # (monta.sh poi rimette la canzone continua anche sotto la sigla)
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(_canzone.INIZIO), '-i', _canzone.FILE, '-t', str(sec), '-ac', '1', '-ar', '44100', path], check=True)
     else: (_lounge.music if RITMO else _sigla.music)(sec, path)
 
 tmp = tempfile.mkdtemp(); vid = os.path.join(tmp, 'v.mp4')
