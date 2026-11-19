@@ -17,8 +17,22 @@ IMG_Y, IMG_S = 560, 1080
 FINALE_IMG = os.path.join(HERE, 'pose', 'bronco_finale_tango.jpg')
 
 ep = json.load(open(sys.argv[1])); OUT = sys.argv[2]
+# RITMO (Robi 19/11, dalla puntata del 20/11): musica lounge (lounge.py, 100 bpm) e montaggio a tempo:
+# ogni inquadratura dura un numero intero di battute ("battute" nel json, di solito 2 = 4,8 s; 1 per gli stacchi brevi).
+# Niente zoom oltre la risoluzione vera della posa: nessun ingrandimento, al massimo un avvicinamento leggerissimo.
+# Niente chiusura con tazza o regalo: le tazze hanno i loro spot a parte (sitcom/spot.py).
+RITMO = ep.get('ritmo', ep.get('data', '') >= '2026-11-20')
+if RITMO:
+    sys.path.insert(0, HERE); import lounge as _lounge
+    BAR = _lounge.BAR
+    # canzone esterna (es. "Torso Stufo" di Robi, 110 bpm): SITCOM_MUSICA=file SITCOM_BPM=110 -> stacchi sulle sue battute
+    sys.path.insert(0, os.path.join(HERE, 'musica')); import canzone as _canzone
+    if _canzone.ATTIVA: BAR = 240 / _canzone.BPM
+_FATTE = [0]  # battute gia' montate: i fotogrammi si contano sul tempo totale, cosi' gli stacchi non scivolano
+def fotogrammi(battute):
+    a = round(_FATTE[0] * BAR * FPS); _FATTE[0] += battute; return round(_FATTE[0] * BAR * FPS) - a
 if ep.get('finale', True):
-    ep['scene'].append({'img': ep.get('finale_img', FINALE_IMG), 'chi': 'BRONCO', 'testo': 'Vai col tango!', 'durata': 2.6})
+    ep['scene'].append({'img': ep.get('finale_img', FINALE_IMG), 'chi': 'BRONCO', 'testo': 'Vai col tango!', 'durata': 2.6, 'battute': 1})
 # voci dei personaggi (Robi 13/11): una per battuta, la scena dura almeno quanto la voce
 VOCI = []
 if ep.get('voci', True):
@@ -41,6 +55,7 @@ def square(path, box=None, flip=False):
     """box = [x0, y0, x1, y1] in frazioni dell'immagine (inquadratura stretta); flip = specchiata."""
     k = (path, tuple(box) if box else None, flip)
     if k in _IMC: return _IMC[k]
+    if RITMO: _IMC[k] = nitida(path, box, flip); return _IMC[k]
     # qualita' (Robi 18/11: primi piani sgranati): se c'e' la versione ingrandita 2x (pose/hd/, waifu2x) si usa quella;
     # sulle pose nate sfocate (MORBIDE) il primo piano non stringe oltre il 75% del quadro.
     hd = os.path.join(HERE, os.path.dirname(path), 'hd', os.path.basename(path))
@@ -60,6 +75,21 @@ def square(path, box=None, flip=False):
     im = im.resize((IMG_S, IMG_S), Image.LANCZOS)
     if flip: im = im.transpose(Image.FLIP_LEFT_RIGHT)
     _IMC[k] = im; return im
+
+MIN_LATO = IMG_S  # in RITMO un'inquadratura non e' mai piu' piccola di 1080 px veri della posa: niente ingrandimenti
+def nitida(path, box, flip):
+    """Ritaglio quadrato dalla posa ORIGINALE (1264 px) senza mai ingrandire: il lato del ritaglio e' almeno 1080 px.
+    Le pose nate sfocate (MORBIDE) si usano sempre intere. Restituisce l'immagine alla sua risoluzione vera (la riduce base())."""
+    im = Image.open(os.path.join(HERE, path)).convert('RGB'); w, h = im.size
+    if os.path.basename(path) in MORBIDE: box = None
+    if box:
+        x0, y0, x1, y1 = box[0] * w, box[1] * h, box[2] * w, box[3] * h
+        s = min(min(w, h), max(x1 - x0, y1 - y0, MIN_LATO)); cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    else: s = min(w, h); cx, cy = w / 2, h / 2
+    x0 = min(max(0, cx - s / 2), w - s); y0 = min(max(0, cy - s / 2), h - s)
+    im = im.crop((int(x0), int(y0), int(x0 + s), int(y0 + s)))
+    if flip: im = im.transpose(Image.FLIP_LEFT_RIGHT)
+    return im
 
 def wrap(d, text, font, maxw):
     out = []
@@ -100,9 +130,14 @@ def testata():
     return t
 
 def base(img, t, dur):
-    z = 1.0 + 0.06 * ease(min(1, t / dur)); s = int(IMG_S * z)
-    big = img.resize((s, s), Image.LANCZOS); o = (s - IMG_S) // 2
-    c = Image.new('RGB', (W, H), BG); c.paste(big.crop((o, o, o + IMG_S, o + IMG_S)), (0, IMG_Y))
+    c = Image.new('RGB', (W, H), BG)
+    if RITMO:  # avvicinamento leggerissimo solo se la posa ha pixel in piu' (mai sotto 1080 px veri)
+        s0 = img.width; s1 = max(IMG_S, s0 * 0.96); s = s0 - (s0 - s1) * ease(min(1, t / dur)); o = (s0 - s) / 2
+        c.paste(img.resize((IMG_S, IMG_S), Image.LANCZOS, box=(o, o, o + s, o + s)), (0, IMG_Y))
+    else:
+        z = 1.0 + 0.06 * ease(min(1, t / dur)); s = int(IMG_S * z)
+        big = img.resize((s, s), Image.LANCZOS); o = (s - IMG_S) // 2
+        c.paste(big.crop((o, o, o + IMG_S, o + IMG_S)), (0, IMG_Y))
     d = ImageDraw.Draw(c)
     if testata(): d.text((W // 2, 62), testata(), font=f_tag, fill=GOLD, anchor='mm', stroke_width=3, stroke_fill='black')
     if ep.get('avvento'):  # calendario dell'Avvento (Robi 18/11): bollino rosso "-K A NATALE" sull'angolo dell'immagine
@@ -115,7 +150,7 @@ def base(img, t, dur):
 
 frames_written = 0
 def card(lines, dur, sub=None):
-    n = int(dur * FPS)
+    n = fotogrammi(1) if RITMO else int(round(dur * FPS))
     for k in range(n):
         t = k / FPS; c = Image.new('RGB', (W, H), BG); d = ImageDraw.Draw(c)
         dy = int((1 - ease(min(1, t / 0.4))) * -250)
@@ -131,7 +166,12 @@ def scene(s):
     inq = s.get('inq') or [{}]
     pesi = [q.get('peso', 1) for q in inq]; tot = sum(pesi)
     tagli = []; acc = 0
-    for q, pw in zip(inq, pesi):
+    if RITMO:  # ogni inquadratura = battute intere di musica: lo stacco cade sempre sul primo tempo
+        for q in inq:
+            b = fotogrammi(q.get('battute', s.get('battute', 2))); tagli.append((acc, acc + b, q)); acc += b
+        n = acc; s['durata'] = n / FPS
+    else:
+      for q, pw in zip(inq, pesi):
         a = int(n * acc / tot); acc += pw; tagli.append((a, int(n * acc / tot), q))
     chars = len(s.get('testo', ''))
     for k in range(n):
@@ -149,6 +189,7 @@ def all_frames():
     # formato "battuta subito" (Robi 18/11): si apre sulla battuta piu' forte (2,5 s), poi la puntata; sigla in coda (monta.sh)
     if ep.get('aggancio'):
         scene_list = [dict({'durata': 2.5}, **ep['aggancio'])] + ep['scene']; t = 0
+        if RITMO: scene_list[0] = dict({'battute': 2}, **ep['aggancio'])
     else:
         yield from card(['AL BANCONE', 'DI BRONCO'], 2.2, f"Episodio {ep['numero']}\n{ep['titolo']}")
         scene_list = ep['scene']; t = 2.2
@@ -159,10 +200,12 @@ def all_frames():
     if ep.get('saga'):  # mini-saga (Robi 18/11): cartello "continua" con la parte successiva
         sg = ep['saga']
         if sg['parte'] < sg['di']:
-            yield from card(['CONTINUA...'], 2.4, f"{sg['titolo']}\nParte {sg['parte'] + 1} di {sg['di']}\ndomani alle 13")
+            yield from card(['CONTINUA...'], BAR if RITMO else 2.4, f"{sg['titolo']}\nParte {sg['parte'] + 1} di {sg['di']}\ndomani alle 13")
         else:
-            yield from card(['FINE'], 2.0, f"{sg['titolo']}\nla saga completa")
-    if ep.get('data', '') <= '2026-12-24':
+            yield from card(['FINE'], BAR if RITMO else 2.0, f"{sg['titolo']}\nla saga completa")
+    if RITMO:  # niente tazza/regalo in coda (Robi 19/11): solo l'invito a tornare, poi la sigla
+        if not ep.get('saga'): yield from card(['DOMANI', 'ALLE 13'], BAR, 'nuova puntata\nsegui @marconicreation')
+    elif ep.get('data', '') <= '2026-12-24':
         # Robi 18/11 sera: fino a Natale la chiusura si alterna. Giorni dispari = tazza del protagonista (Etsy), pari = regalo cocktail.
         if chiusura_tazza(ep): yield from tazza(4.0, tazza_di(ep))
         else: yield from regalo(4.0)  # Robi 18/11: chiusura sul regalo
@@ -210,7 +253,10 @@ def regalo(dur):
 # --- musica: la stessa della sigla (funk anni '70, approvata da Robi il 13/11), da sigla/sigla.py ---
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sigla'))
 import sigla as _sigla
-def music(sec, path): _sigla.music(sec, path)
+def music(sec, path):
+    if RITMO and _canzone.ATTIVA:  # (monta.sh poi rimette la canzone continua anche sotto la sigla)
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(_canzone.INIZIO), '-i', _canzone.FILE, '-t', str(sec), '-ac', '1', '-ar', '44100', path], check=True)
+    else: (_lounge.music if RITMO else _sigla.music)(sec, path)
 
 tmp = tempfile.mkdtemp(); vid = os.path.join(tmp, 'v.mp4')
 p = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',

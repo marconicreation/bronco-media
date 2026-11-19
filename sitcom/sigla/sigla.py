@@ -21,7 +21,10 @@ CLIP = os.path.join(HERE, 'clip_trio.mp4')
 OUT = os.path.join(HERE, 'sigla.mp4')
 MUSICA = None  # python3 sigla.py --musica FILE.wav|mp3 usa una base esterna invece di quella sintetizzata
 W, H, FPS = 1080, 1920, 30
-BPM = 132; BEAT = 60 / BPM; BAR = 4 * BEAT
+sys.path.insert(0, os.path.join(HERE, '..')); import lounge as _lounge
+# dal 19/11 (Robi: "musica troppo ritmata") la sigla usa la musica lounge della sitcom (100 bpm); il vecchio funk resta in music_funk()
+sys.path.insert(0, os.path.join(HERE, '..', 'musica')); import canzone as _canzone  # dal 20/11 la canzone di Robi
+BPM = _canzone.BPM if _canzone.ATTIVA else _lounge.BPM; BEAT = 60 / BPM; BAR = 4 * BEAT
 INK = (20, 12, 8); GOLD = (255, 214, 90); CREAM = (255, 246, 228)
 
 PERSONAGGI = [  # (posa, nome, ruolo, colore sfondo, entra da)
@@ -99,6 +102,10 @@ def hp(x, fc):
     return np.fft.irfft(X * (1 - 1 / np.sqrt(1 + (f / fc) ** 4)), len(x))
 
 def music(sec, path):
+    if _canzone.ATTIVA: subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(_canzone.INIZIO), '-i', _canzone.FILE, '-t', str(sec), '-af', f'afade=t=out:st={sec - 1}:d=1', '-ac', '1', '-ar', '44100', path], check=True)
+    else: _lounge.music(sec, path)
+
+def music_funk(sec, path):
     N = int(sec * SR); y = np.zeros(N + 2 * SR); s16 = BEAT / 4
     bus = {k: np.zeros_like(y) for k in ('dr', 'bass', 'clav', 'str', 'br')}
     def add(k, sig, at):
@@ -185,7 +192,7 @@ def build(out=OUT):
     n = 0
     for args in PERSONAGGI:
         for f in intro(*args): p.stdin.write(f.tobytes()); n += 1
-    for f in clip_frames(min(3 * BAR, 5.0)): p.stdin.write(f.tobytes()); n += 1
+    for f in clip_frames(2 * BAR): p.stdin.write(f.tobytes()); n += 1
     p.stdin.close(); p.wait()
     if MUSICA:  # base approvata da Robi (es. /mnt/project-files/sitcom/musica/...): presa dall'inizio, sfumata in coda
         d = n / FPS; subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', MUSICA, '-t', str(d), '-af', f'afade=t=out:st={d - 0.4}:d=0.4',

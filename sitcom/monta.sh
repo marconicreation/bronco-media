@@ -7,4 +7,11 @@ python3 "$D/sitcom.py" "$J" "$T/ep.mp4"
 if grep -q '"aggancio"' "$J"; then M=--accoda; else M=--anteponi; fi
 python3 "$D/sigla/sigla.py" $M "$T/ep.mp4" "$T/full.mp4"
 ffmpeg -y -loglevel error -i "$T/full.mp4" -c:v copy -c:a aac -b:a 128k -movflags +faststart "${J%.json}.mp4"
+# canzone esterna: una sola traccia continua dall'inizio alla fine (puntata + sigla), sfumata negli ultimi 1,5 s
+IFS='|' read CANZ INIZIO <<< "$(python3 "$D/musica/canzone.py")"
+if [ -n "$CANZ" ] && grep -q '"ritmo": true' "$J"; then
+  L=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "${J%.json}.mp4")
+  ffmpeg -y -loglevel error -i "${J%.json}.mp4" -ss "$INIZIO" -i "$CANZ" -map 0:v -map 1:a -t "$L" -af "afade=t=out:st=$(python3 -c "print($L-1.5)"):d=1.5" \
+    -c:v copy -c:a aac -b:a 160k -ac 2 -movflags +faststart "$T/m.mp4" && mv "$T/m.mp4" "${J%.json}.mp4"
+fi
 echo "${J%.json}.mp4"
