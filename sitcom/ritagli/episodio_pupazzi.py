@@ -115,10 +115,11 @@ def effetti(scene, prova=False):
             out.append((t + 0.15, 'colpo', -9))
         if not cassa and s['chi'] in VOCI_ID and any(k in testo.lower() for k in SOLDI):
             out.append((voce_fine(s, t) - 0.2, 'cassa', -14)); cassa = True
-        if s.get('fissa') == 'bartolomeo_sciabadu.mp3': out.append((voce_fine(s, t) - 0.1, 'risata_piccola', -6))
+        if s.get('fissa') == 'bartolomeo_sciabadu.mp3':  # Robi 20/11: piu' risate su Sciabadu' e Vai col tango
+            out += [(voce_fine(s, t) - 0.2, 'risata_media', -2), (voce_fine(s, t) + 0.4, 'risata_piccola', -3)]
         if i == bronco_finale:
             fine = voce_fine(s, t); out += [(fine, 'badumtss', -8), (fine + 0.3, 'risata_media', -7)]
-        if s.get('fissa') == 'bronco_vai_col_tango.mp3': out.append((t + 0.9, 'risata_grande', -8))
+        if s.get('fissa') == 'bronco_vai_col_tango.mp3': out += [(t + 0.8, 'risata_grande', -1), (t + 1.0, 'risata_media', -4)]
         t += dur
     return out
 
