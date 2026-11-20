@@ -33,17 +33,16 @@ Confronta con gli obiettivi della settimana (memoria di progetto "crescita-pagin
 Regole fisse sempre valide: niente spam, niente follower comprati, niente spesa senza il sì di Robi, satira senza nomi/partiti/cifre,
 niente La Spezia e provincia, niente concorsi con premi (in Italia servono autorizzazioni): si vince solo l'onore di entrare in puntata.
 
-1. RISPOSTE AI COMMENTI, OGNI SERA (le fa la routine serale della sitcom, passo 8 di sitcom/TASK_SITCOM.md)
-   - Make scenario 8663341 "Commenti IG: raccogli" (su richiesta): scrive i commenti nuovi di Instagram nel data store 264473
-     (key = id commento; testo, utente, post, quando, stato="nuovo").
-   - Leggi i record con stato "nuovo" (data-store-records_list 264473). Per ognuno scrivi una risposta IN PERSONAGGIO, max ~150 caratteri,
-     di solito Bronco (calmo, ironico, gentile), a volte Geremia (brontolone) se il commento lo prende in giro. Ringrazia sempre chi scrive.
-     Niente link, niente prezzi (se chiedono del regalo: "trovi tutto nel link in bio 🍸"). Spam, insulti, politica: stato="ignorato".
-   - data-store-records_update: risposta="...", stato="da_inviare". Poi scenarios_run 8663345 "Commenti IG: rispondi": pubblica e mette stato="inviata".
+1. RISPOSTE AI COMMENTI: AUTOMATICHE DAL 20/11 (Robi sì 20/11). NON rispondere più a mano.
+   - Make 8704211 "Bronco risponde ai commenti IG" gira da solo ogni 3 ore (9-21): commenti Instagram nuovi -> Claude Haiku
+     (prompt tools/commenti/PROMPT_BRONCO.md, connessione Anthropic 11211055 condivisa con Ospito: NON modificarla) -> risposta pubblicata.
+   - Registro: data store 266990 (chiave ig-IDcommento; stato "risposta" o "saltato"). Per il gioco del lunedì leggi i commenti da lì.
+   - Facebook: per ora NO (moduli Make di lettura commenti FB in errore lato Make; scenario 8704215 spento). DM: non possibili.
+   - Gli scenari vecchi 8663341/8663345 e il data store 264473 NON si usano più (farebbero risposte doppie).
 2. IL GIOCO DELLA SETTIMANA (lunedì -> giovedì)
    - Didascalia della puntata del LUNEDÌ, subito dopo la prima riga: "🎲 GIOCO DELLA SETTIMANA: Bartolomeo cerca il nome per la sua prossima
      invenzione [descrivila in 5 parole]. Scrivetelo nei commenti: il più divertente entra nella puntata di giovedì!"
-   - La puntata del GIOVEDÌ usa il nome scelto (fra i commenti del lunedì nel data store 264473; se nessuno ha scritto, lo inventi tu e non citi nessuno)
+   - La puntata del GIOVEDÌ usa il nome scelto (fra i commenti del lunedì nel data store 266990; se nessuno ha scritto, lo inventi tu e non citi nessuno)
      e in didascalia: "Nome dell'invenzione suggerito da @utente 🏆". Se la saga in corso non lo permette, mettilo nella battuta di Bronco finale.
 3. LA NOTIZIA DEL GIORNO
    - L'aggancio (prima battuta) e la prima riga della didascalia prendono il TEMA del giorno: Black Friday (27/11), primo freddo, bollette, regali,
