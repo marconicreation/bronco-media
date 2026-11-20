@@ -2,7 +2,7 @@
 import math, sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops
-FONT = "/mnt/project-files/gadget/Bangers.ttf"
+FONT = "/mnt/project-files/fonts/Pricedown_Bl.otf"
 CUT = sys.argv[1] if len(sys.argv) > 1 else "."
 OUT = sys.argv[2] if len(sys.argv) > 2 else "."
 W, H = 2717, 1146
@@ -47,6 +47,24 @@ def inchiostro(cut, px=9):
     cut = cut.copy(); cut.putalpha(ImageChops.multiply(cut.split()[3], a.filter(ImageFilter.GaussianBlur(0.8))))
     out.alpha_composite(cut); return out
 
+def scritta_gta(testo, f, sw, fill=(255, 255, 255)):
+    """Scritta Pricedown stile GTA: lettere bianche separate, contorno nero spesso, buchi delle lettere pieni di nero."""
+    from scipy import ndimage
+    d0 = ImageDraw.Draw(Image.new("L", (1, 1)))
+    track = int(sw * 0.55); xs = []; x = sw
+    for ch in testo:
+        xs.append(x); x += d0.textlength(ch, font=f) + (track if ch != " " else 0)
+    asc, desc = f.getmetrics(); W_ = int(x + sw * 2); H_ = asc + desc + sw * 2
+    im = Image.new("RGBA", (W_, H_), (0, 0, 0, 0))
+    for ch, cx in zip(testo, xs):
+        if ch == " ": continue
+        m = Image.new("L", (W_, H_), 0); ImageDraw.Draw(m).text((cx, sw + asc), ch, font=f, fill=255, anchor="ls", stroke_width=sw, stroke_fill=255)
+        m = Image.fromarray((ndimage.binary_fill_holes(np.array(m) > 127) * 255).astype("uint8")).filter(ImageFilter.GaussianBlur(0.7))
+        im.paste((0, 0, 0, 255), (0, 0), m)
+        fm = Image.new("L", (W_, H_), 0); ImageDraw.Draw(fm).text((cx, sw + asc), ch, font=f, fill=255, anchor="ls")
+        im.paste(fill + (255,), (0, 0), fm)
+    return im.crop(im.getbbox())
+
 def nastro(w, h, colore, righe, testo):
     """Nastro con code ripiegate."""
     pad = 70; im = Image.new("RGBA", (w + 2 * pad, h + 60), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
@@ -60,14 +78,15 @@ def nastro(w, h, colore, righe, testo):
         d.polygon([(x, yb), (x - s * 0, yb + 30), (x + s * 40, yb + 30)], fill=tuple(int(v * .4) for v in colore), outline=INK, width=6)
     d.rounded_rectangle((pad, y0, pad + w, yb), 14, fill=colore, outline=INK, width=9)
     d.line((pad + 20, y0 + 18, pad + w - 20, y0 + 18), fill=tuple(min(255, int(v * 1.3) + 25) for v in colore), width=6)
-    n = len(righe); size = int(h / n * 0.80)
-    f = ImageFont.truetype(FONT, size)
-    while max(d.textlength(r, font=f) for r in righe) > w - 80:
-        size -= 4; f = ImageFont.truetype(FONT, size)
-    for i, r in enumerate(righe):
-        y = y0 + h * (i + 0.5) / n + 6
-        d.text((pad + w / 2 + 6, y + 6), r, font=f, fill=INK, anchor="mm", stroke_width=7, stroke_fill=INK)
-        d.text((pad + w / 2, y), r, font=f, fill=testo, anchor="mm", stroke_width=7, stroke_fill=INK)
+    n = len(righe); size = int(h / n * 1.25)
+    while True:
+        f = ImageFont.truetype(FONT, size); sw = max(10, int(size * 0.085))
+        ims = [scritta_gta(r, f, sw) for r in righe]
+        if max(i.width for i in ims) <= w - 60 and max(i.height for i in ims) <= h / n * 0.92: break
+        size -= 3
+    for i, t_ in enumerate(ims):
+        cy = y0 + h * (i + 0.5) / n
+        im.alpha_composite(t_, (int(pad + w / 2 - t_.width / 2), int(cy - t_.height / 2)))
     return im
 
 def disegno(t):
