@@ -11,6 +11,7 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
    (copia la struttura di un epNN.json recente e cambia testi, titolo, data, didascalia; varia le pose e le inquadrature).
 4. bash sitcom/monta.sh sitcom/episodi/epNN.json  (crea epNN.mp4). Controlla 4 fotogrammi con Read
    (ffmpeg -ss 1 / 10 / 20 / 30 -i video -frames:v 1 f.jpg e l'ultimo secondo prima della sigla): fumetti leggibili, interi, sopra l'immagine.
+4b. bash sitcom/prova.sh sitcom/episodi/epNN.json (Reel di prova, vedi CAMPAGNA): controlla 1 fotogramma.
 5. git add sitcom/episodi && commit (stesso utente git indicato in tools/TASK.md) && push su main.
    URL: https://raw.githubusercontent.com/marconicreation/bronco-media/main/sitcom/episodi/epNN.mp4 — verifica con curl -sI che risponda 200.
 6. Make data-store-records_replace: dataStoreId 233472, key "puntata", data {"date": D, "v1": URL, "m1": didascalia del json}.
@@ -65,6 +66,20 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   (una sola volta, poi torna brontolone). Il 24/12 la puntata chiude: "Hai ancora tempo: il cocktail col tuo nome arriva per email in poche ore".
 - Una saga a dicembre è sui regali sbagliati (Bartolomeo inventa il regalo perfetto per chi ha tutto), una sul cenone (prezzi, parenti, avanzi).
 - Le saghe di dicembre le proponi a Robi 2 alla volta nel messaggio serale dell'ultima parte, come per la saga 2.
+
+## CAMPAGNA "NATALE AL BANCONE" (Robi sì 20/11, solo mosse gratuite: niente pubblicità)
+Piano: https://claude.ai/artifact/8myW2xrNwV9LwKERX8T81E
+1. REEL DI PROVA (Instagram "Trial Reel", lo vede solo chi NON ci segue): ogni giorno alle 17:41 lo pubblica lo scheduled task
+   "Bronco: Reel di prova 18:00" con il connettore Windsor (non serve nulla dalla routine serale). Versione corta della puntata del giorno:
+   bash sitcom/prova.sh sitcom/episodi/epNN.json -> epNN_prova.mp4 (~25 s, apre con un'altra battuta, senza trio, senza saga, senza sigla).
+   La routine serale, dopo aver montato la puntata, monta ANCHE epNN_prova.mp4 e lo mette nel commit (così alle 17:41 è già pronto).
+2. REEL DA MANDARE A UN AMICO: almeno 2 puntate a settimana su situazioni che tutti conoscono (l'amico brontolone, quello con le idee assurde,
+   il caffè al bar, le bollette, i regali di Natale, il cenone, i parenti). Nella didascalia, 2-3 volte a settimana, una domanda che fa venire
+   in mente qualcuno: "Anche tu hai un amico come Geremia? 😂". Mai "tagga", "manda a 3 amici", "metti like se" (Instagram li penalizza).
+3. ARCO DI NATALE nelle didascalie: fino al 6/12 la riga del link è la TAZZA ("ultimi giorni per riceverla a Natale" dal 28/11);
+   dal 7/12 al 24/12 è il REGALO "il cocktail col tuo nome: arriva per email, va bene anche all'ultimo minuto".
+   27/11 puntata speciale "Black Friday al bancone" (Geremia vuole lo sconto sul caffè; satira generica, niente marchi né cifre).
+4. VOCI: quando Robi avrà scelto le tre voci (memoria di progetto "campagna-marketing-strumenti"), le puntate avranno le voci: istruzioni a parte.
 
 ## REGOLE (scelte di Robi, da rispettare sempre)
 - Personaggi: BARTOLOMEO (vecchio cavallo inventore sognatore, fan di Bronco, storpia le parole), GEREMIA (vecchio scimpanzé arrabbiato e tirchio,

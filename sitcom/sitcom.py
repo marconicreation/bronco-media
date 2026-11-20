@@ -37,16 +37,18 @@ if ep.get('finale', True):
     ep['scene'].append({'img': ep.get('finale_img', FINALE_IMG), 'chi': 'BRONCO', 'testo': 'Vai col tango!', 'durata': 2.6, 'battute': 1})
 # voci dei personaggi (Robi 13/11): una per battuta, la scena dura almeno quanto la voce
 VOCI = []
-if ep.get('voci', True):
+if True:  # dal 20/11 voci ElevenLabs dalla cache (sitcom/voci/cache): battute senza file restano mute
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'voci'))
     import voci as _voci
     _vt = tempfile.mkdtemp()
-    for i, sc in enumerate(ep['scene']):
+    for i, sc in enumerate(([ep['aggancio']] if ep.get('aggancio') else []) + ep['scene']):
         if sc.get('chi') and sc.get('testo'):
             w = _voci.voce(sc['chi'], sc['testo'], os.path.join(_vt, f'v{i}.wav'))
             if w:
                 with wave.open(w) as f: L = f.getnframes() / f.getframerate()
                 sc['durata'] = max(sc.get('durata', 3.5), L + 0.7); sc['_voce'] = w
+                if RITMO:  # a tempo di musica: se la voce e' lunga l'inquadratura prende una battuta in piu'
+                    sc['battute'] = max(sc.get('battute', 2), math.ceil((L + 0.6) / BAR))
 f_big = ImageFont.truetype(FONT, 110); f_mid = ImageFont.truetype(FONT, 72)
 f_bub = ImageFont.truetype(FONT, 64); f_tag = ImageFont.truetype(FONT, 50)
 
@@ -191,7 +193,7 @@ def all_frames():
     # formato "battuta subito" (Robi 18/11): si apre sulla battuta piu' forte (2,5 s), poi la puntata; sigla in coda (monta.sh)
     if ep.get('aggancio'):
         scene_list = [dict({'durata': 2.5}, **ep['aggancio'])] + ep['scene']; t = 0
-        if RITMO: scene_list[0] = dict({'battute': 2}, **ep['aggancio'])
+        if RITMO: scene_list[0] = dict({'battute': 2}, **ep['aggancio'])  # (battute dell'aggancio: 2, o di piu' se la voce e' lunga)
     else:
         yield from card(['AL BANCONE', 'DI BRONCO'], 2.2, f"Episodio {ep['numero']}\n{ep['titolo']}")
         scene_list = ep['scene']; t = 2.2
@@ -278,6 +280,9 @@ if VOCI:
     env = np.convolve(np.abs(v) > 0.01, np.ones(int(0.25 * sr)) / int(0.25 * sr), 'same')
     duck = 1 - 0.65 * np.clip(env * 3, 0, 1)
     y = np.tanh(m * duck * 0.9 + v * 1.0)
+    # monta.sh / prova.sh rimettono la canzone continua sotto tutto: salvo anche le sole voci per rimixarle sopra
+    with wave.open(OUT + '.voci.wav', 'w') as f:
+        f.setnchannels(1); f.setsampwidth(2); f.setframerate(sr); f.writeframes((np.clip(v, -1, 1) * 32767).astype(np.int16).tobytes())
     with wave.open(os.path.join(tmp, 'm.wav'), 'w') as f:
         f.setnchannels(1); f.setsampwidth(2); f.setframerate(sr); f.writeframes((np.clip(y, -1, 1) * 32767).astype(np.int16).tobytes())
 subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', vid, '-i', os.path.join(tmp, 'm.wav'), '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k',
