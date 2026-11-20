@@ -9,3 +9,5 @@ Bozza 2 (spot2.py + audio2.py, 22 s): campo largo scogliera 20508226, onde, rosa
 Bozza 3 (spot3.py): Bronco su scogliera ad altezza d'occhio (11600665), sale da dietro i cespugli (cespugli in primo piano davanti a lui), mai in trasparenza.
 
 Voci (bozza 3 con voci): Higgsfield seed_audio, donna 'Vesper', uomo 'Orion' (sorgenti in /mnt/project-files/spot_profumo/sorgenti/). Credito Higgsfield esaurito con queste due.
+
+Voci v2 (7_bozza3_voci_nuove.mp4): Kokoro (kokoro-onnx, voci italiane if_sara e im_nicola, gira in locale gratis) + sussurro.py (trasforma la voce in sussurro). La v1 Higgsfield aveva un errore di taglio (si sentiva solo 'Intenso') ed e' stata tolta.
