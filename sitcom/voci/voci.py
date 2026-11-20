@@ -6,7 +6,7 @@ import os, sys, json, hashlib, subprocess, re
 DIR = os.path.dirname(os.path.abspath(__file__)); CACHE = os.path.join(DIR, 'cache')
 MODELLO = 'eleven_v3'
 VOCI = {  # voice_id ElevenLabs (account di Robi), scelte il 20/11/2026
-    'BRONCO': 'BEWlTVSPWoG721VSAnWv',      # bulldog barista: profondo, calmo, ironico
+    'BRONCO': 'R4gEgJEocQc2CqX4LOsT',      # bulldog barista: roco da fumatore, un po' stonato (scelto 20/11)
     'GEREMIA': 'DQrAbk5JYQkfbsD7QZ8f',     # vecchio scimpanzé brontolone che urla
     'BARTOLOMEO': 'Gq5e8oJrkKsAeJRonm7y',  # vecchio cavallo inventore svampito
 }
