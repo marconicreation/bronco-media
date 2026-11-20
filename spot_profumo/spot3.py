@@ -8,6 +8,7 @@ SH=[frames(D+f'seg2/s{i}.mp4',1) for i in range(1,6)]
 B6=frames(D+'seg2/s6b.mp4',3)
 serif=lambda s: ImageFont.truetype(D+'fonts/CormorantGaramond.ttf',s)
 cin=lambda s: ImageFont.truetype(D+'fonts/Cinzel.ttf',s)
+pd=lambda s: ImageFont.truetype('/mnt/project-files/fonts/Pricedown_Bl.otf',s)
 def v(f,w):
     f.set_variation_by_axes([w]); return f
 # shots: (start, length)
@@ -64,8 +65,8 @@ WORDS=[  # text, start, end, y, font, size, weight, sp, colour
  ('AUDACE',7.0,9.9,0,'s',66,400,18),
  ('INDIMENTICABILE',10.0,12.9,0,'s',58,400,10),
  ('IL NUOVO PROFUMO DI',13.0,15.6,0,'c',46,400,8),
- ('BRONCO',17.4,TOT+1,0,'c',110,700,16),
- ('Sa di caffè.',18.6,TOT+1,140,'s',84,600,2),
+ ('BRONCO',17.55,TOT+1,-20,'P',190,0,10),
+ ('Sa di caffè.',18.9,TOT+1,185,'p',92,0,3),
 ]
 GOLD=(232,214,170); WHITE=(240,236,228)
 out=subprocess.Popen(['ffmpeg','-v','error','-y','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','-','-c:v','libx264','-pix_fmt','yuv420p','-crf','18',D+'video3_muto.mp4'],stdin=subprocess.PIPE)
@@ -83,15 +84,15 @@ for n in range(int(TOT*FPS)):
     fr.paste(Image.fromarray(np.clip(band,0,255).astype('uint8')),(0,BANDY))
     d=ImageDraw.Draw(fr)
     for txt,s,e,dy,ft,sz,wg,sp in WORDS:
-        a=ease((t-s)/0.8)*ease((e-t)/0.6)
-        font=v(serif(sz) if ft=='s' else cin(sz),wg)
-        col=GOLD if ft=='c' else WHITE
+        a=ease((t-s)/(0.3 if ft in 'pP' else 0.8))*ease((e-t)/0.6)
+        font=pd(sz) if ft in 'pP' else v(serif(sz) if ft=='s' else cin(sz),wg)
+        col=GOLD if ft in 'cP' else WHITE
         spaced(d,txt,BANDY+BH+70+dy,font,col,a,sp)
     # Etsy line under, elegant
     if t>19.8:
         a=ease((t-19.8)/0.8)
-        spaced(d,'“VAI COL TANGO!”',BANDY-200,v(cin(44),500),GOLD,a,6)
-        spaced(d,'La tazza di Bronco è su Etsy',BANDY+BH+330,v(serif(52),600),WHITE,a,1)
-        spaced(d,'link in bio',BANDY+BH+400,v(serif(46),500),(200,190,170),a,3)
+        spaced(d,'VAI COL TANGO!',BANDY-230,pd(96),WHITE,a,4)
+        spaced(d,'La tazza di Bronco è su Etsy',BANDY+BH+425,v(serif(52),600),WHITE,a,1)
+        spaced(d,'link in bio',BANDY+BH+495,v(serif(46),500),(200,190,170),a,3)
     out.stdin.write(fr.convert('RGB').tobytes())
 out.stdin.close(); out.wait(); print('ok')
