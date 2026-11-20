@@ -23,8 +23,15 @@ python3 "$D/sitcom.py" "$D/episodi/.prova_tmp.json" "$T/v.mp4"; rm -f "$D/episod
 IFS='|' read CANZ INIZIO <<< "$(python3 "$D/musica/canzone.py")"
 L=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$T/v.mp4")
 if [ -n "$CANZ" ]; then
+  FADE=$(python3 -c "print($L-1.5)")
+  if [ -f "$T/v.mp4.voci.wav" ]; then
+    ffmpeg -y -loglevel error -i "$T/v.mp4" -ss "$INIZIO" -i "$CANZ" -i "$T/v.mp4.voci.wav" -filter_complex \
+      "[2:a]aresample=44100,apad,asplit=2[v1][v2];[1:a]aresample=44100,aformat=channel_layouts=stereo[m];[m][v1]sidechaincompress=threshold=0.03:ratio=8:attack=20:release=400[md];[md][v2]amix=inputs=2:duration=first:normalize=0,afade=t=out:st=$FADE:d=1.5[a]" \
+      -map 0:v -map "[a]" -t "$L" -c:v copy -c:a aac -b:a 160k -ac 2 -movflags +faststart "$OUT"
+  else
   ffmpeg -y -loglevel error -i "$T/v.mp4" -ss "$INIZIO" -i "$CANZ" -map 0:v -map 1:a -t "$L" \
-    -af "afade=t=out:st=$(python3 -c "print($L-1.5)"):d=1.5" -c:v copy -c:a aac -b:a 160k -ac 2 -movflags +faststart "$OUT"
+    -af "afade=t=out:st=$FADE:d=1.5" -c:v copy -c:a aac -b:a 160k -ac 2 -movflags +faststart "$OUT"
+  fi
 else
   ffmpeg -y -loglevel error -i "$T/v.mp4" -c:v copy -c:a aac -movflags +faststart "$OUT"
 fi
