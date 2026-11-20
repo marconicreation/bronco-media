@@ -7,7 +7,8 @@ In coda: sigla (sitcom/sigla/sigla.py --accoda) e la canzone continua sotto tutt
 Elenco delle battute da registrare (numero file, voce, testo):  python3 episodio_pupazzi.py --battute epNN.json
 "Sciabadù!" e "Vai col tango!" non si registrano: le copia da sole da voci_fisse/.
 Le voci vengono ripulite dai silenzi all'inizio e alla fine; se una battuta dura troppo viene accelerata un poco
-e l'inquadratura si allunga a battute intere di musica."""
+e l'inquadratura si allunga a battute intere di musica.
+Effetti comici e risate finte (effetti/) si mettono da soli; --senza-effetti li toglie."""
 import sys, os, json, subprocess, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__)); SITCOM = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
@@ -18,6 +19,8 @@ BAR = 240 / 110
 # voci fisse scelte da Robi (20/11/2026), da usare con eleven_v3
 VOCI_ID = {'BRONCO': 'R4gEgJEocQc2CqX4LOsT', 'GEREMIA': 'DQrAbk5JYQkfbsD7QZ8f', 'BARTOLOMEO': 'Gq5e8oJrkKsAeJRonm7y'}
 FISSE = os.path.join(HERE, 'voci_fisse')
+EFFETTI = os.path.join(HERE, 'effetti')   # libreria suoni comici ElevenLabs (Robi 20/11: "vai"), generata una volta sola
+SOLDI = ('conto', 'soldi', 'euro', 'prezz', 'pag', 'tass', 'bollett', 'scont', 'fisco', 'cassa', 'spes', 'cost')
 
 def chi_di(sc):
     if sc.get('chi'): return sc['chi'].upper()
@@ -95,6 +98,42 @@ def voce_unica(scene, cartella, out):
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error'] + ins + ['-filter_complex', ';'.join(filt) + f';{mix}amix=inputs={j}:normalize=0[o]', '-map', '[o]', out], check=True)
     return out
 
+def effetti(scene, prova=False):
+    """[(secondi, file, volume dB)]: suoni comici e risate finte messi da soli sulle scene."""
+    out, t, boing, cassa = [], 0.0, False, False
+    def voce_fine(s, t0):
+        return t0 + 0.3 + (durata(s['_voce']) if s.get('_voce') else 1.5)
+    bronco_finale = max([i for i, s in enumerate(scene) if s['chi'] == 'BRONCO' and not s.get('fissa') and s['testo']] or [-1])
+    for i, s in enumerate(scene):
+        dur = s['battute'] * BAR; testo = s.get('testo') or ''
+        if i > 0 and s['chi'] != 'CARTELLO': out.append((max(0, t - 0.15), 'swoosh', -14))
+        if s['chi'] == 'TRIO' and not prova: out.append((t + 0.2, 'campanello', -12))
+        if s.get('parla') == []: out.append((t + 0.1, 'grilli', -8))
+        if s['chi'] == 'BARTOLOMEO' and not boing and not s.get('fissa') and testo:
+            out.append((t + 0.1, 'boing', -10)); boing = True
+        if s['chi'] == 'GEREMIA' and ('!' in testo or any(w.isupper() and len(w) > 2 for w in testo.split())):
+            out.append((t + 0.15, 'colpo', -9))
+        if not cassa and s['chi'] in VOCI_ID and any(k in testo.lower() for k in SOLDI):
+            out.append((voce_fine(s, t) - 0.2, 'cassa', -14)); cassa = True
+        if s.get('fissa') == 'bartolomeo_sciabadu.mp3': out.append((voce_fine(s, t) - 0.1, 'risata_piccola', -6))
+        if i == bronco_finale:
+            fine = voce_fine(s, t); out += [(fine, 'badumtss', -8), (fine + 0.3, 'risata_media', -7)]
+        if s.get('fissa') == 'bronco_vai_col_tango.mp3': out.append((t + 0.9, 'risata_grande', -8))
+        t += dur
+    return out
+
+def mixa_effetti(video, lista, out):
+    """Aggiunge gli effetti all'audio del video (sopra musica e voci, senza toccare la bocca dei pupazzi)."""
+    if not lista: os.rename(video, out); return
+    ins, filt = ['-i', video], []
+    for j, (t, nome, db) in enumerate(lista, 1):
+        ins += ['-i', os.path.join(EFFETTI, nome + '.mp3')]; ms = int(t * 1000)
+        filt.append(f'[{j}:a]aformat=channel_layouts=stereo:sample_rates=44100,volume={db}dB,adelay={ms}|{ms}[e{j}]')
+    mix = '[0:a]' + ''.join(f'[e{j}]' for j in range(1, len(lista) + 1))
+    filt.append(f'{mix}amix=inputs={len(lista) + 1}:duration=first:normalize=0,alimiter=limit=0.89:level=false[a]')
+    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error'] + ins + ['-filter_complex', ';'.join(filt), '-map', '0:v', '-map', '[a]',
+                    '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', out], check=True)
+
 def bollino(ep):
     """Calendario dell'Avvento (dal 1/12): bollino rosso "-K A NATALE" in alto a destra sulla scena."""
     if not ep.get('avvento'): return None
@@ -113,6 +152,8 @@ if __name__ == '__main__':
         sys.exit()
     PROVA = '--prova' in sys.argv
     if PROVA: sys.argv.remove('--prova')
+    SENZA = '--senza-effetti' in sys.argv
+    if SENZA: sys.argv.remove('--senza-effetti')
     J, OUT = sys.argv[1], sys.argv[2]; VOCI = sys.argv[3] if len(sys.argv) > 3 else None
     ep = json.load(open(J)); scene = scene_da_json(ep)
     T = tempfile.mkdtemp(); P.DECORA = bollino(ep)
@@ -126,7 +167,9 @@ if __name__ == '__main__':
     voce = voce_unica(scene, VOCI, os.path.join(T, 'voci.mp3')) if VOCI else None
     testata = f"AL BANCONE DI BRONCO · EP. {ep['numero']}"
     if ep.get('saga') and not PROVA: testata += f" · PARTE {ep['saga']['parte']}/{ep['saga']['di']}"
-    P.render(scene, os.path.join(T, 'ep.mp4'), testata=testata, voce=voce, ritardo=0)
+    P.render(scene, os.path.join(T, 'ep0.mp4'), testata=testata, voce=voce, ritardo=0)
+    lista = [] if SENZA else effetti(scene, PROVA)
+    mixa_effetti(os.path.join(T, 'ep0.mp4'), lista, os.path.join(T, 'ep.mp4'))
     if PROVA: os.rename(os.path.join(T, 'ep.mp4'), os.path.join(T, 'full.mp4'))
     else: subprocess.run(['python3', os.path.join(SITCOM, 'sigla', 'sigla.py'), '--accoda', os.path.join(T, 'ep.mp4'), os.path.join(T, 'full.mp4')], check=True)
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', os.path.join(T, 'full.mp4'), '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', OUT], check=True)
