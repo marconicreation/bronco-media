@@ -25,6 +25,13 @@ PERSONAGGI = {
     'BARTOLOMEO': dict(cartella='bartolomeo', scala=0.85, bocca=(0.00, 0.50, 0.55, 0.95), occhi=(0.20, 0.22, 0.75, 0.58), collo=90),
 }
 
+# stessi personaggi in versione plastilina (pezzi in plastilina/<nome>/, estratti con estrai_plastilina.py)
+PERSONAGGI_PLASTILINA = {
+    'BRONCO': dict(cartella='plastilina/bronco', scala=0.92, bocca=(0.22, 0.52, 0.78, 0.92), occhi=(0.12, 0.18, 0.88, 0.50), collo=50),
+    'GEREMIA': dict(cartella='plastilina/geremia', scala=1.10, bocca=(0.25, 0.58, 0.75, 0.97), occhi=(0.20, 0.22, 0.80, 0.52), collo=40),
+    'BARTOLOMEO': dict(cartella='plastilina/bartolomeo', scala=1.08, bocca=(0.00, 0.52, 0.58, 0.88), occhi=(0.18, 0.24, 0.75, 0.50), collo=110),
+}
+
 def carica(cartella, scala, BOCCA=(0.22, 0.50, 0.78, 0.90), OCCHI=(0.12, 0.18, 0.88, 0.50)):
     if not os.path.isabs(cartella): cartella = os.path.join(HERE, cartella)
     def ld(n):
@@ -181,4 +188,6 @@ PROVA_TRIO = [
 ]
 
 if __name__ == '__main__':
+    if '--plastilina' in sys.argv:
+        sys.argv.remove('--plastilina'); PERSONAGGI.update(PERSONAGGI_PLASTILINA)
     print(render(PROVA_TRIO, sys.argv[1] if len(sys.argv) > 1 else 'prova_trio.mp4', testata='AL BANCONE DI BRONCO · PROVA PUPAZZI'))
