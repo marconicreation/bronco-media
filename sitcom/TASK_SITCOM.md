@@ -26,6 +26,8 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
       Se manca una voce lo script lo scrive (ATTENZIONE: mancano...): quella scena esce muta, avvisa Robi.
    d) Controlla 4 fotogrammi con Read (ffmpeg -ss 1 / 10 / 20 / 30 -i video -frames:v 1 f.jpg) e il volume
       (ffmpeg -i video -af volumedetect -f null - : mean_volume intorno a -17 dB, mai -91 = muto).
+   Effetti comici e risate finte (Robi 20/11) li mette lo script da solo dalla libreria sitcom/ritagli/effetti/ (gratis, niente da generare):
+   swoosh sugli stacchi, boing sull'invenzione, colpo quando Geremia urla, cassa sui soldi, grilli sul "...", risate dopo Sciabadù, Bronco e Vai col tango.
    e) Se ElevenLabs non è disponibile nella sessione o le voci falliscono: monta la puntata con i pupazzi SENZA voci
       (stesso comando senza l'ultima cartella), pubblicala lo stesso e avvisa Robi.
    Nel json "voci": true. Le pose ("img") servono solo per capire chi parla (bronco_/geremia_/bartolomeo_...) o il campo "chi";
