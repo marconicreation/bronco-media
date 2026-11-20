@@ -5,7 +5,9 @@ shape: oval (default, fumetto ovale) | pill | rect. pos: top (default) o bottom.
 Dopo il render CONTROLLA l'immagine: muso (occhi, naso, bocca) deve restare libero. Se coperto: cambia pos/tx/lines/shape."""
 import argparse,os
 from PIL import Image,ImageDraw,ImageFont
-FONT=os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","Bangers-Regular.ttf")
+_R=os.path.join(os.path.dirname(os.path.abspath(__file__)),"..")
+# FONT DEI FUMETTI (Robi 20/11): Pricedown (file nei file del progetto, non nel repo per licenza); riserva Bangers
+FONT=next(f for f in ["/mnt/project-files/fonts/Pricedown_Bl.otf",os.path.join(_R,"fonts","Pricedown_Bl.otf"),os.path.join(_R,"Bangers-Regular.ttf")] if os.path.exists(f))
 COLS=[(255,224,64),(120,220,255),(255,150,200),(160,235,120),(255,170,90)]
 K=(20,20,20);RED=(214,40,57)
 def wrap(d,t,f,w):
