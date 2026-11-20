@@ -84,6 +84,21 @@ def gta(fr,txt,y,font,fill,a,sp):
             d.text((x,y),c,font=font,fill=col,stroke_width=sw,stroke_fill=col); x+=w+sp
     if a<1: L.putalpha(L.split()[3].point(lambda p:int(p*a)))
     fr.alpha_composite(L)
+def stamp(txt,font,fill,sp):
+    d0=ImageDraw.Draw(Image.new('RGBA',(8,8))); ws=[d0.textlength(c,font=font) for c in txt]; tw=int(sum(ws)+sp*(len(txt)-1)); so=max(5,font.size//17)
+    L=Image.new('RGBA',(tw+6*so,int(font.size*1.5)+6*so),(0,0,0,0)); d=ImageDraw.Draw(L)
+    for sw,col in ((so,(0,0,0,255)),(0,fill+(255,))):
+        x=3*so
+        for c,w in zip(txt,ws): d.text((x,3*so),c,font=font,fill=col,stroke_width=sw,stroke_fill=col); x+=w+sp
+    return L.crop(L.getbbox())
+ETSY=stamp('LA TROVI SU ETSY!',pd(150),(241,100,30),12)
+def pulse(fr,t,cx,cy):
+    a=ease((t-19.8)/0.35)
+    if a<=0: return
+    k=(0.55+0.45*a)*(1+0.07*math.sin((t-19.8)*2*math.pi*1.8))*0.62
+    L=ETSY.resize((int(ETSY.width*k),int(ETSY.height*k)),Image.LANCZOS).rotate(8,expand=True,resample=Image.BICUBIC)
+    if a<1: L.putalpha(L.split()[3].point(lambda p:int(p*a)))
+    fr.alpha_composite(L,(int(cx-L.width/2),int(cy-L.height/2)))
 WORDS=[  # text, start, end, y, font, size, weight, sp, colour
  ('INTENSO',4.0,6.9,0,'s',66,400,18),
  ('AUDACE',7.0,9.9,0,'s',66,400,18),
@@ -117,7 +132,7 @@ for n in range(int(TOT*FPS)):
     if t>19.8:
         a=ease((t-19.8)/0.8)
         gta(fr,'VAI COL TANGO!',BANDY-240,pd(96),(255,255,255),a,8); d=ImageDraw.Draw(fr)
-        spaced(d,'La tazza di Bronco è su Etsy',BANDY+BH+450,v(serif(52),700),(45,32,24),a,1)
-        spaced(d,'link in bio',BANDY+BH+520,v(serif(46),600),(95,75,60),a,3)
+        pulse(fr,t,W//2,BANDY+BH+500); d=ImageDraw.Draw(fr)
+        spaced(d,'link in bio',BANDY+BH+600,v(serif(46),600),(95,75,60),a,3)
     out.stdin.write(fr.convert('RGB').tobytes())
 out.stdin.close(); out.wait(); print('ok')
