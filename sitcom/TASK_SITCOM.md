@@ -38,7 +38,7 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
    URL: https://raw.githubusercontent.com/marconicreation/bronco-media/main/sitcom/episodi/epNN.mp4 — verifica con curl -sI che risponda 200.
 6. Make data-store-records_replace: dataStoreId 233472, key "puntata", data {"date": D, "v1": URL, "m1": didascalia del json}.
 7. Avvisa Robi in italiano, breve: titolo e copione della puntata di domani (le battute), così se qualcosa non gli piace lo dice in tempo.
-8. ATTRAZIONI (tools/CRESCITA.md, sezione ATTRAZIONI): rispondi ai commenti Instagram (scenari Make 8663341 poi 8663345), e nella puntata
+8. ATTRAZIONI (tools/CRESCITA.md, sezione ATTRAZIONI): i commenti Instagram li risponde DA SOLO Bronco (Make 8704211, dal 20/11): NON lanciare 8663341/8663345. Nella puntata
    applica gioco della settimana (lunedì/giovedì), notizia del giorno e "tipo_aggancio" a rotazione.
 
 ## NUOVO FORMATO dal 18/11 (Robi: "innovare tutto"): BATTUTA SUBITO + MINI-SAGA + REGALO
