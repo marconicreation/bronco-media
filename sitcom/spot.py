@@ -15,7 +15,9 @@ sys.path.insert(0, os.path.join(HERE, 'musica')); import canzone  # dal 20/11 la
 
 W, H, FPS = 1080, 1920, 30
 BG = (38, 22, 14); CREAM = (255, 246, 228); INK = (20, 12, 8); GOLD = (255, 214, 90)
-FONT = os.path.join(ROOT, 'Bangers-Regular.ttf')
+# FONT (Robi 20/11): Pricedown stile GTA ovunque parlino i personaggi. Il file NON sta nel repo (licenza): sta nei file del progetto.
+_F = ['/mnt/project-files/fonts/Pricedown_Bl.otf', os.path.join(ROOT, 'fonts', 'Pricedown_Bl.otf'), os.path.join(ROOT, 'Bangers-Regular.ttf')]
+FONT = next(f for f in _F if os.path.exists(f))
 f_big = ImageFont.truetype(FONT, 118); f_mid = ImageFont.truetype(FONT, 76); f_bub = ImageFont.truetype(FONT, 78); f_tag = ImageFont.truetype(FONT, 50)
 BAR = 240 / canzone.BPM if canzone.ATTIVA else lounge.BAR; NB = int(round(BAR * FPS))
 
@@ -43,20 +45,21 @@ def fumetto(d, text, y_punta):
     d.rounded_rectangle((x0, y0, x0 + bw, y0 + bh), 50, fill=CREAM, outline=INK, width=8)
     d.polygon([(W // 2 - 40, y0 + bh - 4), (W // 2 + 40, y0 + bh - 4), (W // 2 + 10, y0 + bh + 66)], fill=CREAM)
     d.line([(W // 2 - 40, y0 + bh), (W // 2 + 10, y0 + bh + 66), (W // 2 + 40, y0 + bh)], fill=INK, width=8)
-    for i, ln in enumerate(lines): d.text((W // 2, y0 + 35 + i * lh + lh // 2), ln, font=f_bub, fill=INK, anchor='mm')
+    for i, ln in enumerate(lines):  # stile GTA: lettere bianche, contorno nero spesso
+        d.text((W // 2, y0 + 35 + i * lh + lh // 2), ln, font=f_bub, fill=(255, 255, 255), anchor='mm', stroke_width=7, stroke_fill='black')
 
 def frames(chi):
     z = TAZZE[chi]; nome = chi
     posa = Image.open(os.path.join(HERE, 'pose', z['posa'])).convert('RGB')                     # 1264 px
-    foto = Image.open(os.path.join(ROOT, 'gadget', 'foto', z['file'] + '_foto.jpg')).convert('RGB')  # 2000 px
-    foto = foto.crop((180, 200, 1880, 1900))                                                        # la tazza intera al centro, 1700 px veri
-    st = Image.open(os.path.join(ROOT, 'gadget', 'tazze', z['file'] + '_stampa.png')).convert('RGBA')
-    terzo = st.width // 3; dis = st.crop((terzo, 0, 2 * terzo, st.height))                          # un solo disegno (sono 3 intorno alla tazza)
+    # tazze v2 (20/11): foto 3D Blender 1600 px e disegno singolo trasparente
+    foto = Image.open(os.path.join(ROOT, 'gadget', 'tazze_v2', z['file'] + '_foto.jpg')).convert('RGB')
+    fw = foto.width; foto = foto.crop((int(fw * .09), int(fw * .10), int(fw * .94), int(fw * .95)))     # la tazza intera, 1360 px veri
+    dis = Image.open(os.path.join(ROOT, 'gadget', 'tazze_v2', z['file'] + '_disegno.png')).convert('RGBA')
     # 1) il personaggio dice la sua frase
     for k in range(NB):
         t = k / FPS; c = Image.new('RGB', (W, H), BG); d = ImageDraw.Draw(c)
         c.paste(quadro(posa, 1080, t, BAR, 0.04), (0, 640))
-        fumetto(d, z['frase'], 600)
+        fumetto(d, z['frase'].upper(), 600)
         testo(d, (W // 2, 90), f'LA TAZZA DI {nome}', f_mid, stroke=6)
         yield c
     # 2-3) la foto della tazza vera
