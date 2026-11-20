@@ -64,8 +64,8 @@ def gta(fr,txt,y,font,fill,a,sp):
     if a<=0: return
     L=Image.new('RGBA',fr.size,(0,0,0,0)); d=ImageDraw.Draw(L); sz=font.size
     ws=[d.textlength(c,font=font) for c in txt]; tw=sum(ws)+sp*(len(txt)-1)
-    so=max(4,sz//9); si=max(3,sz//14)
-    for sw,col in ((so+si,(255,255,255,255)),(so,(0,0,0,255)),(0,fill+(255,))):
+    so=max(5,sz//17)
+    for sw,col in ((so,(0,0,0,255)),(0,fill+(255,))):
         x=(W-tw)/2
         for c,w in zip(txt,ws):
             d.text((x,y),c,font=font,fill=col,stroke_width=sw,stroke_fill=col); x+=w+sp
@@ -91,7 +91,7 @@ for n in range(int(TOT*FPS)):
     a6=shot_alpha(t,starts[5],TOT,last=True)
     if a6>0: band+=a6*np.array(bronco_scene(t)).astype(float)
     # fade from black at start, to black at very end? keep end.
-    fr=Image.new('RGBA',(W,H),(0,0,0,255))
+    kb=ease((t-16.0)/1.4); fr=Image.new('RGBA',(W,H),(int(244*kb),int(233*kb),int(208*kb),255))
     fr.paste(Image.fromarray(np.clip(band,0,255).astype('uint8')),(0,BANDY))
     d=ImageDraw.Draw(fr)
     for txt,s,e,dy,ft,sz,wg,sp in WORDS:
@@ -104,7 +104,7 @@ for n in range(int(TOT*FPS)):
     if t>19.8:
         a=ease((t-19.8)/0.8)
         gta(fr,'VAI COL TANGO!',BANDY-240,pd(96),(255,255,255),a,8); d=ImageDraw.Draw(fr)
-        spaced(d,'La tazza di Bronco è su Etsy',BANDY+BH+450,v(serif(52),600),WHITE,a,1)
-        spaced(d,'link in bio',BANDY+BH+520,v(serif(46),500),(200,190,170),a,3)
+        spaced(d,'La tazza di Bronco è su Etsy',BANDY+BH+450,v(serif(52),700),(45,32,24),a,1)
+        spaced(d,'link in bio',BANDY+BH+520,v(serif(46),600),(95,75,60),a,3)
     out.stdin.write(fr.convert('RGB').tobytes())
 out.stdin.close(); out.wait(); print('ok')
