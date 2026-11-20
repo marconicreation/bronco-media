@@ -60,13 +60,24 @@ def spaced(d,txt,y,font,fill,a,sp):
     if a<=0: return
     ws=[d.textlength(c,font=font) for c in txt]; tw=sum(ws)+sp*(len(txt)-1); x=(W-tw)/2
     for c,w in zip(txt,ws): d.text((x,y),c,font=font,fill=fill+(int(255*a),)); x+=w+sp
+def gta(fr,txt,y,font,fill,a,sp):
+    if a<=0: return
+    L=Image.new('RGBA',fr.size,(0,0,0,0)); d=ImageDraw.Draw(L); sz=font.size
+    ws=[d.textlength(c,font=font) for c in txt]; tw=sum(ws)+sp*(len(txt)-1)
+    so=max(4,sz//9); si=max(3,sz//14)
+    for sw,col in ((so+si,(255,255,255,255)),(so,(0,0,0,255)),(0,fill+(255,))):
+        x=(W-tw)/2
+        for c,w in zip(txt,ws):
+            d.text((x,y),c,font=font,fill=col,stroke_width=sw,stroke_fill=col); x+=w+sp
+    if a<1: L.putalpha(L.split()[3].point(lambda p:int(p*a)))
+    fr.alpha_composite(L)
 WORDS=[  # text, start, end, y, font, size, weight, sp, colour
  ('INTENSO',4.0,6.9,0,'s',66,400,18),
  ('AUDACE',7.0,9.9,0,'s',66,400,18),
  ('INDIMENTICABILE',10.0,12.9,0,'s',58,400,10),
  ('IL NUOVO PROFUMO DI',13.0,15.6,0,'c',46,400,8),
- ('BRONCO',17.55,TOT+1,-20,'P',190,0,10),
- ('Sa di caffè.',18.9,TOT+1,185,'p',92,0,3),
+ ('BRONCO',17.55,TOT+1,-10,'P',180,0,22),
+ ('Sa di caffè.',18.9,TOT+1,205,'p',92,0,9),
 ]
 GOLD=(232,214,170); WHITE=(240,236,228)
 out=subprocess.Popen(['ffmpeg','-v','error','-y','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','-','-c:v','libx264','-pix_fmt','yuv420p','-crf','18',D+'video3_muto.mp4'],stdin=subprocess.PIPE)
@@ -87,12 +98,13 @@ for n in range(int(TOT*FPS)):
         a=ease((t-s)/(0.3 if ft in 'pP' else 0.8))*ease((e-t)/0.6)
         font=pd(sz) if ft in 'pP' else v(serif(sz) if ft=='s' else cin(sz),wg)
         col=GOLD if ft in 'cP' else WHITE
-        spaced(d,txt,BANDY+BH+70+dy,font,col,a,sp)
+        if ft in 'pP': gta(fr,txt,BANDY+BH+70+dy,font,(255,255,255) if ft=='p' else (255,214,90),a,sp); d=ImageDraw.Draw(fr)
+        else: spaced(d,txt,BANDY+BH+70+dy,font,col,a,sp)
     # Etsy line under, elegant
     if t>19.8:
         a=ease((t-19.8)/0.8)
-        spaced(d,'VAI COL TANGO!',BANDY-230,pd(96),WHITE,a,4)
-        spaced(d,'La tazza di Bronco è su Etsy',BANDY+BH+425,v(serif(52),600),WHITE,a,1)
-        spaced(d,'link in bio',BANDY+BH+495,v(serif(46),500),(200,190,170),a,3)
+        gta(fr,'VAI COL TANGO!',BANDY-240,pd(96),(255,255,255),a,8); d=ImageDraw.Draw(fr)
+        spaced(d,'La tazza di Bronco è su Etsy',BANDY+BH+450,v(serif(52),600),WHITE,a,1)
+        spaced(d,'link in bio',BANDY+BH+520,v(serif(46),500),(200,190,170),a,3)
     out.stdin.write(fr.convert('RGB').tobytes())
 out.stdin.close(); out.wait(); print('ok')
