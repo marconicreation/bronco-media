@@ -30,6 +30,16 @@ def scene_da_json(ep):
     out.append({'chi': 'BRONCO', 'testo': 'Vai col tango!', 'battute': 1, 'tango': True})
     return out
 
+def durata(f):
+    return float(subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f], capture_output=True, text=True).stdout)
+
+def adatta_battute(scene, cartella):
+    """Allunga l'inquadratura (a battute intere di musica) se la voce non ci sta."""
+    import math
+    for i, s in enumerate(scene):
+        f = os.path.join(cartella, f'{i:02d}.mp3')
+        if os.path.exists(f): s['battute'] = max(s['battute'], math.ceil((durata(f) + 0.6) / BAR))
+
 def voce_unica(scene, cartella, out):
     """Mette in fila le voci (una per scena, 0,3 s dopo l'inizio della sua inquadratura)."""
     ins, filt, t, j = [], [], 0.0, 0
@@ -48,6 +58,7 @@ if __name__ == '__main__':
     J, OUT = sys.argv[1], sys.argv[2]; VOCI = sys.argv[3] if len(sys.argv) > 3 else None
     ep = json.load(open(J)); scene = scene_da_json(ep)
     T = tempfile.mkdtemp()
+    if VOCI: adatta_battute(scene, VOCI)
     voce = voce_unica(scene, VOCI, os.path.join(T, 'voci.mp3')) if VOCI else None
     testata = f"AL BANCONE DI BRONCO · EP. {ep['numero']}"
     P.render(scene, os.path.join(T, 'ep.mp4'), testata=testata, voce=voce, ritardo=0)
