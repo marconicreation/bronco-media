@@ -58,7 +58,7 @@ def prepara_voci(scene, cartella, out):
     pulisci = 'silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse'
     for i, s in enumerate(scene):
         dst = os.path.join(out, f'{i:02d}.mp3')
-        if s.get('fissa'): subprocess.run(['cp', os.path.join(FISSE, s['fissa']), dst], check=True); continue
+        if s.get('fissa'): subprocess.run(['cp', os.path.join(FISSE, s['fissa']), dst], check=True); s['_voce'] = dst; continue
         src = os.path.join(cartella, f'{i:02d}.mp3')
         if not os.path.exists(src):
             if i in servono: manca.append(i)
@@ -67,7 +67,7 @@ def prepara_voci(scene, cartella, out):
         subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', src, '-af', pulisci, tmp], check=True)
         d = durata(tmp); vel = min(1.25, d / 8.0) if d > 8.0 else 1.0
         subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', tmp, '-af', f'atempo={vel:.3f}', '-b:a', '128k', dst], check=True)
-        os.remove(tmp)
+        os.remove(tmp); s['_voce'] = dst
     if manca: print('ATTENZIONE: mancano le voci delle scene', manca, file=sys.stderr)
     return out
 
@@ -77,16 +77,16 @@ def durata(f):
 def adatta_battute(scene, cartella):
     """Allunga l'inquadratura (a battute intere di musica) se la voce non ci sta."""
     import math
-    for i, s in enumerate(scene):
-        f = os.path.join(cartella, f'{i:02d}.mp3')
-        if os.path.exists(f): s['battute'] = max(s['battute'], math.ceil((durata(f) + 0.6) / BAR))
+    for s in scene:
+        f = s.get('_voce')
+        if f: s['battute'] = max(s['battute'], math.ceil((durata(f) + 0.6) / BAR))
 
 def voce_unica(scene, cartella, out):
     """Mette in fila le voci (una per scena, 0,3 s dopo l'inizio della sua inquadratura)."""
     ins, filt, t, j = [], [], 0.0, 0
-    for i, s in enumerate(scene):
-        f = os.path.join(cartella, f'{i:02d}.mp3')
-        if os.path.exists(f):
+    for s in scene:
+        f = s.get('_voce')
+        if f:
             ins += ['-i', f]; ms = int((t + 0.3) * 1000)
             filt.append(f'[{j}:a]aformat=channel_layouts=mono:sample_rates=44100,adelay={ms}[a{j}]'); j += 1
         t += s['battute'] * BAR
@@ -111,14 +111,23 @@ if __name__ == '__main__':
         for i, chi, vid, testo in da_registrare(scene_da_json(json.load(open(sys.argv[2])))):
             print(f'{i:02d}.mp3\t{chi}\t{vid}\t{testo}')
         sys.exit()
+    PROVA = '--prova' in sys.argv
+    if PROVA: sys.argv.remove('--prova')
     J, OUT = sys.argv[1], sys.argv[2]; VOCI = sys.argv[3] if len(sys.argv) > 3 else None
     ep = json.load(open(J)); scene = scene_da_json(ep)
     T = tempfile.mkdtemp(); P.DECORA = bollino(ep)
     if VOCI: VOCI = prepara_voci(scene, VOCI, os.path.join(T, 'voci')); adatta_battute(scene, VOCI)
+    if PROVA:  # Reel di prova (campagna): apre con la battuta di Geremia, niente trio, aggancio, cartelli e sigla
+        if ep.get('aggancio'): scene = scene[1:]
+        scene = [s for s in scene if s['chi'] not in ('TRIO', 'CARTELLO')]
+        dial = [s for s in scene if s['chi'] in VOCI_ID and s['testo'] and not s.get('fissa') and s.get('parla', 1) != []]
+        cand = [s for s in dial if s['chi'] == 'GEREMIA'] or dial[:1]
+        if cand: scene = [cand[0]] + [s for s in scene if s is not cand[0]]
     voce = voce_unica(scene, VOCI, os.path.join(T, 'voci.mp3')) if VOCI else None
     testata = f"AL BANCONE DI BRONCO · EP. {ep['numero']}"
-    if ep.get('saga'): testata += f" · PARTE {ep['saga']['parte']}/{ep['saga']['di']}"
+    if ep.get('saga') and not PROVA: testata += f" · PARTE {ep['saga']['parte']}/{ep['saga']['di']}"
     P.render(scene, os.path.join(T, 'ep.mp4'), testata=testata, voce=voce, ritardo=0)
-    subprocess.run(['python3', os.path.join(SITCOM, 'sigla', 'sigla.py'), '--accoda', os.path.join(T, 'ep.mp4'), os.path.join(T, 'full.mp4')], check=True)
+    if PROVA: os.rename(os.path.join(T, 'ep.mp4'), os.path.join(T, 'full.mp4'))
+    else: subprocess.run(['python3', os.path.join(SITCOM, 'sigla', 'sigla.py'), '--accoda', os.path.join(T, 'ep.mp4'), os.path.join(T, 'full.mp4')], check=True)
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', os.path.join(T, 'full.mp4'), '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', OUT], check=True)
     print(OUT)

@@ -59,3 +59,10 @@ niente La Spezia e provincia, niente concorsi con premi (in Italia servono autor
      Quale battuta vince? 1, 2 o 3? 👇" + riga regalo + hashtag.
 6. NATALE (Robi sì 18/11, dettagli in sitcom/TASK_SITCOM.md): "Il calendario dell'Avvento di Bronco" dal 1/12 al 24/12, ogni puntata è una casella ("🎄 -N a Natale")
    e la saga di Natale porta al regalo "Il cocktail col tuo nome".
+
+## CAMPAGNA "NATALE AL BANCONE" (Robi 20/11, solo mosse gratuite)
+Dati veri Instagram (Windsor, 14 giorni): le puntate raggiungono 6-60 persone, 0 condivisioni, 0 salvataggi; la visione media sale (ep5 12,6 s).
+Il segnale che oggi conta di più per arrivare a gente nuova sono gli INVII (chi manda il Reel a un amico) e il tempo di visione.
+- Reel di prova (Trial Reel, solo non follower) ogni giorno 17:41 via Windsor: vedi sitcom/TASK_SITCOM.md sezione CAMPAGNA.
+- Didascalie: 2-3 volte a settimana una domanda che fa pensare a una persona ("Anche tu hai un amico come Geremia? 😂"). Mai "tagga/manda a 3 amici".
+- Misura domenicale: aggiungi per Instagram (Windsor get_data instagram: media_reach, media_shares, media_saved, media_reel_avg_watch_time) e confronta Reel di prova vs puntate.
