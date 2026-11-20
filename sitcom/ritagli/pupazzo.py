@@ -9,7 +9,7 @@ torso, braccio_sx, braccio_dx (PNG trasparenti).
 import os, sys, math, random, subprocess, tempfile, wave
 import numpy as np
 import cv2
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import ImageFont, Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -105,6 +105,48 @@ def finta_voce(n, finestre, seed=5):
         L = r.randint(3, 5); v[k:k + L] = val; k += L
     return v
 
+# ---------------------------------------------------------------- scritte stile TikTok
+STILE_TESTO = 'fumetto'      # 'fumetto' (nuvoletta in alto) o 'tiktok' (parole grandi a tempo, quella detta in giallo)
+GIALLO = (255, 214, 40)
+IMG_TT = 400                 # in stile tiktok la scena sale (non serve spazio per la nuvoletta)
+_FT = {}
+def font_tt(sz):
+    if sz not in _FT: _FT[sz] = ImageFont.truetype(R.FONT, sz)
+    return _FT[sz]
+
+def tempi_parole(testo, vol):
+    """Fotogramma d'inizio di ogni parola: le lettere sono distribuite sui fotogrammi in cui si sente la voce."""
+    parole = testo.split(); voce = np.asarray(vol) > 0.16
+    idx = np.flatnonzero(voce)
+    if len(idx) == 0: idx = np.arange(len(vol))
+    lett = np.cumsum([0] + [len(p) + 1 for p in parole])[:-1] / max(1, sum(len(p) + 1 for p in parole))
+    return [int(idx[min(len(idx) - 1, int(f * len(idx)))]) for f in lett]
+
+def scritte_tiktok(c, testo, k, inizi, v, fine, seed):
+    """Disegna la battuta a parole grandi; la parola detta e' gialla e fa un piccolo salto; se urla, tremano."""
+    if k < inizi[0] - 2 or k > fine + 8: return
+    d = ImageDraw.Draw(c); base = font_tt(96); parole = testo.split()
+    cur = max([i for i, a in enumerate(inizi) if a <= k] or [0])
+    ent = min(1.0, (k - inizi[0] + 2) / 5)                       # entrata: sale dal basso con rimbalzo
+    oy = int((1 - ent) * 60 - math.sin(min(1, ent) * math.pi) * 12)
+    r = random.Random(seed * 1000 + k)
+    sx, sy = (r.randint(-7, 7), r.randint(-6, 6)) if v > 0.62 else (0, 0)
+    righe = R.wrap(d, testo, base, 980); y = IMG_TT + 840 + oy + sy; i = 0
+    for ln in righe:
+        x = W / 2 - d.textlength(ln, font=base) / 2 + sx
+        for p in ln.split():
+            wpx = d.textlength(p, font=base)
+            if i == cur and k <= fine:
+                fase = (k - inizi[i]) / 5
+                sz = int(96 * (1 + 0.14 * math.sin(min(1, fase) * math.pi))) if fase < 1 else 96
+                dopo = ((x + wpx / 2, y), p, font_tt(sz))
+            else:
+                d.text((x + wpx / 2, y), p, font=base, fill='white', anchor='mm', stroke_width=10, stroke_fill='black')
+            x += wpx + d.textlength(' ', font=base); i += 1
+        y += 112
+    if 'dopo' in locals():
+        d.text(dopo[0], dopo[1], font=dopo[2], fill=GIALLO, anchor='mm', stroke_width=10, stroke_fill='black')
+
 BANCONE_PLASTILINA = 1080   # riga (su S) del bordo alto del bancone nel bar di plastilina
 
 def sfondo_plastilina():
@@ -129,6 +171,10 @@ def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None
     collo = (S // 2, ty + 70)
     sp_sx, sp_dx = (tx + 70, ty + 80), (tx + tw - 70, ty + 80)
     n = int(round(dur * FPS)); stato = None; ultimo = None; bocca = 'chiusa'; tenuta = 0
+    tt = STILE_TESTO == 'tiktok' and testo
+    if tt:
+        inizi = tempi_parole(testo, vol[:n]); vv = np.flatnonzero(np.asarray(vol[:n]) > 0.16)
+        fine = int(vv[-1]) if len(vv) else n - 1
     for k in range(n):
         t = k / FPS; q = int(t * POSE_FPS); v = vol[k] if k < len(vol) else 0
         nuova = 'aperta' if v > 0.62 else 'parla' if v > 0.16 else 'chiusa'
@@ -149,7 +195,9 @@ def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None
         faccia = 'blink' if occhi else bocca
         chiave = (faccia, ang_t, dy_t, ang_d, ang_s)
         if ultimo and chiave == ultimo[0]:
-            ultimo[1].save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92); continue
+            out = ultimo[1].copy() if tt else ultimo[1]
+            if tt: scritte_tiktok(out, testo, k, inizi, v, fine, k0)
+            out.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92); continue
         fr = bg.copy()
         if not plast: fr.alpha_composite(ban)
         bs, xy = ruota(P['bsx'], ang_s, (P['bsx'].width // 2, 30), sp_sx); metti(fr, bs, xy)
@@ -161,11 +209,14 @@ def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None
         sq = fr.convert('RGB').resize((W, W), Image.LANCZOS)
         a = np.array(sq).astype(np.float32) + gr[:, :, None]
         sq = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
-        c = Image.new('RGB', (W, H), R.BG); c.paste(sq, (0, IMG_Y)); d = ImageDraw.Draw(c)
+        c = Image.new('RGB', (W, H), R.BG); c.paste(sq, (0, IMG_TT if STILE_TESTO == 'tiktok' else IMG_Y)); d = ImageDraw.Draw(c)
         d.text((W // 2, 62), testata, font=R.f_tag, fill=R.GOLD, anchor='mm', stroke_width=3, stroke_fill='black')
-        if testo: R.fumetto(c, testo)
+        if testo and not tt: R.fumetto(c, testo)
         d.text((W // 2, 1790), '@marconicreation', font=R.f_tag, fill=(230, 200, 160), anchor='mm')
-        c.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92); ultimo = (chiave, c)
+        ultimo = (chiave, c)
+        out = c.copy() if tt else c
+        if tt: scritte_tiktok(out, testo, k, inizi, v, fine, k0)
+        out.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92)
     return n
 
 def render(scene, out_mp4, testata='AL BANCONE DI BRONCO', voce=None, ritardo=0.3):
@@ -203,4 +254,6 @@ PROVA_TRIO = [
 if __name__ == '__main__':
     if '--plastilina' in sys.argv:
         sys.argv.remove('--plastilina'); PERSONAGGI.update(PERSONAGGI_PLASTILINA)
+    if '--tiktok' in sys.argv:
+        sys.argv.remove('--tiktok'); STILE_TESTO = 'tiktok'
     print(render(PROVA_TRIO, sys.argv[1] if len(sys.argv) > 1 else 'prova_trio.mp4', testata='AL BANCONE DI BRONCO · PROVA PUPAZZI'))
