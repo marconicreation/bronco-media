@@ -17,9 +17,9 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 R = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-FONT = os.path.join(R, "Bangers-Regular.ttf")
+FONT = os.path.join(R, "fonts", "Pricedown Bl.otf")  # Pricedown: regola Robi 20/11/2026
 W, H, FPS = 1080, 1920, 30
-BG = (38, 22, 14); YEL = (255, 214, 90); CREAM = (230, 200, 160)
+BG = (38, 22, 14); YEL = (255, 255, 255); CREAM = (255, 255, 255)
 SR = 44100
 
 
@@ -34,7 +34,7 @@ def title(img, txt, t, y, f, fill=YEL, drop=160):
     d = ImageDraw.Draw(img)
     p = ease(t / 0.35); dy = int((1 - p) * -drop)
     d.multiline_text((W // 2, y + dy), txt, font=f, fill=fill, anchor='mm', align='center',
-                     stroke_width=8, stroke_fill=(0, 0, 0), spacing=8)
+                     stroke_width=14, stroke_fill=(0, 0, 0), spacing=8)
 
 
 def fit_hook(txt, maxw, start=150, minsize=58, maxlines=3):
@@ -77,8 +77,8 @@ def scene_main(clean, capt, hook, dur, pop=True, tag="BRONCO DICE LA SUA"):
         c.paste(crop, (0, 430 + bob))
         title(c, hook, t, 250, hf)
         ImageDraw.Draw(c).text((W // 2, 1640), tag, font=sm, fill='white',
-                               anchor='mm', stroke_width=6, stroke_fill='black')
-        ImageDraw.Draw(c).text((W // 2, 1810), "@marconicreation", font=sm, fill=CREAM, anchor='mm')
+                               anchor='mm', stroke_width=10, stroke_fill='black')
+        ImageDraw.Draw(c).text((W // 2, 1810), "@marconicreation", font=sm, fill=CREAM, anchor='mm', stroke_width=8, stroke_fill='black')
         yield c
 
 
@@ -102,7 +102,7 @@ def scene_end(kind, dur):
             title(c, "TI È PIACIUTA?", t, 900, big)
             if t > 0.5: title(c, "SEGUI BRONCO", t - 0.5, 1130, mid, 'white')
             if t > 1.0: title(c, "BATTUTE DAL BANCONE\nOGNI GIORNO", t - 1.0, 1330, sm, CREAM)
-        ImageDraw.Draw(c).text((W // 2, 1800), "@marconicreation", font=sm, fill=CREAM, anchor='mm')
+        ImageDraw.Draw(c).text((W // 2, 1800), "@marconicreation", font=sm, fill=CREAM, anchor='mm', stroke_width=8, stroke_fill='black')
         yield c
 
 
