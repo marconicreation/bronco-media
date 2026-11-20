@@ -27,9 +27,9 @@ PERSONAGGI = {
 
 # stessi personaggi in versione plastilina (pezzi in plastilina/<nome>/, estratti con estrai_plastilina.py)
 PERSONAGGI_PLASTILINA = {
-    'BRONCO': dict(cartella='plastilina/bronco', scala=0.92, bocca=(0.22, 0.52, 0.78, 0.92), occhi=(0.12, 0.18, 0.88, 0.50), collo=50),
-    'GEREMIA': dict(cartella='plastilina/geremia', scala=1.10, bocca=(0.25, 0.58, 0.75, 0.97), occhi=(0.20, 0.22, 0.80, 0.52), collo=40),
-    'BARTOLOMEO': dict(cartella='plastilina/bartolomeo', scala=1.08, bocca=(0.00, 0.52, 0.58, 0.88), occhi=(0.18, 0.24, 0.75, 0.50), collo=110),
+    'BRONCO': dict(cartella='plastilina/bronco', sfondo='plastilina', scala=0.92, bocca=(0.22, 0.52, 0.78, 0.92), occhi=(0.12, 0.18, 0.88, 0.50), collo=50),
+    'GEREMIA': dict(cartella='plastilina/geremia', sfondo='plastilina', scala=1.10, gesti=0.6, bocca=(0.25, 0.58, 0.75, 0.97), occhi=(0.20, 0.22, 0.80, 0.52), collo=40),
+    'BARTOLOMEO': dict(cartella='plastilina/bartolomeo', sfondo='plastilina', scala=1.08, bocca=(0.00, 0.52, 0.58, 0.88), occhi=(0.18, 0.24, 0.75, 0.50), collo=110),
 }
 
 def carica(cartella, scala, BOCCA=(0.22, 0.50, 0.78, 0.90), OCCHI=(0.12, 0.18, 0.88, 0.50)):
@@ -105,15 +105,26 @@ def finta_voce(n, finestre, seed=5):
         L = r.randint(3, 5); v[k:k + L] = val; k += L
     return v
 
+BANCONE_PLASTILINA = 1080   # riga (su S) del bordo alto del bancone nel bar di plastilina
+
+def sfondo_plastilina():
+    """Bar di plastilina (plastilina/bar_full.png, quadrato centrale) -> (sfondo, bancone davanti)."""
+    im = Image.open(os.path.join(HERE, 'plastilina', 'bar_full.png')).convert('RGBA'); w, h = im.size
+    bg = im.crop(((w - h) // 2, 0, (w + h) // 2, h)).resize((S, S), Image.LANCZOS)
+    ban = bg.copy(); a = Image.new('L', (S, S), 0); ImageDraw.Draw(a).rectangle((0, BANCONE_PLASTILINA, S, S), fill=255)
+    ban.putalpha(a)
+    return bg, ban
+
 def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None):
     """Disegna una inquadratura (un personaggio) lunga dur secondi; vol = volume voce per fotogramma (0..1)."""
     P = cache.get(id(cfg)) if cache is not None else None
     if P is None:
         P = carica(cfg['cartella'], cfg['scala'], cfg['bocca'], cfg['occhi'])
         if cache is not None: cache[id(cfg)] = P
-    bg, ban = R.sfondo_bar(); gr = R.grana()
+    plast = cfg.get('sfondo') == 'plastilina'
+    bg, ban = sfondo_plastilina() if plast else R.sfondo_bar(); gr = R.grana() * (0.3 if plast else 1.0)
     T = P['torso']; tw, th = T.size
-    tx, ty = S // 2 - tw // 2, 1172 - th
+    tx, ty = S // 2 - tw // 2, (BANCONE_PLASTILINA + 60 if plast else 1172) - th
     hw, hh = P['chiusa'].size
     collo = (S // 2, ty + 70)
     sp_sx, sp_dx = (tx + 70, ty + 80), (tx + tw - 70, ty + 80)
@@ -129,7 +140,7 @@ def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None
             ang_t = round((2.5 * math.sin(t * 2.6) + (r.uniform(-1.5, 1.5) if parla else 0)) * 2) / 2
             dy_t = int(-6 * abs(math.sin(t * 6.0))) if parla else 0
             if tango: ang_d = 150 if t > 0.15 else 80
-            elif parla: ang_d = [48, 70, 58, 78][(q // 3) % 4]
+            elif parla: ang_d = [round(a * cfg.get('gesti', 1.0)) for a in (48, 70, 58, 78)][(q // 3) % 4]
             else: ang_d = 30
             ang_s = -28 + (-14 if parla and (q // 5) % 2 else 0)
             occhi = ((t + k0 / FPS) % 2.9) < 0.17 and not parla
@@ -139,12 +150,14 @@ def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None
         chiave = (faccia, ang_t, dy_t, ang_d, ang_s)
         if ultimo and chiave == ultimo[0]:
             ultimo[1].save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92); continue
-        fr = bg.copy(); fr.alpha_composite(ban)
+        fr = bg.copy()
+        if not plast: fr.alpha_composite(ban)
         bs, xy = ruota(P['bsx'], ang_s, (P['bsx'].width // 2, 30), sp_sx); metti(fr, bs, xy)
         bd, xy = ruota(P['bdx'], ang_d, (P['bdx'].width // 2, 30), sp_dx); metti(fr, bd, xy)
         metti(fr, T, (tx, ty + dy_t // 3))
         hd, xy = ruota(P[faccia], ang_t, (hw // 2, hh - cfg['collo']), (collo[0], collo[1] + dy_t)); metti(fr, hd, xy)
-        fr.alpha_composite(ban.crop((0, 1112, S, S)), (0, 1112))
+        if plast: fr.alpha_composite(ban)
+        else: fr.alpha_composite(ban.crop((0, 1112, S, S)), (0, 1112))
         sq = fr.convert('RGB').resize((W, W), Image.LANCZOS)
         a = np.array(sq).astype(np.float32) + gr[:, :, None]
         sq = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
