@@ -219,6 +219,43 @@ def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None
         out.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92)
     return n
 
+def scena_trio(dur, tmp, k0, testata, cache):
+    """Inquadratura larga: i tre pupazzi insieme al bancone, fermi che respirano e sbattono gli occhi."""
+    posti = [('BARTOLOMEO', 0.20, 0.58), ('BRONCO', 0.50, 0.62), ('GEREMIA', 0.80, 0.58)]
+    pezzi = []
+    for chi, fx, k in posti:
+        cfg = PERSONAGGI[chi]; key = ('trio', chi)
+        if key not in cache: cache[key] = carica(cfg['cartella'], cfg['scala'] * k, cfg['bocca'], cfg['occhi'])
+        pezzi.append((cfg, cache[key], fx, k))
+    plast = PERSONAGGI['BRONCO'].get('sfondo') == 'plastilina'
+    bg, ban = sfondo_plastilina() if plast else R.sfondo_bar(); gr = R.grana() * (0.3 if plast else 1.0)
+    base_y = (BANCONE_PLASTILINA + 40) if plast else 1150
+    n = int(round(dur * FPS))
+    for k in range(n):
+        t = k / FPS; q = int(t * POSE_FPS)
+        fr = bg.copy()
+        if not plast: fr.alpha_composite(ban)
+        for j, (cfg, P, fx, sc) in enumerate(pezzi):
+            T = P['torso']; tw, th = T.size; cx = int(S * fx)
+            tx, ty = cx - tw // 2, base_y - th
+            ang = round(2.0 * math.sin(q / POSE_FPS * 2.2 + j * 2.1) * 2) / 2
+            occhi = ((t + j * 0.9 + k0 / FPS) % 2.9) < 0.17
+            for b, a, sp in ((P['bsx'], -22, (tx + int(70 * sc), ty + int(80 * sc))), (P['bdx'], 22, (tx + tw - int(70 * sc), ty + int(80 * sc)))):
+                im, xy = ruota(b, a, (b.width // 2, int(30 * sc)), sp); metti(fr, im, xy)
+            metti(fr, T, (tx, ty))
+            hd = P['blink' if occhi else 'chiusa']; hw, hh = hd.size
+            im, xy = ruota(hd, ang, (hw // 2, hh - int(cfg['collo'] * sc)), (cx, ty + int(70 * sc))); metti(fr, im, xy)
+        if plast: fr.alpha_composite(ban)
+        else: fr.alpha_composite(ban.crop((0, 1112, S, S)), (0, 1112))
+        sq = fr.convert('RGB').resize((W, W), Image.LANCZOS)
+        a = np.array(sq).astype(np.float32) + gr[:, :, None]
+        sq = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+        c = Image.new('RGB', (W, H), R.BG); c.paste(sq, (0, IMG_TT if STILE_TESTO == 'tiktok' else IMG_Y)); d = ImageDraw.Draw(c)
+        d.text((W // 2, 62), testata, font=R.f_tag, fill=R.GOLD, anchor='mm', stroke_width=3, stroke_fill='black')
+        d.text((W // 2, 1790), '@marconicreation', font=R.f_tag, fill=(230, 200, 160), anchor='mm')
+        c.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92)
+    return n
+
 def render(scene, out_mp4, testata='AL BANCONE DI BRONCO', voce=None, ritardo=0.3):
     """scene: lista di {chi, testo, battute, tango?, parla: [(da, a)] secondi dentro la scena (senza voce)}."""
     BAR = 240 / 110; tmp = tempfile.mkdtemp(); k0 = 0; cache = {}
@@ -228,7 +265,8 @@ def render(scene, out_mp4, testata='AL BANCONE DI BRONCO', voce=None, ritardo=0.
         n = int(round((k0 / FPS + s['battute'] * BAR) * FPS)) - k0
         if vol_all is not None: vol = vol_all[k0:k0 + n]
         else: vol = finta_voce(n, s.get('parla', [(0.2, s['battute'] * BAR - 0.6)] if s.get('testo') else []), seed=k0)
-        scena_frames(PERSONAGGI[s['chi']], n / FPS, s.get('testo'), vol, tmp, k0, testata, s.get('tango', False), cache)
+        if s['chi'] == 'TRIO': scena_trio(n / FPS, tmp, k0, testata, cache)
+        else: scena_frames(PERSONAGGI[s['chi']], n / FPS, s.get('testo'), vol, tmp, k0, testata, s.get('tango', False), cache)
         k0 += n
     sys.path.insert(0, os.path.join(R.SITCOM, 'musica')); import canzone
     cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-framerate', str(FPS), '-i', os.path.join(tmp, '%05d.jpg')]
