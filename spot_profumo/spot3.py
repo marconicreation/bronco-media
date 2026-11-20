@@ -26,7 +26,7 @@ def steam(t):
     L=Image.new('RGBA',(BW,BH)); d=ImageDraw.Draw(L)
     a=int(150*ease((t-17.4)/0.6))
     for k in range(3):
-        x0=575+k*22; pts=[(x0+9*math.sin(j*0.5+t*3+k*2)+j*5.0, 420-j*5) for j in range(16)]
+        x0=537+k*22; pts=[(x0+9*math.sin(j*0.5+t*3+k*2)+j*5.0, 332-j*5) for j in range(16)]
         d.line(pts,fill=(255,255,255,a),width=10,joint='curve')
     return L.filter(ImageFilter.GaussianBlur(5))
 import numpy as _np
@@ -48,7 +48,7 @@ def bronco_scene(t):
     bob=-int(5*abs(math.sin((t-17.6)*7))) if 17.6<t<18.8 else 0
     if rise>0:
         f.alpha_composite(bron2,(500,BH-bh+70+off+bob))
-        f.alpha_composite(mug,(470,BH-mug.height+75+int((1-ease((t-17.0)/0.6))*360)))
+        f.alpha_composite(mug,(445,BH-mug.height-20+int((1-ease((t-17.0)/0.6))*360)))
         f.alpha_composite(steam(t))
         # cespugli davanti a Bronco e alla tazza
         fg=raw.convert('RGBA'); fg.putalpha(fgmask(arr)); f.alpha_composite(fg)
