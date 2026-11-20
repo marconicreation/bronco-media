@@ -9,7 +9,9 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-_F = [os.path.join(HERE, '..', 'Bangers-Regular.ttf'), '/home/user/bronco-media/Bangers-Regular.ttf']
+# FONT DEI FUMETTI (Robi 20/11): Pricedown. Il file NON sta nel repo (licenza): sta nei file del progetto.
+_F = ['/mnt/project-files/fonts/Pricedown_Bl.otf', os.path.join(HERE, '..', 'fonts', 'Pricedown_Bl.otf'),
+      os.path.join(HERE, '..', 'Bangers-Regular.ttf'), '/home/user/bronco-media/Bangers-Regular.ttf']
 FONT = next(f for f in _F if os.path.exists(f))
 W, H, FPS = 1080, 1920, 30
 BG = (38, 22, 14); CREAM = (255, 246, 228); INK = (20, 12, 8); GOLD = (255, 214, 90)
