@@ -4,13 +4,32 @@ Ogni giorno alle 13:00 (Europe/Rome) lo scenario Make "Puntata sitcom 13:00" pub
 Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere), leggendo la cassetta di Make
 (data store 233472, key "puntata": date = AAAA-MM-GG, v1 = URL del video, m1 = didascalia). Metricool NON si usa (limite 20 post/mese).
 
+
+> AGGIORNAMENTO 20/11/2026 (Robi: "voci ogni giorno"): se il messaggio della routine dice "montala con bash sitcom/monta.sh",
+> è il testo vecchio. Vale il punto 4 qui sotto: pupazzi di plastilina + voci ElevenLabs con sitcom/ritagli/episodio_pupazzi.py.
+
 ## Routine serale (prepara la puntata di DOMANI)
 1. add_repo marconicreation/bronco-media (push), git clone, cd bronco-media. D = data di DOMANI (Europe/Rome).
 2. Cerca in sitcom/episodi/ un epNN.json con "data" = D. Se c'è ed esiste epNN.mp4, vai al punto 6.
 3. Se non c'è: scrivi la puntata nuova (numero = ultimo + 1) seguendo le REGOLE qui sotto e lo stesso schema JSON delle puntate esistenti
    (copia la struttura di un epNN.json recente e cambia testi, titolo, data, didascalia; varia le pose e le inquadrature).
-4. bash sitcom/monta.sh sitcom/episodi/epNN.json  (crea epNN.mp4). Controlla 4 fotogrammi con Read
-   (ffmpeg -ss 1 / 10 / 20 / 30 -i video -frames:v 1 f.jpg e l'ultimo secondo prima della sigla): fumetti leggibili, interi, sopra l'immagine.
+4. PUPAZZI CON LE VOCI (Robi 20/11: "voci ogni giorno"). Dal 21/11 sera le puntate si montano con i pupazzi di plastilina,
+   le scritte stile TikTok e le tre voci fisse (NON più con monta.sh, che resta solo di riserva):
+   a) python3 sitcom/ritagli/episodio_pupazzi.py --battute sitcom/episodi/epNN.json
+      stampa le battute da registrare: nome file, personaggio, voice_id, testo ("Sciabadù!" e "Vai col tango!" sono già registrati).
+   b) Per ogni riga: ElevenLabs creative_generate_speech con model_id "eleven_v3", quel voice_id, generations_count 1,
+      prompt = "[tono in inglese] testo" (es. "[angry, shouting] ...", "[dreamy, excited] ...", "[dry, deadpan] ...").
+      UNA chiamata per battuta, mai ripetere (ogni chiamata costa crediti). Aspetta con creative_get_flow_run_status
+      e scarica l'mp3 dall'url del risultato: curl -sL -o /tmp/voci_epNN/NN.mp3 "URL". Le voci NON vanno nel repo.
+      Costo atteso: circa 300-400 crediti a puntata (budget approvato da Robi). Se una puntata supererebbe 600 crediti, accorcia le battute.
+   c) python3 sitcom/ritagli/episodio_pupazzi.py sitcom/episodi/epNN.json sitcom/episodi/epNN.mp4 /tmp/voci_epNN   (circa 6-8 minuti)
+      Se manca una voce lo script lo scrive (ATTENZIONE: mancano...): quella scena esce muta, avvisa Robi.
+   d) Controlla 4 fotogrammi con Read (ffmpeg -ss 1 / 10 / 20 / 30 -i video -frames:v 1 f.jpg) e il volume
+      (ffmpeg -i video -af volumedetect -f null - : mean_volume intorno a -17 dB, mai -91 = muto).
+   e) Se ElevenLabs non è disponibile nella sessione o le voci falliscono: monta la puntata con i pupazzi SENZA voci
+      (stesso comando senza l'ultima cartella), pubblicala lo stesso e avvisa Robi.
+   Nel json "voci": true. Le pose ("img") servono solo per capire chi parla (bronco_/geremia_/bartolomeo_...) o il campo "chi";
+   trio_bancone = inquadratura dei tre; "..." = reazione muta; "saga" e "avvento" funzionano come prima (cartello finale e bollino).
 5. git add sitcom/episodi && commit (stesso utente git indicato in tools/TASK.md) && push su main.
    URL: https://raw.githubusercontent.com/marconicreation/bronco-media/main/sitcom/episodi/epNN.mp4 — verifica con curl -sI che risponda 200.
 6. Make data-store-records_replace: dataStoreId 233472, key "puntata", data {"date": D, "v1": URL, "m1": didascalia del json}.
@@ -73,7 +92,8 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   battuta finale di Bartolomeo (senza "Sciabadù") -> scena SEPARATA con solo "Sciabadù!" su bartolomeo_sciabadu.jpg, inquadratura unica fissa ->
   reazione muta di Geremia ("...") -> battuta di Bronco. "Vai col tango!" lo aggiunge da solo sitcom.py nella scena finale: MAI scriverlo nelle battute.
 - Dal 20/11 una inquadratura per battuta di dialogo, lunga 2 battute di musica (vedi RITMO). Varia le pose da una battuta all'altra.
-- Fumetti: niente nomi dei personaggi, testo breve (max ~90 caratteri), statici. Niente voci. Musica = Torso Stufo (automatica).
+- Scritte: niente nomi dei personaggi, testo breve (max ~90 caratteri). Dal 21/11 voci fisse ElevenLabs (vedi punto 4) e scritte stile TikTok. Musica = Torso Stufo (automatica).
+- Battute dette ad alta voce: scrivile come si parlano (niente sigle o simboli strani; i numeri in lettere se brevi), max ~8 secondi di parlato a battuta.
 - Satira sottile su tasse, bollette, prezzi, burocrazia, caro vita: MAI nomi di persone o partiti, niente cifre precise, niente fatti inventati,
   niente riferimenti a persone o luoghi di La Spezia e provincia. Niente tratti o cognomi che richiamino stereotipi etnici o religiosi:
   Geremia è tirchio e brontolone, MAI usuraio, mai "prestiti", mai banchieri.

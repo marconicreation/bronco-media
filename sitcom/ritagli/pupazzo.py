@@ -109,6 +109,7 @@ def finta_voce(n, finestre, seed=5):
 STILE_TESTO = 'fumetto'      # 'fumetto' (nuvoletta in alto) o 'tiktok' (parole grandi a tempo, quella detta in giallo)
 GIALLO = (255, 214, 40)
 IMG_TT = 400                 # in stile tiktok la scena sale (non serve spazio per la nuvoletta)
+DECORA = None               # funzione(d, y_img) chiamata su ogni fotogramma (es. bollino dell'Avvento)
 _FT = {}
 def font_tt(sz):
     if sz not in _FT: _FT[sz] = ImageFont.truetype(R.FONT, sz)
@@ -211,6 +212,7 @@ def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None
         sq = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
         c = Image.new('RGB', (W, H), R.BG); c.paste(sq, (0, IMG_TT if STILE_TESTO == 'tiktok' else IMG_Y)); d = ImageDraw.Draw(c)
         d.text((W // 2, 62), testata, font=R.f_tag, fill=R.GOLD, anchor='mm', stroke_width=3, stroke_fill='black')
+        if DECORA: DECORA(d, IMG_TT if STILE_TESTO == 'tiktok' else IMG_Y)
         if testo and not tt: R.fumetto(c, testo)
         d.text((W // 2, 1790), '@marconicreation', font=R.f_tag, fill=(230, 200, 160), anchor='mm')
         ultimo = (chiave, c)
@@ -252,6 +254,28 @@ def scena_trio(dur, tmp, k0, testata, cache):
         sq = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
         c = Image.new('RGB', (W, H), R.BG); c.paste(sq, (0, IMG_TT if STILE_TESTO == 'tiktok' else IMG_Y)); d = ImageDraw.Draw(c)
         d.text((W // 2, 62), testata, font=R.f_tag, fill=R.GOLD, anchor='mm', stroke_width=3, stroke_fill='black')
+        if DECORA: DECORA(d, IMG_TT if STILE_TESTO == 'tiktok' else IMG_Y)
+        d.text((W // 2, 1790), '@marconicreation', font=R.f_tag, fill=(230, 200, 160), anchor='mm')
+        c.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92)
+    return n
+
+def scena_cartello(dur, tmp, k0, righe, sotto, cache):
+    """Cartello finale: scritta grande Pricedown che cade dall'alto sul bar di plastilina sfocato."""
+    if 'cartello_bg' not in cache:
+        plast = PERSONAGGI['BRONCO'].get('sfondo') == 'plastilina'
+        bg, ban = sfondo_plastilina() if plast else R.sfondo_bar()
+        fr = bg.copy(); fr.alpha_composite(ban)
+        sq = fr.convert('RGB').resize((W, W), Image.LANCZOS).filter(ImageFilter.GaussianBlur(14))
+        sq = Image.blend(sq, Image.new('RGB', sq.size, R.BG), 0.45)
+        c = Image.new('RGB', (W, H), R.BG); c.paste(sq, (0, (H - W) // 2)); cache['cartello_bg'] = c
+    fb, fs = font_tt(150), font_tt(70)
+    n = int(round(dur * FPS))
+    for k in range(n):
+        t = k / FPS; c = cache['cartello_bg'].copy(); d = ImageDraw.Draw(c)
+        e = min(1, t / 0.35); dy = int((1 - e) ** 2 * -300) + int(math.sin(min(1, t / 0.6) * math.pi) * 18 * (1 - e))
+        d.multiline_text((W // 2, 820 + dy), '\n'.join(righe), font=fb, fill=GIALLO, anchor='mm', align='center', stroke_width=12, stroke_fill='black', spacing=10)
+        if sotto: d.multiline_text((W // 2, 1180), sotto, font=fs, fill='white', anchor='mm', align='center', stroke_width=7, stroke_fill='black', spacing=12)
+        if DECORA: DECORA(d, (H - W) // 2)
         d.text((W // 2, 1790), '@marconicreation', font=R.f_tag, fill=(230, 200, 160), anchor='mm')
         c.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92)
     return n
@@ -265,7 +289,8 @@ def render(scene, out_mp4, testata='AL BANCONE DI BRONCO', voce=None, ritardo=0.
         n = int(round((k0 / FPS + s['battute'] * BAR) * FPS)) - k0
         if vol_all is not None: vol = vol_all[k0:k0 + n]
         else: vol = finta_voce(n, s.get('parla', [(0.2, s['battute'] * BAR - 0.6)] if s.get('testo') else []), seed=k0)
-        if s['chi'] == 'TRIO': scena_trio(n / FPS, tmp, k0, testata, cache)
+        if s['chi'] == 'CARTELLO': scena_cartello(n / FPS, tmp, k0, s['righe'], s.get('sotto'), cache)
+        elif s['chi'] == 'TRIO': scena_trio(n / FPS, tmp, k0, testata, cache)
         else: scena_frames(PERSONAGGI[s['chi']], n / FPS, s.get('testo'), vol, tmp, k0, testata, s.get('tango', False), cache)
         k0 += n
     sys.path.insert(0, os.path.join(R.SITCOM, 'musica')); import canzone
