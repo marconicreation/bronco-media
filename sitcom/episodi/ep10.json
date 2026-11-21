@@ -1,0 +1,27 @@
+{
+ "numero": 10,
+ "titolo": "Il grande concorso degli inventori",
+ "data": "2026-11-22",
+ "saga": {"titolo": "Il grande concorso degli inventori", "parte": 1, "di": 5},
+ "tipo_aggancio": "assurdo",
+ "aggancio": {
+  "img": "pose/bartolomeo_invenzione.jpg",
+  "chi": "BARTOLOMEO",
+  "testo": "Una botte di vermut intera a chi inventa meglio!",
+  "battute": 2
+ },
+ "scene": [
+  {"img": "pose/trio_bancone.jpg", "chi": "", "testo": "", "battute": 1},
+  {"img": "pose/bartolomeo_annuncia.jpg", "chi": "BARTOLOMEO", "testo": "Bronco, c'è il grande concorso degli inventori! Mi sono già iscritto!", "battute": 2},
+  {"img": "pose/geremia_strilla.jpg", "chi": "GEREMIA", "testo": "Una botte di vermut GRATIS? Il premio è MIO!", "battute": 2},
+  {"img": "pose/bartolomeo_birra.jpg", "chi": "BARTOLOMEO", "testo": "Ma tu non hai mai inventato niente in vita tua.", "battute": 2},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "GEREMIA", "testo": "Bugia! Ho inventato mille scuse per non pagare il caffè!", "battute": 2},
+  {"img": "pose/bartolomeo_invenzione.jpg", "chi": "BARTOLOMEO", "testo": "Mille scuse? Allora sei l'inventore più bravo del paese!", "battute": 2},
+  {"img": "pose/bartolomeo_sciabadu.jpg", "chi": "BARTOLOMEO", "testo": "Sciabadù!", "battute": 1},
+  {"img": "pose/geremia_braccia.jpg", "chi": "", "testo": "...", "battute": 1},
+  {"img": "pose/bronco_papillon.jpg", "chi": "BRONCO", "testo": "Due inventori e una botte sola? Qui finisce male, ve lo dico io!", "battute": 2}
+ ],
+ "voci": true,
+ "ritmo": true,
+ "didascalia": "Una botte di vermut intera a chi inventa meglio! 🍷\n\nAL BANCONE DI BRONCO 🍸 Ep. 10 · Il grande concorso degli inventori (parte 1 di 5)\nAl paese parte il concorso degli inventori: Bartolomeo si iscrive, ma Geremia ha già deciso che il premio è suo.\n\nChi vince la botte: Bartolomeo o Geremia? Scrivetelo qui 👇\n\nSegui @marconicreation: la parte 2 esce domani alle 13.\n\n☕ La tazza di Bartolomeo è su Etsy: 19,90 € con spedizione gratis 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)\n\n#sitcom #cartonianimati #barlife #inventori #comicità #plastilina #marconicreation"
+}
