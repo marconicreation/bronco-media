@@ -20,6 +20,9 @@ Passi (dopo aver scritto m1, m2, m3 e la citazione come da istruzioni della rout
 4. Reel 2 (18:00, regalo di Natale fino al 24/12): posa a tema (shaker, natale, festa, bicchiere, negroni, spritz, tramonto_vino).
    python3 tools/reel.py pose/.../P.jpg pose/.../P.jpg promo/fb/D_2.mp4 --hook "aggancio della sera, max ~70 caratteri (es. IL PAPÀ CHE NON BEVE? BRONCO GLI INVENTA UN COCKTAIL COL SUO NOME)" --tag "REGALO DI NATALE · 5 €" --cta regalo
    Dopo il 24/12: un Reel con consiglio/battuta dal bancone e --cta segui.
+   PROVA 23-29/11 (misura del 22/11: i Reel solo-vendita della sera fanno ~120 view, le battute ~220-970): il Reel delle 18:00 apre con una
+   BATTUTA su caro vita/bollette/prezzi (non con l'offerta) nel --hook, il regalo resta solo nella chiusura (--cta regalo) e nell'ultima riga della didascalia.
+   Didascalia: prima riga = la battuta, poi una domanda al pubblico, poi la riga regalo. La domenica 29/11 si confrontano le view.
 5. Guarda con Read un fotogramma a 3 s di ogni video (ffmpeg -ss 3 -i X.mp4 -frames:v 1 X.jpg): testo leggibile e dentro lo schermo.
 6. git add promo/fb citazioni && commit (user marconicreation / rmarconi79@gmail.com) && push su main.
    URL: https://raw.githubusercontent.com/marconicreation/bronco-media/main/promo/fb/D_1.mp4 (e _2, _3). Verifica con curl -sI che rispondano 200.
