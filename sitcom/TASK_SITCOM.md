@@ -21,7 +21,8 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
       prompt = "[tono in inglese] testo" (es. "[angry, shouting] ...", "[dreamy, excited] ...", "[dry, deadpan] ...").
       UNA chiamata per battuta, mai ripetere (ogni chiamata costa crediti). Aspetta con creative_get_flow_run_status
       e scarica l'mp3 dall'url del risultato: curl -sL -o /tmp/voci_epNN/NN.mp3 "URL". Le voci NON vanno nel repo.
-      Costo atteso: circa 300-400 crediti a puntata (budget approvato da Robi). Se una puntata supererebbe 600 crediti, accorcia le battute.
+      Costo atteso: circa 400-500 crediti a puntata. Budget ElevenLabs (Robi sì 22/11): tutti i 38.777 crediti del piano Starter al mese
+      (reset il 20 del mese), cioè circa 850 al giorno per tutto. Se una puntata supererebbe 600 crediti, accorcia le battute.
    c) python3 sitcom/ritagli/episodio_pupazzi.py sitcom/episodi/epNN.json sitcom/episodi/epNN.mp4 /tmp/voci_epNN   (circa 6-8 minuti)
       Se manca una voce lo script lo scrive (ATTENZIONE: mancano...): quella scena esce muta, avvisa Robi.
    d) Controlla 4 fotogrammi con Read (ffmpeg -ss 1 / 10 / 20 / 30 -i video -frames:v 1 f.jpg) e il volume
@@ -40,6 +41,16 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
 7. Avvisa Robi in italiano, breve: titolo e copione della puntata di domani (le battute), così se qualcosa non gli piace lo dice in tempo.
 8. ATTRAZIONI (tools/CRESCITA.md, sezione ATTRAZIONI): i commenti Instagram li risponde DA SOLO Bronco (Make 8704211, dal 20/11): NON lanciare 8663341/8663345. Nella puntata
    applica gioco della settimana (lunedì/giovedì), notizia del giorno e "tipo_aggancio" a rotazione.
+
+## MODELLO EP. 8 / EP. 9 (Robi sì 22/11, dal bilancio della settimana)
+Le due puntate che hanno funzionato di più: Ep. 8 "Il termosifone a pedali" (973 view su Facebook, record) e
+Ep. 9 "La calcolatrice ottimista" (114 view su Instagram, record). Da ora ogni puntata segue la loro ricetta:
+- Al centro c'è UN'INVENZIONE ASSURDA di Bartolomeo contro un fastidio di tutti i giorni (bollette, fisco, prezzi, burocrazia, caro vita).
+- La PRIMA RIGA della didascalia e l'"aggancio" dicono l'invenzione in modo concreto e buffo, con 1-2 emoji
+  (es. "Il termosifone a pedali: il caldo te lo fai da solo 🚴‍♂️🔥", "Una calcolatrice che fa lo sconto? Geremia la vuole SUBITO 🧮").
+- La battuta forte arriva SUBITO (Geremia che vuole approfittarne o che esplode), poi il colpo di scena sull'invenzione che si rivolta contro.
+- Nelle mini-saghe ogni parte deve avere la sua invenzione o il suo pezzo di invenzione assurda, non solo la trama.
+- Regole di sempre: niente nomi di persone o partiti, niente cifre precise, niente fatti inventati.
 
 ## NUOVO FORMATO dal 18/11 (Robi: "innovare tutto"): BATTUTA SUBITO + MINI-SAGA + REGALO
 Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% scorre via nei primi 3 s.
