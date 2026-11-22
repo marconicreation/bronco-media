@@ -1,0 +1,27 @@
+{
+ "numero": 11,
+ "titolo": "Il grande concorso degli inventori",
+ "data": "2026-11-23",
+ "saga": {"titolo": "Il grande concorso degli inventori", "parte": 2, "di": 5},
+ "tipo_aggancio": "urlo",
+ "aggancio": {
+  "img": "pose/geremia_strilla.jpg",
+  "chi": "GEREMIA",
+  "testo": "Socio sì, ma al NOVANTA per cento!",
+  "battute": 2
+ },
+ "scene": [
+  {"img": "pose/trio_bancone.jpg", "chi": "", "testo": "", "battute": 1},
+  {"img": "pose/bartolomeo_invenzione.jpg", "chi": "BARTOLOMEO", "testo": "Per il concorso ho inventato lo spartitore: divide tutto in parti giuste!", "battute": 2},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "GEREMIA", "testo": "Ti serve un socio! Io prendo il novanta, tu il resto.", "battute": 2},
+  {"img": "pose/bartolomeo_annuncia.jpg", "chi": "BARTOLOMEO", "testo": "Affare fatto! Tanto io so contare solo fino a cinquanta.", "battute": 2},
+  {"img": "pose/geremia_strilla.jpg", "chi": "GEREMIA", "testo": "Allora proviamolo subito sul conto del bar!", "battute": 2},
+  {"img": "pose/bartolomeo_birra.jpg", "chi": "BARTOLOMEO", "testo": "Fatto! Il conto è novanta per cento tuo, dieci mio.", "battute": 2},
+  {"img": "pose/bartolomeo_sciabadu.jpg", "chi": "BARTOLOMEO", "testo": "Sciabadù!", "battute": 1},
+  {"img": "pose/geremia_braccia.jpg", "chi": "", "testo": "...", "battute": 1},
+  {"img": "pose/bronco_papillon.jpg", "chi": "BRONCO", "testo": "Socio, alla cassa! E domani voglio vedere 'sto prototipo!", "battute": 2}
+ ],
+ "voci": true,
+ "ritmo": true,
+ "didascalia": "Socio sì, ma al NOVANTA per cento! 🤑\n\n🎲 GIOCO DELLA SETTIMANA: Bartolomeo cerca il nome per la sua prossima invenzione, una macchina che prepara cocktail da sola. Scrivetelo nei commenti: il più divertente entra nella puntata di giovedì!\n\nAL BANCONE DI BRONCO 🍸 Ep. 11 · Il grande concorso degli inventori (parte 2 di 5)\nIeri Bartolomeo si è iscritto al concorso degli inventori. Oggi Geremia si offre come socio... al novanta per cento.\n\nAnche tu hai un amico come Geremia? 😂\n\nSegui @marconicreation: la parte 3 esce domani alle 13.\n\n☕ La tazza di Geremia è su Etsy: 19,90 € con spedizione gratis 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)\n\n#sitcom #cartonianimati #barlife #inventori #comicità #plastilina #marconicreation"
+}
