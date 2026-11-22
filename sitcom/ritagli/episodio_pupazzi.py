@@ -16,9 +16,12 @@ import pupazzo as P
 
 P.PERSONAGGI.update(P.PERSONAGGI_PLASTILINA); P.STILE_TESTO = 'tiktok'
 BAR = 240 / 110
-# voci fisse scelte da Robi (20/11/2026), da usare con eleven_v3
-VOCI_ID = {'BRONCO': 'R4gEgJEocQc2CqX4LOsT', 'GEREMIA': 'DQrAbk5JYQkfbsD7QZ8f', 'BARTOLOMEO': 'Gq5e8oJrkKsAeJRonm7y'}
+# voci fisse scelte da Robi (20/11/2026), da usare con eleven_v3.
+# 22/11/2026 Robi: Bronco passa alla voce romanesca "Bronco romano" (prima "Bronco roco" R4gEgJEocQc2CqX4LOsT)
+VOCI_ID = {'BRONCO': 'uquwTh028LNny1rljUlB', 'GEREMIA': 'DQrAbk5JYQkfbsD7QZ8f', 'BARTOLOMEO': 'Gq5e8oJrkKsAeJRonm7y'}
 FISSE = os.path.join(HERE, 'voci_fisse')
+# "Vai col tango!" registrato una volta per voce: se manca il file della voce attuale, la routine lo registra come le altre battute
+TANGO = f"bronco_vai_col_tango_{VOCI_ID['BRONCO']}.mp3"
 EFFETTI = os.path.join(HERE, 'effetti')   # libreria suoni comici ElevenLabs (Robi 20/11: "vai"), generata una volta sola
 SOLDI = ('conto', 'soldi', 'euro', 'prezz', 'pag', 'tass', 'bollett', 'scont', 'fisco', 'cassa', 'spes', 'cost')
 
@@ -38,7 +41,9 @@ def scene_da_json(ep):
         if testo in ('...', '…'): s['parla'] = []                     # reazione muta
         if testo.lower().startswith('sciabad'): s['tango'] = True        # braccio al cielo
         out.append(s)
-    out.append({'chi': 'BRONCO', 'testo': 'Vai col tango!', 'battute': 1, 'tango': True, 'fissa': 'bronco_vai_col_tango.mp3'})
+    finale = {'chi': 'BRONCO', 'testo': 'Vai col tango!', 'battute': 1, 'tango': True, 'finale': True}
+    if os.path.exists(os.path.join(FISSE, TANGO)): finale['fissa'] = TANGO
+    out.append(finale)
     for s in out:
         if s['testo'].lower().startswith('sciabad'): s['fissa'] = 'bartolomeo_sciabadu.mp3'
     sg = ep.get('saga')   # mini-saga: cartello "continua" / "fine"; altrimenti l'invito per domani
@@ -103,7 +108,7 @@ def effetti(scene, prova=False):
     out, t, boing, cassa = [], 0.0, False, False
     def voce_fine(s, t0):
         return t0 + 0.3 + (durata(s['_voce']) if s.get('_voce') else 1.5)
-    bronco_finale = max([i for i, s in enumerate(scene) if s['chi'] == 'BRONCO' and not s.get('fissa') and s['testo']] or [-1])
+    bronco_finale = max([i for i, s in enumerate(scene) if s['chi'] == 'BRONCO' and not s.get('fissa') and not s.get('finale') and s['testo']] or [-1])
     for i, s in enumerate(scene):
         dur = s['battute'] * BAR; testo = s.get('testo') or ''
         if i > 0 and s['chi'] != 'CARTELLO': out.append((max(0, t - 0.15), 'swoosh', -14))
@@ -119,7 +124,7 @@ def effetti(scene, prova=False):
             out += [(voce_fine(s, t) - 0.2, 'risata_media', -2), (voce_fine(s, t) + 0.4, 'risata_piccola', -3)]
         if i == bronco_finale:
             fine = voce_fine(s, t); out += [(fine, 'badumtss', -8), (fine + 0.3, 'risata_media', -7)]
-        if s.get('fissa') == 'bronco_vai_col_tango.mp3': out += [(t + 0.8, 'risata_grande', -1), (t + 1.0, 'risata_media', -4)]
+        if s.get('finale'): out += [(t + 0.8, 'risata_grande', -1), (t + 1.0, 'risata_media', -4)]
         t += dur
     return out
 
