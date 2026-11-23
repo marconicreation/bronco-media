@@ -1,0 +1,27 @@
+{
+ "numero": 12,
+ "titolo": "Il grande concorso degli inventori",
+ "data": "2026-11-24",
+ "saga": {"titolo": "Il grande concorso degli inventori", "parte": 3, "di": 5},
+ "tipo_aggancio": "bronco",
+ "aggancio": {
+  "img": "pose/bronco_papillon.jpg",
+  "chi": "BRONCO",
+  "testo": "Prima er conto e poi er cocktail? Ma che è?!",
+  "battute": 2
+ },
+ "scene": [
+  {"img": "pose/trio_bancone.jpg", "chi": "", "testo": "", "battute": 1},
+  {"img": "pose/bartolomeo_invenzione.jpg", "chi": "BARTOLOMEO", "testo": "Ecco il prototipo! La macchina che prepara i cocktail tutta da sola!", "battute": 2},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "GEREMIA", "testo": "Da sola? Niente barista, niente mancia! Accendila subito!", "battute": 2},
+  {"img": "pose/bartolomeo_annuncia.jpg", "chi": "BARTOLOMEO", "testo": "Parte! Prima il ghiaccio sciolto, poi il bicchiere rotto...", "battute": 2},
+  {"img": "pose/geremia_strilla.jpg", "chi": "GEREMIA", "testo": "E questo foglio cos'è? Il CONTO prima del cocktail?!", "battute": 2},
+  {"img": "pose/bartolomeo_birra.jpg", "chi": "BARTOLOMEO", "testo": "È la parte più moderna: oggi si paga prima e si spera dopo!", "battute": 2},
+  {"img": "pose/bartolomeo_sciabadu.jpg", "chi": "BARTOLOMEO", "testo": "Sciabadù!", "battute": 1},
+  {"img": "pose/geremia_braccia.jpg", "chi": "", "testo": "...", "battute": 1},
+  {"img": "pose/bronco_papillon.jpg", "chi": "BRONCO", "testo": "Novanta per cento de un bicchiere rotto, socio! E domani alla giuria chi ce va?", "battute": 2}
+ ],
+ "voci": true,
+ "ritmo": true,
+ "didascalia": "Prima er conto e poi er cocktail? Ma che è?! 🍸🧾\n\nAL BANCONE DI BRONCO 🍸 Ep. 12 · Il grande concorso degli inventori (parte 3 di 5)\nIeri Geremia è diventato socio di Bartolomeo al novanta per cento. Oggi si accende il prototipo: la macchina che fa i cocktail da sola... al contrario.\n\nSecondo voi domani la giuria se la beve? Scrivetelo qui 👇\n\nSegui @marconicreation: la parte 4 esce domani alle 13.\n\n☕ La tazza di Bronco è su Etsy: 19,90 € con spedizione gratis 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)\n\n#sitcom #cartonianimati #barlife #cocktail #inventori #comicità #marconicreation"
+}
