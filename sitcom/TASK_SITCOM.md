@@ -62,7 +62,8 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   Con "aggancio": niente cartello iniziale, titolo piccolo in alto su ogni scena, la SIGLA VA IN CODA (monta.sh lo fa da solo).
   La prima scena (trio_bancone) dura 1,0 s.
 - (Fino al 19/11 la puntata chiudeva con regalo/tazza. Dal 20/11 NON PIÙ: vedi RITMO qui sotto.)
-  Nei giorni dispari la riga regalo della didascalia diventa: "☕ La tazza di NOME è su Etsy: 19,90 € con spedizione gratis 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)".
+  Nei giorni dispari la riga regalo della didascalia diventa: "☕ Regala la tazza di NOME: 19,90 € con spedizione gratis, ordina entro il 6/12 per averla a Natale 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)".
+  (Invito più chiaro, Robi sì 24/11. Dal 7/12 togli la frase "ordina entro il 6/12" e nei giorni dispari usa la riga del regalo cocktail.)
 - MINI-SAGA: dal 22/11 le puntate sono storie di 5 parti. Nel json: "saga": {"titolo": "...", "parte": N, "di": 5}.
   sitcom.py mette "PARTE N/5" in alto e il cartello "CONTINUA... domani alle 13" (o "FINE" all'ultima parte).
   Ogni parte deve finire con una domanda aperta (cosa succederà?), e avere comunque una battuta che fa ridere da sola.
@@ -87,6 +88,19 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
 - Niente tazza né regalo in fondo al video: la puntata chiude con "Vai col tango!", poi "CONTINUA..." (saga) o "DOMANI ALLE 13", poi la sigla.
   La didascalia può tenere la riga con il link (regalo o tazza come prima).
 - Esempi da copiare: sitcom/episodi/ep08.json e ep09.json.
+
+## DOMANDA SECCA DI BRONCO IN CHIUSURA (Robi sì 24/11, dal bilancio della settimana)
+Su Instagram zero condivisioni, salvati e commenti: da ora OGNI puntata chiude con Bronco che fa UNA domanda secca al pubblico, a voce.
+- È l'ULTIMA battuta di Bronco (quella prima di "Vai col tango!"): la domanda PRENDE IL POSTO della sua battuta finale, non si aggiunge.
+  Così le battute restano le stesse di numero e i crediti ElevenLabs non salgono.
+- Corta (max ~6 secondi di parlato), in romanesco leggero, guardando il pubblico, e legata all'invenzione della puntata.
+  Deve avere una risposta facile da scrivere in una parola o una riga. Esempi:
+  "E tu, er termosifone a pedali lo compreresti? Scrivilo sotto!" · "Che ce mettevi te ner bicchiere? Dimmelo nei commenti!" ·
+  "Chi c'ha ragione, Geremia o Bartolomeo? Scrivi er nome!" · "A te te serve? Sì o no, scrivilo!"
+  Varia la formula ogni giorno (mai la stessa due giorni di fila). Mai "tagga" o "metti like se" (tools/CRESCITA.md), mai chiedere follow nella domanda.
+- La STESSA domanda va nella didascalia come "domanda vera al pubblico" (vedi DIDASCALIA PER CRESCERE), così chi legge e chi ascolta risponde alla stessa cosa.
+- Nel copione da mandare a Robi (punto 7) scrivi la domanda finale in evidenza.
+- Bronco risponde ai commenti da solo (Make 8704211): niente da cambiare lì.
 
 ## SPOT DELLE TAZZE (Robi 19/11): Reel separati di 10 s, non dentro le puntate
 - python3 sitcom/spot.py GEREMIA|BARTOLOMEO|BRONCO -> sitcom/spot/spot_NOME.mp4 (frase del personaggio, foto della tazza, prezzo, "su Etsy, link in bio").
@@ -122,7 +136,7 @@ Piano: https://claude.ai/artifact/8myW2xrNwV9LwKERX8T81E
   occhialini tondi, urla "ORO!"), BRONCO (bulldog barista, chiude con calma e ironia). Paese inventato: Kavod.
 - Schema: AGGANCIO (battuta forte, 2,5 s) -> i tre al bancone (trio_bancone, 1 s) -> Bartolomeo presenta o storpia un'invenzione (3-4 inquadrature) -> Geremia esplode ->
   battuta finale di Bartolomeo (senza "Sciabadù") -> scena SEPARATA con solo "Sciabadù!" su bartolomeo_sciabadu.jpg, inquadratura unica fissa ->
-  reazione muta di Geremia ("...") -> battuta di Bronco. "Vai col tango!" lo aggiunge da solo sitcom.py nella scena finale: MAI scriverlo nelle battute.
+  reazione muta di Geremia ("...") -> battuta di Bronco = DOMANDA SECCA al pubblico (dal 24/11, vedi sopra). "Vai col tango!" lo aggiunge da solo sitcom.py nella scena finale: MAI scriverlo nelle battute.
 - Dal 20/11 una inquadratura per battuta di dialogo, lunga 2 battute di musica (vedi RITMO). Varia le pose da una battuta all'altra.
 - Scritte: niente nomi dei personaggi, testo breve (max ~90 caratteri). Dal 21/11 voci fisse ElevenLabs (vedi punto 4) e scritte stile TikTok. Musica = Torso Stufo (automatica).
 - Battute dette ad alta voce: scrivile come si parlano (niente sigle o simboli strani; i numeri in lettere se brevi), max ~8 secondi di parlato a battuta.
@@ -134,7 +148,8 @@ Piano: https://claude.ai/artifact/8myW2xrNwV9LwKERX8T81E
   Le pose nate sfocate (MORBIDE in sitcom.py: geremia_dito, bronco_shaker, bronco_finale_tango, bartolomeo_quaderno) non vanno in primo piano stretto.
 - Pose disponibili in sitcom/pose/ (non generarne di nuove: il limite IA di Canva è finito fino all'11/12).
 - Didascalia: "AL BANCONE DI BRONCO 🍸 Episodio N: Titolo" + 1-2 frasi + riga sulla puntata quotidiana + riga regalo di Natale (fino al 24/12), SEMPRE con il link contaclic:
-  "🎁 Il cocktail col tuo nome: regalo di Natale a 5 € 👉 https://marconicreation.vercel.app/regalo?da=sitcom (link anche in bio)" + hashtag.
+  "🎁 Regala un cocktail inventato col nome di chi vuoi: 5 €, arriva per email in 24 ore 👉 https://marconicreation.vercel.app/regalo?da=sitcom (link anche in bio)" + hashtag.
+  (Invito più chiaro, Robi sì 24/11: cosa ricevi, prezzo e tempi nella stessa riga.)
   Mai il link claude.ai/artifact diretto (vedi link/README.md).
 - DIDASCALIA PER CRESCERE (Robi 18/11): segui tools/CRESCITA.md. Prima riga = la battuta dell'aggancio (non il titolo),
   poi la riga "AL BANCONE DI BRONCO", una domanda vera al pubblico, "Segui @marconicreation: la puntata di domani esce alle 13", regalo, 5-7 hashtag a rotazione.
