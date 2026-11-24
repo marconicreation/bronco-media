@@ -20,9 +20,8 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
    ATTENZIONE: con --veloce i numeri dei file cambiano (il trio non conta), quindi usa SEMPRE --veloce anche in a).
    a) python3 sitcom/ritagli/episodio_pupazzi.py --battute --veloce sitcom/episodi/epNN.json
       stampa le battute da registrare: nome file, personaggio, voice_id, testo ("Sciabadù!" è già registrato; "Vai col tango!" esce nella lista finché non c'è il file della voce nuova di Bronco).
-      Voce di Bronco dal 22/11 (Robi): "Bronco romano" uquwTh028LNny1rljUlB, romanesco. La prima volta che registri "Vai col tango!"
-      con questa voce, copia l'mp3 anche in sitcom/ritagli/voci_fisse/bronco_vai_col_tango_uquwTh028LNny1rljUlB.mp3 e mettilo nel commit,
-      così dalle puntate dopo non si paga più.
+      Voce di Bronco dal 24/11 sera (Robi): "Bronco cagnolone" xHMnzwnNGu6rNUfNTXmY (voce profonda e simpatica, non leccaculo, parla con qualche parola romana).
+      "Vai col tango!" con questa voce è già in sitcom/ritagli/voci_fisse/bronco_vai_col_tango_xHMnzwnNGu6rNUfNTXmY.mp3 (non si paga più).
    b) Per ogni riga: ElevenLabs creative_generate_speech con model_id "eleven_v3", quel voice_id, generations_count 1,
       prompt = "[tono in inglese] testo" (es. "[angry, shouting] ...", "[dreamy, excited] ...", "[dry, deadpan] ...").
       UNA chiamata per battuta, mai ripetere (ogni chiamata costa crediti). Aspetta con creative_get_flow_run_status
