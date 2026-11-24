@@ -15,7 +15,10 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
    (copia la struttura di un epNN.json recente e cambia testi, titolo, data, didascalia; varia le pose e le inquadrature).
 4. PUPAZZI CON LE VOCI (Robi 20/11: "voci ogni giorno"). Dal 21/11 sera le puntate si montano con i pupazzi di plastilina,
    le scritte stile TikTok e le tre voci fisse (NON più con monta.sh, che resta solo di riserva):
-   a) python3 sitcom/ritagli/episodio_pupazzi.py --battute sitcom/episodi/epNN.json
+   VELOCE (Robi 24/11 "Vai"): dal 25/11 OGNI puntata si monta con --veloce, sia in a) sia in c): niente inquadratura dei tre
+   (trio_bancone viene saltato), voci +18% più svelte senza pause interne, ogni scena dura quanto la voce + 0,3 s.
+   ATTENZIONE: con --veloce i numeri dei file cambiano (il trio non conta), quindi usa SEMPRE --veloce anche in a).
+   a) python3 sitcom/ritagli/episodio_pupazzi.py --battute --veloce sitcom/episodi/epNN.json
       stampa le battute da registrare: nome file, personaggio, voice_id, testo ("Sciabadù!" è già registrato; "Vai col tango!" esce nella lista finché non c'è il file della voce nuova di Bronco).
       Voce di Bronco dal 22/11 (Robi): "Bronco romano" uquwTh028LNny1rljUlB, romanesco. La prima volta che registri "Vai col tango!"
       con questa voce, copia l'mp3 anche in sitcom/ritagli/voci_fisse/bronco_vai_col_tango_uquwTh028LNny1rljUlB.mp3 e mettilo nel commit,
@@ -26,17 +29,18 @@ Instagram @marconicreation e sulla pagina Facebook MarconiCreation (Portovenere)
       e scarica l'mp3 dall'url del risultato: curl -sL -o /tmp/voci_epNN/NN.mp3 "URL". Le voci NON vanno nel repo.
       Costo atteso: circa 400-500 crediti a puntata. Budget ElevenLabs (Robi sì 22/11): tutti i 38.777 crediti del piano Starter al mese
       (reset il 20 del mese), cioè circa 850 al giorno per tutto. Se una puntata supererebbe 600 crediti, accorcia le battute.
-   c) python3 sitcom/ritagli/episodio_pupazzi.py sitcom/episodi/epNN.json sitcom/episodi/epNN.mp4 /tmp/voci_epNN   (circa 6-8 minuti)
+   c) python3 sitcom/ritagli/episodio_pupazzi.py --veloce sitcom/episodi/epNN.json sitcom/episodi/epNN.mp4 /tmp/voci_epNN   (circa 8-11 minuti)
+      (prima: pip install opencv-python-headless)
       Se manca una voce lo script lo scrive (ATTENZIONE: mancano...): quella scena esce muta, avvisa Robi.
    d) Controlla 4 fotogrammi con Read (ffmpeg -ss 1 / 10 / 20 / 30 -i video -frames:v 1 f.jpg) e il volume
       (ffmpeg -i video -af volumedetect -f null - : mean_volume intorno a -17 dB, mai -91 = muto).
    Effetti comici e risate finte (Robi 20/11) li mette lo script da solo dalla libreria sitcom/ritagli/effetti/ (gratis, niente da generare):
    swoosh sugli stacchi, boing sull'invenzione, colpo quando Geremia urla, cassa sui soldi, grilli sul "...", risate dopo Sciabadù, Bronco e Vai col tango.
    e) Se ElevenLabs non è disponibile nella sessione o le voci falliscono: monta la puntata con i pupazzi SENZA voci
-      (stesso comando senza l'ultima cartella), pubblicala lo stesso e avvisa Robi.
+      (stesso comando con --veloce, senza l'ultima cartella), pubblicala lo stesso e avvisa Robi.
    Nel json "voci": true. Le pose ("img") servono solo per capire chi parla (bronco_/geremia_/bartolomeo_...) o il campo "chi";
    trio_bancone = inquadratura dei tre; "..." = reazione muta; "saga" e "avvento" funzionano come prima (cartello finale e bollino).
-4b. Reel di prova (vedi CAMPAGNA), stesse voci: python3 sitcom/ritagli/episodio_pupazzi.py --prova sitcom/episodi/epNN.json sitcom/episodi/epNN_prova.mp4 /tmp/voci_epNN
+4b. Reel di prova (vedi CAMPAGNA), stesse voci: python3 sitcom/ritagli/episodio_pupazzi.py --veloce --prova sitcom/episodi/epNN.json sitcom/episodi/epNN_prova.mp4 /tmp/voci_epNN
    (~25 s: apre con la battuta di Geremia, senza trio, cartelli e sigla). Controlla 1 fotogramma. (prova.sh resta solo per le puntate vecchie.)
 5. git add sitcom/episodi && commit (stesso utente git indicato in tools/TASK.md) && push su main.
    URL: https://raw.githubusercontent.com/marconicreation/bronco-media/main/sitcom/episodi/epNN.mp4 — verifica con curl -sI che risponda 200.
