@@ -37,6 +37,7 @@ def scene_da_json(ep):
     for sc in ([ep['aggancio']] if ep.get('aggancio') else []) + ep['scene']:
         chi = chi_di(sc); testo = (sc.get('testo') or '').strip()
         s = {'chi': chi, 'testo': testo, 'battute': sc.get('battute', 2)}
+        if sc.get('sfondo'): s['sfondo'] = sc['sfondo']                # Compagnia del Bancone: sfondo della scena
         if chi == 'TRIO': s['testo'] = ''
         if testo in ('...', '…'): s['parla'] = []                     # reazione muta
         if testo.lower().startswith('sciabad'): s['tango'] = True        # braccio al cielo
@@ -160,8 +161,11 @@ if __name__ == '__main__':
     if PROVA: sys.argv.remove('--prova')
     SENZA = '--senza-effetti' in sys.argv
     if SENZA: sys.argv.remove('--senza-effetti')
+    NOSIGLA = '--senza-sigla' in sys.argv   # puntate di prova: niente sigla e niente cartello "domani alle 13"
+    if NOSIGLA: sys.argv.remove('--senza-sigla')
     J, OUT = sys.argv[1], sys.argv[2]; VOCI = sys.argv[3] if len(sys.argv) > 3 else None
     ep = json.load(open(J)); scene = scene_da_json(ep)
+    if NOSIGLA: scene = [s for s in scene if s['chi'] != 'CARTELLO']
     T = tempfile.mkdtemp(); P.DECORA = bollino(ep)
     if VOCI: VOCI = prepara_voci(scene, VOCI, os.path.join(T, 'voci')); adatta_battute(scene, VOCI)
     if PROVA:  # Reel di prova (campagna): apre con la battuta di Geremia, niente trio, aggancio, cartelli e sigla
@@ -171,12 +175,12 @@ if __name__ == '__main__':
         cand = [s for s in dial if s['chi'] == 'GEREMIA'] or dial[:1]
         if cand: scene = [cand[0]] + [s for s in scene if s is not cand[0]]
     voce = voce_unica(scene, VOCI, os.path.join(T, 'voci.mp3')) if VOCI else None
-    testata = f"AL BANCONE DI BRONCO · EP. {ep['numero']}"
+    testata = ep.get('testata') or f"AL BANCONE DI BRONCO · EP. {ep['numero']}"
     if ep.get('saga') and not PROVA: testata += f" · PARTE {ep['saga']['parte']}/{ep['saga']['di']}"
     P.render(scene, os.path.join(T, 'ep0.mp4'), testata=testata, voce=voce, ritardo=0)
     lista = [] if SENZA else effetti(scene, PROVA)
     mixa_effetti(os.path.join(T, 'ep0.mp4'), lista, os.path.join(T, 'ep.mp4'))
-    if PROVA: os.rename(os.path.join(T, 'ep.mp4'), os.path.join(T, 'full.mp4'))
+    if PROVA or NOSIGLA: os.rename(os.path.join(T, 'ep.mp4'), os.path.join(T, 'full.mp4'))
     else: subprocess.run(['python3', os.path.join(SITCOM, 'sigla', 'sigla.py'), '--accoda', os.path.join(T, 'ep.mp4'), os.path.join(T, 'full.mp4')], check=True)
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', os.path.join(T, 'full.mp4'), '-c:v', 'copy', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', OUT], check=True)
     print(OUT)

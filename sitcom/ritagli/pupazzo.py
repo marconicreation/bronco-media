@@ -150,9 +150,16 @@ def scritte_tiktok(c, testo, k, inizi, v, fine, seed):
 
 BANCONE_PLASTILINA = 1080   # riga (su S) del bordo alto del bancone nel bar di plastilina
 
+# Compagnia del Bancone (24/11/2026): sfondi diversi per scena (campo "sfondo" della scena = nome in plastilina/sfondi/).
+# Per ogni sfondo: riga (su S) del bordo alto della cosa in primo piano che copre i pupazzi (come il bancone del bar).
+SFONDI_LINEA = {'palco': 986, 'luna': 1020, 'acquario': 980}
+SFONDO_SCENA = None   # nome dello sfondo della scena in corso (None = bar)
+
 def sfondo_plastilina():
-    """Bar di plastilina (plastilina/bar_full.png, quadrato centrale) -> (sfondo, bancone davanti)."""
-    im = Image.open(os.path.join(HERE, 'plastilina', 'bar_full.png')).convert('RGBA'); w, h = im.size
+    """Bar di plastilina (plastilina/bar_full.png, quadrato centrale) -> (sfondo, bancone davanti).
+    Se SFONDO_SCENA e' impostato usa plastilina/sfondi/<nome>.jpg al posto del bar."""
+    f = os.path.join(HERE, 'plastilina', 'sfondi', SFONDO_SCENA + '.jpg') if SFONDO_SCENA else os.path.join(HERE, 'plastilina', 'bar_full.png')
+    im = Image.open(f).convert('RGBA'); w, h = im.size
     bg = im.crop(((w - h) // 2, 0, (w + h) // 2, h)).resize((S, S), Image.LANCZOS)
     ban = bg.copy(); a = Image.new('L', (S, S), 0); ImageDraw.Draw(a).rectangle((0, BANCONE_PLASTILINA, S, S), fill=255)
     ban.putalpha(a)
@@ -291,7 +298,13 @@ def render(scene, out_mp4, testata='AL BANCONE DI BRONCO', voce=None, ritardo=0.
         else: vol = finta_voce(n, s.get('parla', [(0.2, s['battute'] * BAR - 0.6)] if s.get('testo') else []), seed=k0)
         if s['chi'] == 'CARTELLO': scena_cartello(n / FPS, tmp, k0, s['righe'], s.get('sotto'), cache)
         elif s['chi'] == 'TRIO': scena_trio(n / FPS, tmp, k0, testata, cache)
-        else: scena_frames(PERSONAGGI[s['chi']], n / FPS, s.get('testo'), vol, tmp, k0, testata, s.get('tango', False), cache)
+        else:
+            global SFONDO_SCENA, BANCONE_PLASTILINA
+            bar_linea = BANCONE_PLASTILINA
+            SFONDO_SCENA = s.get('sfondo')
+            if SFONDO_SCENA: BANCONE_PLASTILINA = SFONDI_LINEA.get(SFONDO_SCENA, bar_linea)
+            scena_frames(PERSONAGGI[s['chi']], n / FPS, s.get('testo'), vol, tmp, k0, testata, s.get('tango', False), cache)
+            SFONDO_SCENA, BANCONE_PLASTILINA = None, bar_linea
         k0 += n
     sys.path.insert(0, os.path.join(R.SITCOM, 'musica')); import canzone
     cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-framerate', str(FPS), '-i', os.path.join(tmp, '%05d.jpg')]

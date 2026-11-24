@@ -1,0 +1,44 @@
+{
+ "numero": 1,
+ "titolo": "Prova sulla Luna",
+ "formato": "La Compagnia del Bancone (prova, non pubblicare)",
+ "scene": [
+  {
+   "chi": "BRONCO",
+   "sfondo": "palco",
+   "testo": "Signori, stasera er grande dramma spaziale!",
+   "battute": 1
+  },
+  {
+   "chi": "GEREMIA",
+   "sfondo": "luna",
+   "testo": "Non c'è aria! Come recito senz'aria?",
+   "battute": 1
+  },
+  {
+   "chi": "BARTOLOMEO",
+   "sfondo": "luna",
+   "testo": "Ho inventato l'aria in barattolo!",
+   "battute": 1
+  },
+  {
+   "chi": "BARTOLOMEO",
+   "sfondo": "luna",
+   "testo": "Sciabadù!",
+   "battute": 1
+  },
+  {
+   "chi": "GEREMIA",
+   "sfondo": "luna",
+   "testo": "Era meglio senz'aria.",
+   "battute": 1
+  },
+  {
+   "chi": "BRONCO",
+   "sfondo": "acquario",
+   "testo": "Er tecnico ha sbagliato pianeta.",
+   "battute": 1
+  }
+ ],
+ "testata": "LA COMPAGNIA DEL BANCONE · PROVA N. 1"
+}
