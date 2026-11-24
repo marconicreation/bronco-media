@@ -1,0 +1,27 @@
+{
+ "numero": 13,
+ "titolo": "Il grande concorso degli inventori",
+ "data": "2026-11-25",
+ "saga": {"titolo": "Il grande concorso degli inventori", "parte": 4, "di": 5},
+ "tipo_aggancio": "urlo",
+ "aggancio": {
+  "img": "pose/geremia_strilla.jpg",
+  "chi": "GEREMIA",
+  "testo": "Una TASSA per partecipare? Io svengo!",
+  "battute": 2
+ },
+ "scene": [
+  {"img": "pose/trio_bancone.jpg", "chi": "", "testo": "", "battute": 1},
+  {"img": "pose/bartolomeo_invenzione.jpg", "chi": "BARTOLOMEO", "testo": "Pezzo nuovo per la giuria: lo sportello che compila i moduli da solo!", "battute": 2},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "GEREMIA", "testo": "Lascia fare a me! Alla giuria la presento io, da solo!", "battute": 2},
+  {"img": "pose/bartolomeo_annuncia.jpg", "chi": "BARTOLOMEO", "testo": "La giuria dice che prima serve la tassa d'iscrizione...", "battute": 2},
+  {"img": "pose/geremia_strilla.jpg", "chi": "GEREMIA", "testo": "PAGARE per vincere un premio?! Mi manca l'aria... svengo!", "battute": 2},
+  {"img": "pose/bartolomeo_birra.jpg", "chi": "BARTOLOMEO", "testo": "Niente paura! Lo sportello ha già stampato il modulo per lo svenimento!", "battute": 2},
+  {"img": "pose/bartolomeo_sciabadu.jpg", "chi": "BARTOLOMEO", "testo": "Sciabadù!", "battute": 1},
+  {"img": "pose/geremia_braccia.jpg", "chi": "", "testo": "...", "battute": 1},
+  {"img": "pose/bronco_papillon.jpg", "chi": "BRONCO", "testo": "Socio svenuto, giuria che aspetta... chi lo vince 'sto concorso? Scrivi er nome!", "battute": 2}
+ ],
+ "voci": true,
+ "ritmo": true,
+ "didascalia": "Una TASSA per partecipare? Geremia sviene 😵🧾\n\nAL BANCONE DI BRONCO 🍸 Ep. 13 · Il grande concorso degli inventori (parte 4 di 5)\nIeri il prototipo faceva i cocktail al contrario. Oggi Geremia lo presenta alla giuria da solo... ma prima c'è da pagare la tassa d'iscrizione.\n\nSocio svenuto, giuria che aspetta: secondo te chi lo vince 'sto concorso? Scrivi il nome qui 👇\n\nSegui @marconicreation: il gran finale esce domani alle 13.\n\n☕ Regala la tazza di Bartolomeo: 19,90 € con spedizione gratis, ordina entro il 6/12 per averla a Natale 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)\n\n#sitcom #cartonianimati #barlife #burocrazia #inventori #comicità #marconicreation"
+}
