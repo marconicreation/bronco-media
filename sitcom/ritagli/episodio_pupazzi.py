@@ -23,6 +23,9 @@ FISSE = os.path.join(HERE, 'voci_fisse')
 # "Vai col tango!" registrato una volta per voce: se manca il file della voce attuale, la routine lo registra come le altre battute
 TANGO = f"bronco_vai_col_tango_{VOCI_ID['BRONCO']}.mp3"
 EFFETTI = os.path.join(HERE, 'effetti')   # libreria suoni comici ElevenLabs (Robi 20/11: "vai"), generata una volta sola
+# VELOCE (Robi 24/11: "tra una battuta e l'altra c'è un'eternità, via il fotogramma dei tre, parlano lenti"):
+# niente inquadratura dei tre, voci accelerate e senza pause interne lunghe, ogni scena dura quanto la voce + un attimo.
+VELOCE = {'attivo': False, 'tempo': 1.18, 'attacco': 0.08, 'coda': 0.30, 'muta': 0.9}
 SOLDI = ('conto', 'soldi', 'euro', 'prezz', 'pag', 'tass', 'bollett', 'scont', 'fisco', 'cassa', 'spes', 'cost')
 
 def chi_di(sc):
@@ -37,7 +40,9 @@ def scene_da_json(ep):
     for sc in ([ep['aggancio']] if ep.get('aggancio') else []) + ep['scene']:
         chi = chi_di(sc); testo = (sc.get('testo') or '').strip()
         s = {'chi': chi, 'testo': testo, 'battute': sc.get('battute', 2)}
-        if chi == 'TRIO': s['testo'] = ''
+        if chi == 'TRIO':
+            if VELOCE['attivo']: continue
+            s['testo'] = ''
         if testo in ('...', '…'): s['parla'] = []                     # reazione muta
         if testo.lower().startswith('sciabad'): s['tango'] = True        # braccio al cielo
         out.append(s)
@@ -72,7 +77,10 @@ def prepara_voci(scene, cartella, out):
             if i in servono: manca.append(i)
             continue
         tmp = dst + '.wav'
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', src, '-af', pulisci, tmp], check=True)
+        af = pulisci
+        if VELOCE['attivo']:  # accorcia le pause dentro la battuta (lascia 0,15 s) e parla piu' svelto, stessa intonazione
+            af = 'silenceremove=stop_periods=-1:stop_duration=0.15:stop_threshold=-40dB,' + pulisci + f",atempo={VELOCE['tempo']}"
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', src, '-af', af, tmp], check=True)
         d = durata(tmp); vel = min(1.25, d / 8.0) if d > 8.0 else 1.0
         subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', tmp, '-af', f'atempo={vel:.3f}', '-b:a', '128k', dst], check=True)
         os.remove(tmp); s['_voce'] = dst
@@ -85,9 +93,17 @@ def durata(f):
 def adatta_battute(scene, cartella):
     """Allunga l'inquadratura (a battute intere di musica) se la voce non ci sta."""
     import math
+    if VELOCE['attivo']:  # scena = voce + un attimo, senza arrotondare alle battute di musica
+        for s in scene:
+            f = s.get('_voce')
+            if f: s['battute'] = (VELOCE['attacco'] + durata(f) + VELOCE['coda'] + (0.5 if s.get('fissa') else 0)) / BAR
+            elif s.get('parla') == []: s['battute'] = VELOCE['muta'] / BAR
+        return
     for s in scene:
         f = s.get('_voce')
         if f: s['battute'] = max(s['battute'], math.ceil((durata(f) + 0.6) / BAR))
+
+def attacco(): return VELOCE['attacco'] if VELOCE['attivo'] else 0.3
 
 def voce_unica(scene, cartella, out):
     """Mette in fila le voci (una per scena, 0,3 s dopo l'inizio della sua inquadratura)."""
@@ -95,7 +111,7 @@ def voce_unica(scene, cartella, out):
     for s in scene:
         f = s.get('_voce')
         if f:
-            ins += ['-i', f]; ms = int((t + 0.3) * 1000)
+            ins += ['-i', f]; ms = int((t + attacco()) * 1000)
             filt.append(f'[{j}:a]aformat=channel_layouts=mono:sample_rates=44100,adelay={ms}[a{j}]'); j += 1
         t += s['battute'] * BAR
     if not j: return None
@@ -107,7 +123,7 @@ def effetti(scene, prova=False):
     """[(secondi, file, volume dB)]: suoni comici e risate finte messi da soli sulle scene."""
     out, t, boing, cassa = [], 0.0, False, False
     def voce_fine(s, t0):
-        return t0 + 0.3 + (durata(s['_voce']) if s.get('_voce') else 1.5)
+        return t0 + attacco() + (durata(s['_voce']) if s.get('_voce') else 1.5)
     bronco_finale = max([i for i, s in enumerate(scene) if s['chi'] == 'BRONCO' and not s.get('fissa') and not s.get('finale') and s['testo']] or [-1])
     for i, s in enumerate(scene):
         dur = s['battute'] * BAR; testo = s.get('testo') or ''
@@ -152,6 +168,7 @@ def bollino(ep):
     return dis
 
 if __name__ == '__main__':
+    if '--veloce' in sys.argv: VELOCE['attivo'] = True; sys.argv.remove('--veloce')
     if sys.argv[1] == '--battute':
         for i, chi, vid, testo in da_registrare(scene_da_json(json.load(open(sys.argv[2])))):
             print(f'{i:02d}.mp3\t{chi}\t{vid}\t{testo}')
