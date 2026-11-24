@@ -18,7 +18,8 @@ P.PERSONAGGI.update(P.PERSONAGGI_PLASTILINA); P.STILE_TESTO = 'tiktok'
 BAR = 240 / 110
 # voci fisse scelte da Robi (20/11/2026), da usare con eleven_v3.
 # 22/11/2026 Robi: Bronco passa alla voce romanesca "Bronco romano" (prima "Bronco roco" R4gEgJEocQc2CqX4LOsT)
-VOCI_ID = {'BRONCO': 'uquwTh028LNny1rljUlB', 'GEREMIA': 'DQrAbk5JYQkfbsD7QZ8f', 'BARTOLOMEO': 'Gq5e8oJrkKsAeJRonm7y'}
+# 24/11/2026 Robi: Bronco passa alla voce "Bronco cagnolone" (Voice Design, profonda e simpatica, non leccaculo)
+VOCI_ID = {'BRONCO': 'xHMnzwnNGu6rNUfNTXmY', 'GEREMIA': 'DQrAbk5JYQkfbsD7QZ8f', 'BARTOLOMEO': 'Gq5e8oJrkKsAeJRonm7y'}
 FISSE = os.path.join(HERE, 'voci_fisse')
 # "Vai col tango!" registrato una volta per voce: se manca il file della voce attuale, la routine lo registra come le altre battute
 TANGO = f"bronco_vai_col_tango_{VOCI_ID['BRONCO']}.mp3"
