@@ -23,6 +23,7 @@ FISSE = os.path.join(HERE, 'voci_fisse')
 # "Vai col tango!" registrato una volta per voce: se manca il file della voce attuale, la routine lo registra come le altre battute
 TANGO = f"bronco_vai_col_tango_{VOCI_ID['BRONCO']}.mp3"
 EFFETTI = os.path.join(HERE, 'effetti')   # libreria suoni comici ElevenLabs (Robi 20/11: "vai"), generata una volta sola
+VELOCE = False   # json "veloce": true (Compagnia del Bancone, Robi 24/11): ritmo stretto
 SOLDI = ('conto', 'soldi', 'euro', 'prezz', 'pag', 'tass', 'bollett', 'scont', 'fisco', 'cassa', 'spes', 'cost')
 
 def chi_di(sc):
@@ -39,6 +40,9 @@ def scene_da_json(ep):
         s = {'chi': chi, 'testo': testo, 'battute': sc.get('battute', 2)}
         if sc.get('sfondo'): s['sfondo'] = sc['sfondo']                # Compagnia del Bancone: sfondo della scena
         if chi == 'TRIO': s['testo'] = ''
+        if chi == 'VUOTA':   # scena senza personaggi; "voce" = chi parla fuori campo (non si vede)
+            if sc.get('voce'): s['voce'] = sc['voce'].upper()
+            elif not testo: s['parla'] = []
         if testo in ('...', '…'): s['parla'] = []                     # reazione muta
         if testo.lower().startswith('sciabad'): s['tango'] = True        # braccio al cielo
         out.append(s)
@@ -58,8 +62,8 @@ def scene_da_json(ep):
 
 def da_registrare(scene):
     """[(numero file, chi, voice_id, testo)] delle battute che servono (niente mute, trio, cartelli e voci fisse)."""
-    return [(i, s['chi'], VOCI_ID[s['chi']], s['testo']) for i, s in enumerate(scene)
-            if s['chi'] in VOCI_ID and s['testo'] and not s.get('fissa') and s.get('parla', 1) != []]
+    return [(i, s.get('voce', s['chi']), VOCI_ID[s.get('voce', s['chi'])], s['testo']) for i, s in enumerate(scene)
+            if s.get('voce', s['chi']) in VOCI_ID and s['testo'] and not s.get('fissa') and s.get('parla', 1) != []]
 
 def prepara_voci(scene, cartella, out):
     """Copia le voci in out/: fisse da voci_fisse/, le altre ripulite dai silenzi (e accelerate se oltre 8 s)."""
@@ -75,6 +79,7 @@ def prepara_voci(scene, cartella, out):
         tmp = dst + '.wav'
         subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', src, '-af', pulisci, tmp], check=True)
         d = durata(tmp); vel = min(1.25, d / 8.0) if d > 8.0 else 1.0
+        if VELOCE: vel = max(vel, 1.12)
         subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', tmp, '-af', f'atempo={vel:.3f}', '-b:a', '128k', dst], check=True)
         os.remove(tmp); s['_voce'] = dst
     if manca: print('ATTENZIONE: mancano le voci delle scene', manca, file=sys.stderr)
@@ -88,7 +93,8 @@ def adatta_battute(scene, cartella):
     import math
     for s in scene:
         f = s.get('_voce')
-        if f: s['battute'] = max(s['battute'], math.ceil((durata(f) + 0.6) / BAR))
+        if f and VELOCE: s['battute'] = max(1.0 if s.get('finale') else 0, (durata(f) + 0.35) / BAR)   # Robi 24/11: niente pause tra una battuta e l'altra
+        elif f: s['battute'] = max(s['battute'], math.ceil((durata(f) + 0.6) / BAR))
 
 def voce_unica(scene, cartella, out):
     """Mette in fila le voci (una per scena, 0,3 s dopo l'inizio della sua inquadratura)."""
@@ -164,7 +170,7 @@ if __name__ == '__main__':
     NOSIGLA = '--senza-sigla' in sys.argv   # puntate di prova: niente sigla e niente cartello "domani alle 13"
     if NOSIGLA: sys.argv.remove('--senza-sigla')
     J, OUT = sys.argv[1], sys.argv[2]; VOCI = sys.argv[3] if len(sys.argv) > 3 else None
-    ep = json.load(open(J)); scene = scene_da_json(ep)
+    ep = json.load(open(J)); scene = scene_da_json(ep); VELOCE = bool(ep.get('veloce'))
     if NOSIGLA: scene = [s for s in scene if s['chi'] != 'CARTELLO']
     T = tempfile.mkdtemp(); P.DECORA = bollino(ep)
     if VOCI: VOCI = prepara_voci(scene, VOCI, os.path.join(T, 'voci')); adatta_battute(scene, VOCI)

@@ -1,0 +1,18 @@
+{
+ "numero": 2,
+ "titolo": "Il regista è un pesce",
+ "testata": "LA COMPAGNIA DEL BANCONE · PROVA N. 2",
+ "veloce": true,
+ "scene": [
+  {"chi": "GEREMIA", "sfondo": "acquario", "testo": "Perché recitiamo sott'acqua?!", "battute": 1},
+  {"chi": "BRONCO", "sfondo": "acquario", "testo": "Ordini der regista.", "battute": 1},
+  {"chi": "VUOTA", "sfondo": "acquario", "testo": "", "battute": 0.8},
+  {"chi": "GEREMIA", "sfondo": "acquario", "testo": "Il regista è un PESCE ROSSO!", "battute": 1},
+  {"chi": "BRONCO", "sfondo": "palco", "testo": "Avanguardia, Geremia. Fidate.", "battute": 1},
+  {"chi": "GEREMIA", "sfondo": "luna", "testo": "E adesso perché siamo sulla Luna?!", "battute": 1},
+  {"chi": "VUOTA", "sfondo": "luna", "voce": "BRONCO", "testo": "Er pesce ha cambiato idea.", "battute": 1},
+  {"chi": "GEREMIA", "sfondo": "luna", "testo": "E Bartolomeo dov'è?", "battute": 1},
+  {"chi": "VUOTA", "sfondo": "palco", "testo": "Sciabadù!", "battute": 1},
+  {"chi": "GEREMIA", "sfondo": "luna", "testo": "...Me ne vado.", "battute": 1}
+ ]
+}

@@ -228,6 +228,28 @@ def scena_frames(cfg, dur, testo, vol, tmp, k0, testata, tango=False, cache=None
         out.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92)
     return n
 
+def scena_vuota(dur, testo, vol, tmp, k0, testata):
+    """Compagnia del Bancone (24/11/2026): inquadratura SENZA personaggi (solo lo sfondo della scena),
+    con la scritta stile TikTok se c'e' una voce fuori campo (personaggio che non si vede)."""
+    bg, ban = sfondo_plastilina(); gr = R.grana() * 0.3
+    sq = bg.convert('RGB').resize((W, W), Image.LANCZOS)
+    a = np.array(sq).astype(np.float32) + gr[:, :, None]
+    sq = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+    y0 = IMG_TT if STILE_TESTO == 'tiktok' else IMG_Y
+    c = Image.new('RGB', (W, H), R.BG); c.paste(sq, (0, y0)); d = ImageDraw.Draw(c)
+    d.text((W // 2, 62), testata, font=R.f_tag, fill=R.GOLD, anchor='mm', stroke_width=3, stroke_fill='black')
+    if DECORA: DECORA(d, y0)
+    d.text((W // 2, 1790), '@marconicreation', font=R.f_tag, fill=(230, 200, 160), anchor='mm')
+    n = int(round(dur * FPS)); tt = testo and STILE_TESTO == 'tiktok'
+    if tt:
+        inizi = tempi_parole(testo, vol[:n]); vv = np.flatnonzero(np.asarray(vol[:n]) > 0.16)
+        fine = int(vv[-1]) if len(vv) else n - 1
+    for k in range(n):
+        out = c.copy() if tt else c
+        if tt: scritte_tiktok(out, testo, k, inizi, vol[k] if k < len(vol) else 0, fine, k0)
+        out.save(os.path.join(tmp, f'{k0 + k:05d}.jpg'), quality=92)
+    return n
+
 def scena_trio(dur, tmp, k0, testata, cache):
     """Inquadratura larga: i tre pupazzi insieme al bancone, fermi che respirano e sbattono gli occhi."""
     posti = [('BARTOLOMEO', 0.20, 0.58), ('BRONCO', 0.50, 0.62), ('GEREMIA', 0.80, 0.58)]
@@ -289,6 +311,7 @@ def scena_cartello(dur, tmp, k0, righe, sotto, cache):
 
 def render(scene, out_mp4, testata='AL BANCONE DI BRONCO', voce=None, ritardo=0.3):
     """scene: lista di {chi, testo, battute, tango?, parla: [(da, a)] secondi dentro la scena (senza voce)}."""
+    global SFONDO_SCENA, BANCONE_PLASTILINA
     BAR = 240 / 110; tmp = tempfile.mkdtemp(); k0 = 0; cache = {}
     tot = sum(s['battute'] for s in scene) * BAR; ntot = int(round(tot * FPS))
     vol_all = volume_voce(voce, ntot, ritardo) if voce else None
@@ -298,8 +321,9 @@ def render(scene, out_mp4, testata='AL BANCONE DI BRONCO', voce=None, ritardo=0.
         else: vol = finta_voce(n, s.get('parla', [(0.2, s['battute'] * BAR - 0.6)] if s.get('testo') else []), seed=k0)
         if s['chi'] == 'CARTELLO': scena_cartello(n / FPS, tmp, k0, s['righe'], s.get('sotto'), cache)
         elif s['chi'] == 'TRIO': scena_trio(n / FPS, tmp, k0, testata, cache)
+        elif s['chi'] == 'VUOTA':
+            SFONDO_SCENA = s.get('sfondo'); scena_vuota(n / FPS, s.get('testo'), vol, tmp, k0, testata); SFONDO_SCENA = None
         else:
-            global SFONDO_SCENA, BANCONE_PLASTILINA
             bar_linea = BANCONE_PLASTILINA
             SFONDO_SCENA = s.get('sfondo')
             if SFONDO_SCENA: BANCONE_PLASTILINA = SFONDI_LINEA.get(SFONDO_SCENA, bar_linea)
