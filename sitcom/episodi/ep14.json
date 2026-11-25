@@ -1,0 +1,27 @@
+{
+ "numero": 14,
+ "titolo": "Il grande concorso degli inventori",
+ "data": "2026-11-26",
+ "saga": {"titolo": "Il grande concorso degli inventori", "parte": 5, "di": 5},
+ "tipo_aggancio": "assurdo",
+ "aggancio": {
+  "img": "pose/bartolomeo_invenzione.jpg",
+  "chi": "BARTOLOMEO",
+  "testo": "Ecco la Brindisatrice: brinda da sola!",
+  "battute": 2
+ },
+ "scene": [
+  {"img": "pose/trio_bancone.jpg", "chi": "", "testo": "", "battute": 1},
+  {"img": "pose/bartolomeo_annuncia.jpg", "chi": "BARTOLOMEO", "testo": "Gran finale del concorso! La mia macchina ora ha un nome: la Brindisatrice!", "battute": 2},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "GEREMIA", "testo": "Novanta per cento mio! Giuria, portatemi subito la botte!", "battute": 2},
+  {"img": "pose/bartolomeo_invenzione.jpg", "chi": "BARTOLOMEO", "testo": "La giuria l'ha accesa... e lei ha brindato col cocktail di Bronco!", "battute": 2},
+  {"img": "pose/geremia_strilla.jpg", "chi": "GEREMIA", "testo": "Il Broncospasmo?! Ma lui non era nemmeno in gara!", "battute": 2},
+  {"img": "pose/bartolomeo_birra.jpg", "chi": "BARTOLOMEO", "testo": "Vince lui! E la botte si divide fra tutto il bancone, in parti giuste!", "battute": 2},
+  {"img": "pose/bartolomeo_sciabadu.jpg", "chi": "BARTOLOMEO", "testo": "Sciabadù!", "battute": 1},
+  {"img": "pose/geremia_braccia.jpg", "chi": "", "testo": "...", "battute": 1},
+  {"img": "pose/bronco_papillon.jpg", "chi": "BRONCO", "testo": "Botte pe' tutti! E te, ce brindavi co' noi? Sì o no, scrivilo!", "battute": 2}
+ ],
+ "voci": true,
+ "ritmo": true,
+ "didascalia": "La Brindisatrice: il cocktail te lo fa e brinda pure da sola 🥂🤖\n\nAL BANCONE DI BRONCO 🍸 Ep. 14 · Il grande concorso degli inventori (parte 5 di 5, FINALE)\nIeri Geremia è svenuto davanti alla tassa d'iscrizione. Oggi la macchina di Bartolomeo ha finalmente un nome e la giuria dà il verdetto... ma vince chi non era nemmeno in gara.\n\nBotte di vermut per tutti al bancone: tu ci brindavi con noi? Sì o no, scrivilo qui 👇\n\nAnche tu hai un amico come Geremia, che vuole il novanta per cento di tutto? 😂\n\nSegui @marconicreation: domani alle 13 al bancone si ricomincia.\n\n☕ Regala la tazza di Geremia: 19,90 € con spedizione gratis, ordina entro il 6/12 per averla a Natale 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)\n\n#sitcom #cartonianimati #barlife #inventori #cocktail #comicità #marconicreation"
+}
