@@ -1,0 +1,26 @@
+{
+ "numero": 15,
+ "titolo": "La tazzina scontata",
+ "data": "2026-11-27",
+ "tipo_aggancio": "urlo",
+ "aggancio": {
+  "img": "pose/geremia_strilla.jpg",
+  "chi": "GEREMIA",
+  "testo": "BLACK FRIDAY! Voglio il caffè GRATIS!",
+  "battute": 2
+ },
+ "scene": [
+  {"img": "pose/trio_bancone.jpg", "chi": "", "testo": "", "battute": 1},
+  {"img": "pose/bartolomeo_invenzione.jpg", "chi": "BARTOLOMEO", "testo": "Per il Black Friday ho inventato la tazzina scontata: metà caffè!", "battute": 2},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "GEREMIA", "testo": "Metà caffè? Allora pago metà! Anzi, non pago niente!", "battute": 2},
+  {"img": "pose/bartolomeo_annuncia.jpg", "chi": "BARTOLOMEO", "testo": "No no, il prezzo resta uguale. È il caffè che è in offerta!", "battute": 2},
+  {"img": "pose/geremia_braccia.jpg", "chi": "GEREMIA", "testo": "Mezzo caffè a prezzo pieno?! E lo chiami sconto?!", "battute": 2},
+  {"img": "pose/bartolomeo_birra.jpg", "chi": "BARTOLOMEO", "testo": "L'anno prossimo faccio la tazzina vuota: sconto totale!", "battute": 2},
+  {"img": "pose/bartolomeo_sciabadu.jpg", "chi": "BARTOLOMEO", "testo": "Sciabadù!", "battute": 1},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "", "testo": "...", "battute": 1},
+  {"img": "pose/bronco_papillon.jpg", "chi": "BRONCO", "testo": "Qual è lo sconto più assurdo che hai visto? Scrivilo qua sotto!", "battute": 2}
+ ],
+ "voci": true,
+ "ritmo": true,
+ "didascalia": "Black Friday al bancone: la tazzina scontata, metà caffè allo stesso prezzo ☕✂️\n\nAL BANCONE DI BRONCO 🍸 Ep. 15: La tazzina scontata (puntata speciale Black Friday)\nGeremia vuole il caffè gratis, Bartolomeo inventa lo sconto... sul caffè, non sul prezzo.\n\nQual è lo sconto più assurdo che hai visto? Scrivilo qui 👇\n\nAnche tu hai un amico come Geremia, che al Black Friday vuole tutto gratis? 😂\n\nSegui @marconicreation: domani alle 13 parte la nuova saga, \"La crociera di Geremia\" 🚢\n\n☕ Regala la tazza di Bronco: 19,90 € con spedizione gratis, ordina entro il 6/12 per averla a Natale 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)\n\n#blackfriday #sitcom #cartonianimati #barlife #caffè #comicità #marconicreation"
+}
