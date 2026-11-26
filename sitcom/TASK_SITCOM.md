@@ -78,6 +78,11 @@ Motivo: su FB ogni Reel fa ~200 view ma la gente guarda 1-3 s; su IG il 67-93% s
   4) Geremia prova a presentare l'invenzione da solo. La giuria gli chiede la tassa d'iscrizione: lui sviene.
   5) Il verdetto: vince... il Broncospasmo di Bronco, che non era nemmeno in gara. Il premio va diviso fra tutti al bancone. Sciabadù.
   Poi SAGA 2: proponila tu a Robi nel messaggio serale dell'ultima parte (2 idee, lui sceglie).
+- SAGA 2 (Robi ha scelto la B il 26/11): "La crociera di Geremia", 5 parti dal 28/11 al 2/12 (il 27/11 resta la puntata speciale "Black Friday al bancone", fuori saga).
+  Geremia vince per sbaglio una crociera "gratis", ma a bordo si paga tutto; ogni parte Bartolomeo gli inventa un aggeggio assurdo per risparmiare, che si rivolta contro (ricetta Ep. 8/9).
+  Traccia: 1) la crociera "gratis" e la prima sorpresa a pagamento; 2) a bordo si paga anche l'aria di mare, invenzione di Bartolomeo; 3) il buffet a pagamento a peso;
+  4) Geremia prova a scendere a nuoto per non pagare lo sbarco; 5) finale: si scopre che la nave non è mai partita, era tutto al bancone di Bronco. Sciabadù.
+  Le parti del 1/12 e 2/12 hanno anche "avvento" (casella 1 e 2). Le saghe di dicembre quindi slittano: 3-7/12, 8-12/12, 13-17/12, 18-21/12 (4 parti), poi il finale di Natale 22-24/12.
 
 ## RITMO E MUSICA dal 20/11 (Robi 19/11: "a tempo con la musica, ogni due battute per fotogramma", niente sgranature, musica meno ritmata)
 - Musica (Robi 19/11 sera): "Torso Stufo", la canzone di Robi (sitcom/musica/torso_stufo.m4a, sua, niente diritti), 110 bpm, 1 battuta = 2,18 s,
