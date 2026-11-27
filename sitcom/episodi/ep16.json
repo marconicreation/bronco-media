@@ -1,0 +1,28 @@
+{
+ "numero": 16,
+ "titolo": "La crociera di Geremia",
+ "data": "2026-11-28",
+ "saga": {"titolo": "La crociera di Geremia", "parte": 1, "di": 5},
+ "tipo_aggancio": "bronco",
+ "aggancio": {
+  "img": "pose/bronco_papillon.jpg",
+  "chi": "BRONCO",
+  "testo": "Geremia ha vinto 'na crociera gratis. Dice lui.",
+  "battute": 2
+ },
+ "scene": [
+  {"img": "pose/trio_bancone.jpg", "chi": "", "testo": "", "battute": 1},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "GEREMIA", "testo": "Ho vinto una crociera GRATIS! Non pago niente, nemmeno l'aria!", "battute": 2},
+  {"img": "pose/bartolomeo_annuncia.jpg", "chi": "BARTOLOMEO", "testo": "Ho letto il biglietto: la crociera è gratis... ma la valigia si paga a peso!", "battute": 2},
+  {"img": "pose/geremia_strilla.jpg", "chi": "GEREMIA", "testo": "A PESO?! Allora parto senza valigia! Anzi, senza mutande!", "battute": 2},
+  {"img": "pose/bartolomeo_invenzione.jpg", "chi": "BARTOLOMEO", "testo": "Niente paura! Ti ho inventato la valigia leggera: piena di palloncini!", "battute": 2},
+  {"img": "pose/geremia_braccia.jpg", "chi": "GEREMIA", "testo": "Leggera sì... ma ora vola via! Col biglietto dentro!", "battute": 2},
+  {"img": "pose/bartolomeo_birra.jpg", "chi": "BARTOLOMEO", "testo": "Tranquillo, la crociera la fa lei! Ti manda una cartolina!", "battute": 2},
+  {"img": "pose/bartolomeo_sciabadu.jpg", "chi": "BARTOLOMEO", "testo": "Sciabadù!", "battute": 1},
+  {"img": "pose/geremia_bocca_aperta.jpg", "chi": "", "testo": "...", "battute": 1},
+  {"img": "pose/bronco_papillon.jpg", "chi": "BRONCO", "testo": "E te, in crociera, che te portavi ne la valigia? Dimmelo nei commenti!", "battute": 2}
+ ],
+ "voci": true,
+ "ritmo": true,
+ "didascalia": "La valigia piena di palloncini: pesa niente... ma vola via 🎈🧳\n\nAL BANCONE DI BRONCO 🍸 Ep. 16 · La crociera di Geremia (parte 1 di 5)\nGeremia vince una crociera \"gratis\", ma la valigia si paga a peso. Bartolomeo ha la soluzione... e il biglietto prende il volo.\n\nE tu, in crociera, cosa ti porteresti in valigia? Scrivilo qui 👇\n\nAnche tu hai un amico come Geremia, che parte solo se è tutto gratis? 😂\n\nSegui @marconicreation: la parte 2 esce domani alle 13 🚢\n\n☕ Ultimi giorni per averla a Natale: la tazza di Bartolomeo, 19,90 € con spedizione gratis, ordina entro il 6/12 👉 https://marconicreation.vercel.app/etsy?da=sitcom (link anche in bio)\n\n#sitcom #cartonianimati #crociera #barlife #vacanze #comicità #marconicreation"
+}
